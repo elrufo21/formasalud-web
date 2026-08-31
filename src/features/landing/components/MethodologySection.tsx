@@ -29,7 +29,7 @@ export function MethodologySection() {
     <section className="band-navy text-white py-20">
       <div className="wrap">
         <Eyebrow onDark>Metodología y Modelo Académico</Eyebrow>
-        <h2 className="text-white text-3xl md:text-4xl font-serif mt-4 max-w-xl">
+        <h2 className="!text-white text-3xl md:text-4xl font-serif mt-4 max-w-xl">
           Diseñado para el profesional en ejercicio
         </h2>
 
@@ -43,10 +43,10 @@ export function MethodologySection() {
                 {item.num}
               </b>
               <div>
-                <h4 className="text-white font-serif text-lg font-medium">
+                <h4 className="!text-white font-serif text-lg font-medium">
                   {item.title}
                 </h4>
-                <p className="text-white/60 text-sm mt-2 leading-relaxed">
+                <p className="!text-white/80 text-sm mt-2 leading-relaxed">
                   {item.desc}
                 </p>
               </div>

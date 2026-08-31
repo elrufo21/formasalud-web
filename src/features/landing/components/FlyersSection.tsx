@@ -9,7 +9,7 @@ export function FlyersSection() {
   const [selectedFlyer, setSelectedFlyer] = useState<FlyerItem | null>(null);
 
   return (
-    <section id="flyers" className="py-20 bg-bg-alt border-y border-line">
+    <section id="flyers" className="!pt-6 pb-20 bg-bg-alt border-y border-line">
       <div className="wrap">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
           <div>
