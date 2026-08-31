@@ -12,11 +12,7 @@ export const metadata: Metadata = {
 export default function QuienesSomosPage() {
   return (
     <main className="flex-1">
-      <PageHeader
-        sectionTag="INSTITUCIONAL"
-        title="Compromiso académico con la salud pública y privada"
-        lede="FORMASALUD nace para responder a la necesidad de actualización constante del profesional de salud peruano."
-      />
+      
       <InstitutionalFicha />
     </main>
   );

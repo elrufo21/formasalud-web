@@ -6,7 +6,7 @@ export function HeroSection() {
   return (
     <section className="hero reg-frame texture-dark bg-navyink text-white py-0 relative overflow-hidden">
       <div className="hero-inner pt-14 sm:pt-20 px-5 md:px-8 max-w-[1400px] mx-auto relative">
-        <Seal className="hero-seal hidden lg:block" />
+
 
         <div className="hero-top-row flex flex-col lg:flex-row justify-between items-stretch gap-8 lg:gap-12 pb-10">
           <div className="hero-kicker flex flex-col gap-5 max-w-[680px] flex-1">
@@ -22,8 +22,9 @@ export function HeroSection() {
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-white text-3xl sm:text-5xl lg:text-[54px] font-serif leading-[1.1] tracking-tight mt-1">
-              Formación Médica Continua & Ponencias de <em>Alto Nivel</em>
+            <h1 className="text-3xl sm:text-5xl lg:text-[54px] font-serif leading-[1.1] tracking-tight mt-1"
+              style={{ color: '#ffffff' }}>
+              Formación Médica Continua & Ponencias de <em style={{ color: '#ffffff', fontStyle: 'italic' }}>Alto Nivel</em>
             </h1>
 
             {/* Subtitle */}
@@ -64,7 +65,7 @@ export function HeroSection() {
                   "repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 1px,transparent 14px)",
               }}
             />
-            
+
             {/* Visual Header Mock */}
             <div className="absolute top-5 left-5 right-5 flex justify-between items-center text-white/80 border-b border-white/15 pb-3">
               <div className="flex items-center gap-2">
