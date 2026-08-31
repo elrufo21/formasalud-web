@@ -6,7 +6,7 @@ export function InstitutionalFicha() {
     <>
       <section className="!pt-2 pb-20">
         <div className="wrap">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-14 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-14 items-center">
             <div>
               <Eyebrow>Ficha institucional</Eyebrow>
               <div className="ficha border-t border-line mt-4">
