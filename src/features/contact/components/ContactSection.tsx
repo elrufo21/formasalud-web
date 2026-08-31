@@ -4,7 +4,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 
 export function ContactSection() {
   return (
-    <section className="py-20">
+    <section className="pt-8 pb-20">
       <div className="wrap">
         <div className="relative w-full aspect-[21/9] max-h-[360px] rounded-2xl overflow-hidden bg-gradient-to-br from-navy to-teal mb-14 shadow-md">
           <div

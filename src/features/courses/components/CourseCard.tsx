@@ -5,6 +5,9 @@ interface CourseCardProps {
   course: Course;
 }
 
+// IDs de los 2 cursos que ocultan su ícono y badge
+const HIDDEN_ICON_BADGE_IDS = ["enfermeria-cuidados-criticos", "ia-aplicada-salud"];
+
 export function CourseCard({ course }: CourseCardProps) {
   const getBannerGradient = (category: Course["category"]) => {
     switch (category) {
@@ -78,12 +81,14 @@ export function CourseCard({ course }: CourseCardProps) {
     `Hola FORMASALUD, me gustaría recibir el temario e inscribirme en el programa: "${course.title}" (${course.code}).`
   );
 
+  const hideIconAndBadge = HIDDEN_ICON_BADGE_IDS.includes(course.id);
+
   return (
     <article className="group relative rounded-2xl border border-line bg-white shadow-sm hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col h-full">
       {/* Floating Badge */}
-      {course.badge && (
+      {course.badge && !hideIconAndBadge && (
         <span
-          className={`absolute top-4 right-4 z-10 text-[10px] font-mono font-bold tracking-wider uppercase px-3 py-1 rounded-full shadow-md ${getBadgeStyle(
+          className={`absolute top-6 right-5 z-10 text-[10px] font-mono font-bold tracking-wider uppercase px-3.5 py-1.5 rounded-full shadow-md ${getBadgeStyle(
             course.badgeType
           )}`}
         >
@@ -91,15 +96,16 @@ export function CourseCard({ course }: CourseCardProps) {
         </span>
       )}
 
-      {/* Header Visual Bar */}
-      <div className={`h-36 relative flex flex-col justify-between p-5 text-white ${getBannerGradient(course.category)}`}>
-        <div className="flex items-center justify-between">
-          {renderIcon(course.iconType)}
-          <span className="font-mono text-[9.5px] uppercase tracking-widest text-white/75 bg-black/25 px-2 py-0.5 rounded">
-            {course.code}
-          </span>
-        </div>
-        <div className="space-y-0.5">
+      {/* Header Visual Bar - Altura fija estricta de 140px */}
+      <div className={`h-[140px] relative flex flex-col justify-end p-6 text-white ${getBannerGradient(course.category)}`}>
+        {/* Ícono posicionado de forma absoluta para no romper la alineación */}
+        {!hideIconAndBadge && (
+          <div className="absolute top-6 left-6 z-10">
+            {renderIcon(course.iconType)}
+          </div>
+        )}
+
+        <div className="space-y-1">
           <span className="font-mono text-[10px] tracking-widest uppercase text-goldpale block font-semibold">
             {course.categoryLabel}
           </span>
@@ -114,7 +120,7 @@ export function CourseCard({ course }: CourseCardProps) {
         <h3 className="text-lg sm:text-[19px] leading-snug text-navy font-serif font-bold group-hover:text-teal transition-colors">
           {course.title}
         </h3>
-        
+
         <p className="mt-2.5 text-[13.5px] text-ink-soft leading-relaxed flex-1">
           {course.description}
         </p>

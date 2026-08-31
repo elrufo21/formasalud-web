@@ -4,7 +4,8 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 export function InstitutionalFicha() {
   return (
     <>
-      <section className="py-20">
+      {/* 1. Espacio superior e inferior reducido en la Ficha Institucional */}
+      <section className="pt-6 pb-6">
         <div className="wrap">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-14 items-start">
             <div>
@@ -91,8 +92,8 @@ export function InstitutionalFicha() {
         </div>
       </section>
 
-      {/* Mission & Vision */}
-      <section className="band py-20">
+      {/* 2. Espacio superior reducido antes de Misión y Visión (elimina el hueco en blanco previo a la franja gris) */}
+      <section className="band pt-4 pb-14">
         <div className="wrap">
           <Eyebrow>Propósito institucional</Eyebrow>
           <h2 className="text-3xl md:text-4xl font-serif text-navy mt-4">

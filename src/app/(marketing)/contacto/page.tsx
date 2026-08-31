@@ -12,11 +12,7 @@ export const metadata: Metadata = {
 export default function ContactoPage() {
   return (
     <main className="flex-1">
-      <PageHeader
-        sectionTag="CONTACTO"
-        title="Conversemos sobre tu siguiente paso académico"
-        lede="Un asesor académico te orienta sobre programas, fechas y modalidades."
-      />
+      
       <ContactSection />
     </main>
   );

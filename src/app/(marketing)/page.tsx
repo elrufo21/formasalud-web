@@ -20,7 +20,7 @@ export default function HomePage() {
       <HeroSection />
 
       {/* 2. Sección Cursos y Programas Académicos con Tabs Interactivos */}
-      <section id="cursos" className="py-20 bg-paper">
+      <section id="cursos" className="pt-4 pb-12 bg-paper">
         <div className="wrap">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
             <div>

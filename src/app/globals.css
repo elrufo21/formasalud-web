@@ -106,14 +106,28 @@ a {
   padding: 0 32px;
 }
 
-section {
-  padding: 104px 0;
+/*
+  IMPORTANTE: esta regla estaba antes SUELTA (fuera de cualquier @layer).
+  En Tailwind v4, el CSS que no está dentro de un @layer tiene más
+  prioridad en la cascada que las utilidades (pt-, py-, pb-, etc.),
+  sin importar la especificidad. Por eso ningún cambio de padding hecho
+  con clases de Tailwind en las secciones se reflejaba: este padding de
+  104px siempre ganaba. Al meterlo en @layer base, las utilidades vuelven
+  a poder sobreescribirlo normalmente.
+*/
+@layer base {
+  section {
+    padding: 104px 0;
+  }
+
+  @media (max-width: 720px) {
+    section {
+      padding: 64px 0;
+    }
+  }
 }
 
 @media (max-width: 720px) {
-  section {
-    padding: 64px 0;
-  }
   .wrap, .wrap-narrow {
     padding: 0 20px;
   }
