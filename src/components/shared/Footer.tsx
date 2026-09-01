@@ -54,18 +54,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="/#flyers" className="hover:text-goldpale transition-colors">
-                  Próximos Flyers & Eventos
-                </a>
-              </li>
-              <li>
-                <a href="/#equipo" className="hover:text-goldpale transition-colors">
-                  Docentes & Equipo
-                </a>
-              </li>
-              <li>
                 <Link href="/quienes-somos" className="hover:text-goldpale transition-colors">
-                  Quiénes Somos
+                  Institucional
                 </Link>
               </li>
               <li>

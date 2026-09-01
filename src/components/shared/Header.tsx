@@ -12,10 +12,8 @@ export function Header() {
   const links = [
     { href: "/", label: "Inicio", num: "01" },
     { href: "/cursos", label: "Cursos y Programas", num: "02" },
-    { href: "/#flyers", label: "Próximos Flyers", num: "03" },
-    { href: "/#equipo", label: "Docentes & Equipo", num: "04" },
-    { href: "/quienes-somos", label: "Institucional", num: "05" },
-    { href: "/contacto", label: "Contacto", num: "06" },
+    { href: "/quienes-somos", label: "Institucional", num: "03" },
+    { href: "/contacto", label: "Contacto", num: "04" },
   ];
 
   return (
@@ -103,14 +101,12 @@ export function Header() {
               </a>
             </div>
 
-            <a
-              href="https://wa.me/51999999999?text=Hola%20FORMASALUD,%20quisiera%20recibir%20informaci%C3%B3n%20sobre%20los%20programas%20acad%C3%A9micos%202026."
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/login"
               className="btn btn-primary !py-2.5 !px-5 !text-[13px] font-semibold"
             >
-              Matricúlate <span className="arrow">→</span>
-            </a>
+              Iniciar sesión <span className="arrow">→</span>
+            </Link>
           </div>
 
           {/* Mobile Hamburger button */}
@@ -158,14 +154,13 @@ export function Header() {
               >
                 Acceso Aula Virtual (Próximamente)
               </a>
-              <a
-                href="https://wa.me/51999999999?text=Hola%20FORMASALUD,%20quisiera%20recibir%20informaci%C3%B3n%20sobre%20los%20programas%20acad%C3%A9micos%202026."
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/login"
+                onClick={() => setIsOpen(false)}
                 className="btn btn-primary w-full justify-center text-sm font-semibold"
               >
-                Hablar con un asesor por WhatsApp
-              </a>
+                Iniciar sesión
+              </Link>
             </div>
           </div>
         )}
