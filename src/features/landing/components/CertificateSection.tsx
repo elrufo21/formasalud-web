@@ -1,24 +1,23 @@
 import React from "react";
 import { Eyebrow } from "@/components/ui/Eyebrow";
-import { CertificatePreview } from "@/components/ui/CertificatePreview";
 
 export function CertificateSection() {
   const points = [
     {
-      title: "Respaldo Jurídico Formal",
-      desc: "Emitido por GRUPO PAUCAR PERÚ S.A.C. con RUC 20613837613, cumpliendo los estándares de la Ley General de Sociedades y normativa educativa peruana.",
+      title: "Modalidades Virtual, Presencial e Híbrida",
+      desc: "Programas académicos adaptados con soporte en plataformas virtuales e interacción práctica.",
     },
     {
-      title: "Código QR de Validación Inmediata",
-      desc: "Cada diploma cuenta con un identificador único y código QR que permite a clínicas, hospitales y comités de concurso verificar la autenticidad en tiempo real.",
+      title: "Docentes Especialistas de Alta Trayectoria",
+      desc: "Plana docente integrada por profesionales especialistas con amplia experiencia asistencial y docente.",
     },
     {
-      title: "Horas Lectivas y Créditos Académicos",
-      desc: "Especificación detallada de horas teóricas, prácticas y créditos, válidos para concursos públicos, legajo profesional y recertificación de colegios profesionales.",
+      title: "Aprendizaje Basado en Evidencia y Casos Reales",
+      desc: "Metodología teórico-práctica con simulación clínica, análisis de casos reales y evaluación continua.",
     },
     {
-      title: "Entrega Digital y Física Opcional",
-      desc: "Descarga instantánea en alta resolución desde el Aula Virtual y opción de envío de diploma físico con sellos de seguridad a todo el Perú.",
+      title: "Certificación y Convenios Institucionales",
+      desc: "Certificados respaldados por convenios marco de cooperación interinstitucional en el sector salud.",
     },
   ];
 
@@ -26,14 +25,14 @@ export function CertificateSection() {
     <section className="py-20 bg-white border-t border-line">
       <div className="wrap">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left Column Text */}
+          {/* Columna Izquierda: Texto Promocional */}
           <div className="lg:col-span-5 space-y-6">
-            <Eyebrow>Valor Curricular & Acreditación</Eyebrow>
+            <Eyebrow>Propuesta Académica & Beneficios</Eyebrow>
             <h2 className="text-3xl sm:text-4xl font-serif text-navy leading-tight">
-              Certificación Oficial con Validación Digital
+              Innovación y Desarrollo Académico en Salud
             </h2>
             <p className="text-sm sm:text-base text-ink-soft leading-relaxed">
-              Sabemos que tu tiempo y esfuerzo merecen un respaldo tangible. En FORMASALUD todos nuestros programas cuentan con acreditación formal para impulsar tu carrera médica.
+              FORMASALUD ofrece programas especializados para profesionales de la salud, orientados al fortalecimiento de competencias clínicas, éticas, administrativas y tecnológicas.
             </p>
 
             <div className="space-y-4 pt-2">
@@ -55,9 +54,15 @@ export function CertificateSection() {
             </div>
           </div>
 
-          {/* Right Column Certificate Mock Preview */}
-          <div className="lg:col-span-7">
-            <CertificatePreview />
+          {/* Columna Derecha: Logo Formasalud (Agrandado) */}
+          <div className="lg:col-span-7 flex justify-center">
+            <div className="w-full max-w-xl rounded-2xl bg-slate-900 border border-line shadow-xl flex items-center justify-center p-4 overflow-hidden">
+              <img
+                src="/images/logo.png"
+                alt="Logo Formasalud"
+                className="w-full max-w-md h-auto object-contain hover:scale-105 transition-transform duration-300"
+              />
+            </div>
           </div>
         </div>
       </div>

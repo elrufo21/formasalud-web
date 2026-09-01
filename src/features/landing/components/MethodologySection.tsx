@@ -5,32 +5,32 @@ export function MethodologySection() {
   const items = [
     {
       num: "01",
-      title: "Docentes Especialistas y Activos",
-      desc: "Nuestros ponentes son especialistas con amplio recorrido en hospitales públicos y clínicas privadas del Perú.",
+      title: "Casos Clínicos Reales y Simulación",
+      desc: "Aprendizaje basado en la resolución de casos clínicos reales, metodología teórico-práctica y simulación clínica.",
     },
     {
       num: "02",
-      title: "Casos Clínicos Basados en Evidencia",
-      desc: "Enfoque 100% práctico orientado a la resolución de dilemas y protocolos de atención real.",
+      title: "Docentes Especialistas",
+      desc: "Plana docente integrada por especialistas con amplia experiencia profesional y docente en el sector salud.",
     },
     {
       num: "03",
-      title: "Plataforma Virtual 24/7",
-      desc: "Acceso inmediato a ponencias grabadas en HD, lecturas seleccionadas y material descargable.",
+      title: "Evaluación Continua y Acompañamiento",
+      desc: "Evaluación continua con retroalimentación permanente y acompañamiento durante todo el proceso de aprendizaje.",
     },
     {
       num: "04",
-      title: "Certificación con Código QR",
-      desc: "Verificación digital de tus horas lectivas respaldadas formalmente por el GRUPO PAUCAR PERÚ S.A.C.",
+      title: "Material Académico Actualizado",
+      desc: "Acceso a material académico digital actualizado y programas basados en evidencia científica.",
     },
   ];
 
   return (
     <section className="band-navy text-white py-20">
       <div className="wrap">
-        <Eyebrow onDark>Metodología y Modelo Académico</Eyebrow>
+        <Eyebrow onDark>Nuestra Metodología</Eyebrow>
         <h2 className="!text-white text-3xl md:text-4xl font-serif mt-4 max-w-xl">
-          Diseñado para el profesional en ejercicio
+          Orientada al aprendizaje significativo
         </h2>
 
         <div className="num-list grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-6 mt-8">
@@ -43,9 +43,9 @@ export function MethodologySection() {
                 {item.num}
               </b>
               <div>
-                <h4 className="!text-white font-serif text-lg font-medium">
+                <h3 className="!text-white font-serif text-lg font-medium">
                   {item.title}
-                </h4>
+                </h3>
                 <p className="!text-white/80 text-sm mt-2 leading-relaxed">
                   {item.desc}
                 </p>

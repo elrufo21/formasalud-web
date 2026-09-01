@@ -6,21 +6,21 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 const TESTIMONIALS = [
   {
     quote:
-      "La calidad académica de las ponencias y la practicidad de los casos clínicos me permitieron aplicar de inmediato nuevos protocolos en el área de cuidados intensivos.",
-    author: "Lic. Maritza Huamán Cárdenas",
-    role: "Enfermera Especialista en UCI — Lima",
+      "La capacitación recibida en FORMASALUD fortaleció significativamente mis competencias profesionales, permitiéndome optimizar mi desempeño y brindar una atención más segura y de mayor calidad a mis pacientes.",
+    author: "Participante FORMASALUD",
+    role: "Programa de Capacitación Profesional",
   },
   {
     quote:
-      "El programa en Gestión de Servicios me dio las herramientas precisas para liderar el proceso de acreditación en nuestro centro de salud.",
-    author: "Dr. Luis Alberto Paredes",
-    role: "Director Médico — Arequipa",
+      "La capacitación recibida en FORMASALUD fortaleció significativamente mis competencias profesionales, permitiéndome optimizar mi desempeño y brindar una atención más segura y de mayor calidad a mis pacientes.",
+    author: "Participante FORMASALUD",
+    role: "Programa de Capacitación Profesional",
   },
   {
     quote:
-      "Aprender a incorporar herramientas de IA en el diagnóstico diario fue una experiencia reveladora. Un enfoque futurista y sumamente útil.",
-    author: "Dr. Gonzalo Espinoza",
-    role: "Médico Cirujano — Trujillo",
+      "La capacitación recibida en FORMASALUD fortaleció significativamente mis competencias profesionales, permitiéndome optimizar mi desempeño y brindar una atención más segura y de mayor calidad a mis pacientes.",
+    author: "Participante FORMASALUD",
+    role: "Programa de Capacitación Profesional",
   },
 ];
 
@@ -59,11 +59,9 @@ export function TestimonialsSection() {
             <button
               key={i}
               onClick={() => setIndex(i)}
-              className={`quote-dot ${
-                i === index ? "active" : ""
-              } h-2 rounded-full transition-all ${
-                i === index ? "w-6 bg-teal" : "w-2 bg-line-strong"
-              }`}
+              className={`quote-dot ${i === index ? "active" : ""
+                } h-2 rounded-full transition-all ${i === index ? "w-6 bg-teal" : "w-2 bg-line-strong"
+                }`}
               aria-label={`Ver testimonio ${i + 1}`}
             />
           ))}
