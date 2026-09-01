@@ -12,8 +12,8 @@ export const metadata: Metadata = {
 export default function CursosPage() {
   return (
     <main className="flex-1">
-      
-      <section className="pt-4 pb-12">
+
+      <section className="!pt-2 pb-12">
         <div className="wrap">
           <CourseFilters />
         </div>

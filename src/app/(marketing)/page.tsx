@@ -67,10 +67,10 @@ export default function HomePage() {
         <div className="wrap flex flex-col md:flex-row justify-between items-center gap-8 relative z-10">
           <div className="space-y-2 text-center md:text-left">
             <Eyebrow onDark>Inscripciones Abiertas · Ciclo 2026</Eyebrow>
-            <h2 className="text-white text-2xl sm:text-4xl font-serif max-w-xl font-bold leading-tight">
+            <h2 className="!text-white text-2xl sm:text-4xl font-serif max-w-xl font-bold leading-tight">
               Potencia tu perfil profesional con formación médica de vanguardia
             </h2>
-            <p className="text-white/80 text-sm max-w-lg font-sans pt-1">
+            <p className="!text-white text-sm max-w-lg font-sans pt-1">
               Comunícate con un asesor académico y recibe el temario detallado, facilidades de pago y requisitos de matrícula.
             </p>
           </div>
@@ -80,9 +80,9 @@ export default function HomePage() {
               href="https://wa.me/51999999999?text=Hola%20FORMASALUD,%20quisiera%20asesor%C3%ADa%20para%20matricularme%20en%20uno%20de%20los%20programas%202026."
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-gold text-navyink !py-4 !px-8 font-bold text-base shadow-xl w-full sm:w-auto justify-center"
+              className="!bg-white !text-slate-900 hover:!bg-amber-300 transition-colors duration-200 !py-4 !px-8 font-bold text-base shadow-xl w-full sm:w-auto justify-center flex items-center gap-2"
             >
-              Matricularme por WhatsApp <span className="arrow">→</span>
+              <span>Matricularme por WhatsApp</span> <span className="arrow">→</span>
             </a>
           </div>
         </div>

@@ -4,8 +4,9 @@ import { Seal } from "@/components/ui/Seal";
 
 export function HeroSection() {
   return (
-    <section className="hero reg-frame texture-dark bg-navyink text-white py-0 relative overflow-hidden">
-      <div className="hero-inner pt-14 sm:pt-20 px-5 md:px-8 max-w-[1400px] mx-auto relative">
+    <section className="hero reg-frame texture-dark bg-navyink text-white relative overflow-hidden !pt-0">
+      <div className="hero-inner !pt-2 sm:!pt-4 px-5 md:px-8 max-w-[1400px] mx-auto relative">
+
 
 
         <div className="hero-top-row flex flex-col lg:flex-row justify-between items-stretch gap-8 lg:gap-12 pb-10">
