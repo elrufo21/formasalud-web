@@ -91,8 +91,8 @@ export function InstitutionalFicha() {
         </div>
       </section>
 
-      {/* Mission & Vision */}
-      <section className="band py-20">
+      {/* 2. Espacio superior reducido antes de Misión y Visión (elimina el hueco en blanco previo a la franja gris) */}
+      <section className="band pt-4 pb-14">
         <div className="wrap">
           <Eyebrow>Propósito institucional</Eyebrow>
           <h2 className="text-3xl md:text-4xl font-serif text-navy mt-4">
