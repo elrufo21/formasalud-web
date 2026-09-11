@@ -16,11 +16,12 @@ const loginSchema = z.object({
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
+type LoginRole = LoginFormData["role"];
 
 export function LoginForm() {
   const router = useRouter();
   const { login, demoLogin } = useAuthStore();
-  const [role, setRole] = useState<Role>("admin");
+  const [role, setRole] = useState<LoginRole>("admin");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -32,13 +33,16 @@ export function LoginForm() {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: role === "admin" ? "admin@formasalud.pe" : "maritza.huaman@formasalud.pe",
+      email:
+        role === "admin"
+          ? "admin@formasalud.pe"
+          : "maritza.huaman@formasalud.pe",
       password: "password123",
       role: "admin",
     },
   });
 
-  const handleRoleChange = (newRole: Role) => {
+  const handleRoleChange = (newRole: LoginRole) => {
     setRole(newRole);
     setValue("role", newRole);
     if (newRole === "admin") {
@@ -52,7 +56,7 @@ export function LoginForm() {
     setLoading(true);
     setError(null);
     try {
-      const user = await login(data.email, data.role);
+      const user = await login(data.email, data.password);
       if (user.role === "admin") {
         router.push("/admin");
       } else {
@@ -78,7 +82,9 @@ export function LoginForm() {
     <div className="w-full max-w-md mx-auto bg-white rounded-2xl border border-line shadow-xl p-6 sm:p-8">
       {/* Header */}
       <div className="text-center space-y-1 pb-6 border-b border-line">
-        <h2 className="font-serif text-2xl font-bold text-navy">Iniciar Sesión</h2>
+        <h2 className="font-serif text-2xl font-bold text-navy">
+          Iniciar Sesión
+        </h2>
         <p className="text-xs text-ink-soft">
           Ingresa al Aula Virtual o al Panel Administrativo
         </p>
@@ -145,7 +151,9 @@ export function LoginForm() {
             <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
           ) : (
             <>
-              <span>Acceder como {role === "admin" ? "Administrador" : "Alumno"}</span>
+              <span>
+                Acceder como {role === "admin" ? "Administrador" : "Alumno"}
+              </span>
               <ArrowRight className="w-4 h-4" />
             </>
           )}

@@ -6,31 +6,27 @@ export function HeroSection() {
   return (
     <section className="hero reg-frame texture-dark bg-navyink text-white relative overflow-hidden !pt-0">
       <div className="hero-inner !pt-2 sm:!pt-4 px-5 md:px-8 max-w-[1400px] mx-auto relative">
-
-
-
         <div className="hero-top-row flex flex-col lg:flex-row justify-between items-stretch gap-8 lg:gap-12 pb-10">
           <div className="hero-kicker flex flex-col gap-5 max-w-[680px] flex-1">
-            {/* Top Tag */}
-            <div className="flex flex-wrap items-center gap-2 self-start">
+            {/* Top Tag - Única y limpia sin repetir RUC */}
+            <div className="flex items-center gap-2 self-start">
               <div className="edition-tag">
                 <span className="dot" />
                 Programa Académico · Edición 2026
               </div>
-              <span className="text-[11px] font-mono uppercase tracking-wider text-teal bg-tealtint/10 border border-teal/30 px-3 py-1 rounded-full hidden sm:inline-block">
-                🎓 Certificación con respaldo RUC 20613837613
-              </span>
             </div>
 
-            {/* Main Headline */}
-            <h1 className="text-3xl sm:text-5xl lg:text-[54px] font-serif leading-[1.1] tracking-tight mt-1"
-              style={{ color: '#ffffff' }}>
-              Formación Médica Continua & Ponencias de <em style={{ color: '#ffffff', fontStyle: 'italic' }}>Alto Nivel</em>
+            {/* Main Headline - Estructura fluida y legible */}
+            <h1
+              className="text-3xl sm:text-4xl lg:text-5xl font-serif leading-[1.15] tracking-tight mt-1 max-w-[620px]"
+              style={{ color: '#ffffff' }}
+            >
+              Capacitación Médica Continua & Especialización de <em style={{ color: '#ffffff', fontStyle: 'italic' }}>Alto Nivel</em>
             </h1>
 
             {/* Subtitle */}
             <p className="hero-sub text-white/75 text-sm sm:text-base md:text-lg max-w-[540px] leading-relaxed">
-              Capacítate con especialistas en ejercicio clínico activo de los principales hospitales del Perú. Diplomados, cursos y talleres hands-on orientados a la práctica médica real.
+              Empoderamos a los profesionales de la salud mediante diplomados, talleres y programas orientados al fortalecimiento de competencias clínicas, asistenciales, administrativas y tecnológicas.
             </p>
 
             {/* CTAs */}
@@ -46,13 +42,13 @@ export function HeroSection() {
             {/* Micro Trust Indicators */}
             <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-white/60 pt-2">
               <span className="flex items-center gap-1.5">
-                <span className="text-gold font-bold">✓</span> Horas lectivas acreditadas
+                <span className="text-gold font-bold">✓</span> Evidencia Científica y Práctica
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="text-gold font-bold">✓</span> Aula Virtual HD 24/7
+                <span className="text-gold font-bold">✓</span> Modalidad Flexible
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="text-gold font-bold">✓</span> Validación con código QR
+                <span className="text-gold font-bold">✓</span> Acompañamiento Continuo
               </span>
             </div>
           </div>
@@ -74,11 +70,11 @@ export function HeroSection() {
                   FS
                 </div>
                 <span className="font-mono text-xs uppercase tracking-widest font-semibold">
-                  FORMASALUD 2026
+                  FORMASALUD
                 </span>
               </div>
               <span className="font-mono text-[10px] text-gold bg-gold/10 px-2 py-0.5 rounded uppercase font-bold">
-                En vivo & Online
+                Lima – Perú
               </span>
             </div>
 
@@ -107,7 +103,7 @@ export function HeroSection() {
             {/* Bottom Tag */}
             <div className="absolute bottom-4 left-4 right-4 bg-navyink/90 backdrop-blur-md p-3.5 rounded-xl border border-white/15 flex items-center justify-between text-xs font-mono">
               <span className="text-white/80">Plataforma Virtual</span>
-              <span className="text-gold font-bold">Próximamente Aula Virtual</span>
+              <span className="text-gold font-bold">Acceso 24/7</span>
             </div>
           </div>
         </div>
@@ -129,27 +125,27 @@ export function HeroSection() {
         {/* Stats Strip */}
         <div className="hero-stats border-t border-white/15 grid grid-cols-2 md:grid-cols-4">
           <div className="py-6 border-r border-b md:border-b-0 border-white/15 pr-4">
-            <b className="text-white font-serif text-2xl sm:text-3xl font-bold">+1,200</b>
+            <b className="text-white font-serif text-2xl sm:text-3xl font-bold">100%</b>
             <span className="font-mono text-[10px] sm:text-[10.5px] text-white/50 tracking-widest uppercase block mt-1">
-              Profesionales capacitados
+              Basado en Evidencia
             </span>
           </div>
           <div className="py-6 border-r-0 md:border-r border-b md:border-b-0 border-white/15 px-4">
-            <b className="text-white font-serif text-2xl sm:text-3xl font-bold">100%</b>
+            <b className="text-white font-serif text-2xl sm:text-3xl font-bold">3</b>
             <span className="font-mono text-[10px] sm:text-[10.5px] text-white/50 tracking-widest uppercase block mt-1">
-              Docentes Especialistas
+              Modalidades de Estudio
             </span>
           </div>
           <div className="py-6 border-r border-white/15 pr-4 md:px-4">
-            <b className="text-white font-serif text-2xl sm:text-3xl font-bold">05</b>
+            <b className="text-white font-serif text-2xl sm:text-3xl font-bold">08+</b>
             <span className="font-mono text-[10px] sm:text-[10.5px] text-white/50 tracking-widest uppercase block mt-1">
               Líneas Académicas
             </span>
           </div>
           <div className="py-6 pl-4">
-            <b className="text-white font-serif text-2xl sm:text-3xl font-bold">RUC 2061</b>
+            <b className="text-white font-serif text-2xl sm:text-3xl font-bold">20613837613</b>
             <span className="font-mono text-[10px] sm:text-[10.5px] text-white/50 tracking-widest uppercase block mt-1">
-              Respaldo Grupo Paucar
+              RUC Grupo Paucar Perú
             </span>
           </div>
         </div>

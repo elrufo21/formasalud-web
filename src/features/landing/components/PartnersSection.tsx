@@ -7,16 +7,15 @@ export function PartnersSection() {
     <section className="py-20 bg-bg-alt border-t border-line">
       <div className="wrap">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <Eyebrow className="justify-center">Respaldo & Colaboración</Eyebrow>
+          <Eyebrow className="justify-center">Convenios Institucionales</Eyebrow>
           <h2 className="text-3xl sm:text-4xl font-serif text-navy mt-3">
-            Nuestros Colaboradores y Alianzas
+            Convenio Marco de Cooperación Interinstitucional
           </h2>
           <p className="mt-3 text-sm sm:text-base text-ink-soft leading-relaxed">
-            Trabajamos junto a profesionales de las principales redes hospitalarias y sociedades médicas del país para garantizar formación de máximo rigor científico.
+            FORMASALUD mantiene una red de convenios nacionales e internacionales que fortalecen los programas académicos mediante cooperación, investigación, capacitación y certificación académica.
           </p>
         </div>
 
-        {/* Partners Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {PARTNERS_DATA.map((partner) => (
             <div
@@ -32,9 +31,9 @@ export function PartnersSection() {
                     {partner.category}
                   </span>
                 </div>
-                <h4 className="text-base font-serif font-bold text-navy">
+                <h3 className="text-base font-serif font-bold text-navy">
                   {partner.name}
-                </h4>
+                </h3>
                 <p className="mt-2 text-xs text-ink-soft leading-relaxed">
                   {partner.description}
                 </p>
@@ -42,7 +41,7 @@ export function PartnersSection() {
 
               <div className="mt-4 pt-3 border-t border-line flex items-center justify-between text-[11px] font-mono text-ink-soft">
                 <span>Sede: {partner.location}</span>
-                <span className="text-teal font-semibold">✓ Aliado Validado</span>
+                <span className="text-teal font-semibold">✓ Alianza Académica</span>
               </div>
             </div>
           ))}

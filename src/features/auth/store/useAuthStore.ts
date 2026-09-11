@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { api, User } from "@/lib/api";
+import { api, ApiError } from "@/lib/api";
 
-export type Role = "admin" | "student";
+export type Role = "admin" | "student" | "teacher";
 
 export interface AuthUser {
   user_id: number;
@@ -12,6 +12,7 @@ export interface AuthUser {
   document_type?: string;
   document_number?: string;
   phone?: string;
+  roles: Role[];
   role: Role;
 }
 
@@ -19,7 +20,7 @@ interface AuthState {
   user: AuthUser | null;
   role: Role | null;
   isAuthenticated: boolean;
-  login: (email: string, role?: Role) => Promise<AuthUser>;
+  login: (email: string, password: string) => Promise<AuthUser>;
   registerStudent: (data: {
     name: string;
     last_name: string;
@@ -40,44 +41,46 @@ export const useAuthStore = create<AuthState>()(
       role: null,
       isAuthenticated: false,
 
-      login: async (email: string, desiredRole: Role = "student") => {
-        try {
-          const users = await api.getUsers();
-          const found = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
+      login: async (email: string, password: string) => {
+        const response = await api.login(email, password);
+        const value = isRecord(response.user) ? response.user : response;
 
-          if (found) {
-            const userRole: Role =
-              found.roles?.includes("admin") || desiredRole === "admin" ? "admin" : "student";
-            const authUser: AuthUser = {
-              user_id: found.user_id,
-              name: found.name,
-              last_name: found.last_name,
-              email: found.email,
-              document_type: found.document_type || "dni",
-              document_number: found.document_number || "",
-              phone: found.phone || "",
-              role: userRole,
-            };
-
-            set({ user: authUser, role: userRole, isAuthenticated: true });
-            return authUser;
-          }
-        } catch {
-          // Si el backend no está corriendo o no se encuentra, usar fallback
+        if (
+          !isRecord(value) ||
+          typeof value.user_id !== "number" ||
+          typeof value.name !== "string" ||
+          typeof value.last_name !== "string" ||
+          typeof value.email !== "string"
+        ) {
+          throw new ApiError(
+            "El servidor devolvió un usuario inválido",
+            200,
+            "/auth/login",
+            response,
+            [{ code: "INVALID_LOGIN_RESPONSE", message: "No se pudo iniciar la sesión" }],
+          );
         }
 
-        // Fallback demo user
-        const fallbackUser: AuthUser = {
-          user_id: desiredRole === "admin" ? 99 : 1,
-          name: desiredRole === "admin" ? "Administrador" : "Maritza",
-          last_name: desiredRole === "admin" ? "FormaSalud" : "Huamán Cárdenas",
-          email: email,
-          document_number: desiredRole === "admin" ? "00000000" : "47829104",
-          role: desiredRole,
+        const roles: Role[] = Array.isArray(value.roles)
+          ? value.roles.filter(isRole)
+          : isRole(value.role)
+            ? [value.role]
+            : ["student"];
+        const role: Role = roles.includes("admin") ? "admin" : (roles[0] ?? "student");
+        const authUser: AuthUser = {
+          user_id: value.user_id,
+          name: value.name,
+          last_name: value.last_name,
+          email: value.email,
+          document_type: typeof value.document_type === "string" ? value.document_type : undefined,
+          document_number: typeof value.document_number === "string" ? value.document_number : undefined,
+          phone: typeof value.phone === "string" ? value.phone : undefined,
+          roles,
+          role,
         };
 
-        set({ user: fallbackUser, role: desiredRole, isAuthenticated: true });
-        return fallbackUser;
+        set({ user: authUser, role, isAuthenticated: true });
+        return authUser;
       },
 
       registerStudent: async (data) => {
@@ -94,6 +97,7 @@ export const useAuthStore = create<AuthState>()(
           document_type: created.document_type || "dni",
           document_number: created.document_number || "",
           phone: created.phone || "",
+          roles: ["student"],
           role: "student",
         };
 
@@ -110,6 +114,7 @@ export const useAuthStore = create<AuthState>()(
               last_name: "Académica",
               email: "admin@formasalud.pe",
               document_number: "20613837613",
+              roles: ["admin"],
               role: "admin",
             },
             role: "admin",
@@ -124,6 +129,7 @@ export const useAuthStore = create<AuthState>()(
               email: "maritza.huaman@formasalud.pe",
               document_number: "47829104",
               phone: "987654321",
+              roles: ["student"],
               role: "student",
             },
             role: "student",
@@ -138,6 +144,14 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "formasalud_auth_storage",
-    }
-  )
+    },
+  ),
 );
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === "object";
+}
+
+function isRole(value: unknown): value is Role {
+  return value === "admin" || value === "student" || value === "teacher";
+}

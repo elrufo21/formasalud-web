@@ -1,27 +1,109 @@
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+
+export interface ApiErrorDetail {
+  code: string;
+  message: string;
+}
+
+export interface ApiResponse<T> {
+  status: number;
+  message: string;
+  data: T | null;
+  errors: ApiErrorDetail[];
+}
+
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public readonly status: number,
+    public readonly endpoint: string,
+    public readonly data: unknown = null,
+    public readonly errors: ApiErrorDetail[] = [],
+  ) {
+    super(message);
+    this.name = "ApiError";
+  }
+}
+
+function isApiResponse(data: unknown): data is ApiResponse<unknown> {
+  return (
+    !!data &&
+    typeof data === "object" &&
+    "status" in data &&
+    "message" in data &&
+    "data" in data &&
+    "errors" in data &&
+    typeof data.status === "number" &&
+    typeof data.message === "string" &&
+    Array.isArray(data.errors)
+  );
+}
+
+async function getResponseData(response: Response): Promise<unknown> {
+  const contentType = response.headers.get("content-type") || "";
+  if (!contentType.includes("application/json")) {
+    return response.text().catch(() => undefined);
+  }
+
+  return response.json().catch(() => undefined);
+}
 
 async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = `${API_URL}${endpoint}`;
+  let res: Response;
+
   try {
-    const res = await fetch(url, {
+    res = await fetch(url, {
       ...options,
       headers: {
         "Content-Type": "application/json",
         ...options?.headers,
       },
     });
-
-    if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      throw new Error(errorData.message || `Error ${res.status}: ${res.statusText}`);
-    }
-
-    return res.json();
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Error de conexión";
-    console.error(`[API Error] ${endpoint}:`, message);
-    throw err;
+  } catch {
+    const error = new ApiError(
+      "No se pudo conectar con el servidor",
+      0,
+      endpoint,
+      null,
+      [{ code: "NETWORK_ERROR", message: "No se pudo conectar con el servidor" }],
+    );
+    console.error(`[API Error] ${endpoint}:`, error.message);
+    throw error;
   }
+
+  const data = await getResponseData(res);
+  const response = isApiResponse(data) ? data : undefined;
+  if (!res.ok) {
+    const error = new ApiError(
+      response?.message || `Error ${res.status}: ${res.statusText}`,
+      res.status,
+      endpoint,
+      response?.data,
+      response?.errors,
+    );
+    console.error(`[API Error] ${endpoint}:`, error.message);
+    throw error;
+  }
+
+  if (res.status === 204) {
+    return undefined as T;
+  }
+
+  if (!response) {
+    const error = new ApiError(
+      "El servidor devolvió una respuesta inválida",
+      res.status,
+      endpoint,
+      data,
+      [{ code: "INVALID_RESPONSE", message: "La respuesta no sigue el contrato de la API" }],
+    );
+    console.error(`[API Error] ${endpoint}:`, error.message);
+    throw error;
+  }
+
+  return response.data as T;
 }
 
 export interface User {
@@ -115,7 +197,8 @@ export const api = {
   // Usuarios
   getUsers: () => request<User[]>("/user"),
   getUser: (id: number) => request<User>(`/user/${id}`),
-  getUserCombo: () => request<{ value: number; label: string }[]>("/user/combo"),
+  getUserCombo: () =>
+    request<{ value: number; label: string }[]>("/user/combo"),
   createUser: (data: CreateUserData) =>
     request<User>("/user", {
       method: "POST",
@@ -133,8 +216,10 @@ export const api = {
 
   // Cursos
   getCourses: () => request<Course[]>("/course"),
-  getCourseCombo: () => request<{ value: number; label: string }[]>("/course/combo"),
-  getCourse: (idOrSlug: string | number) => request<Course>(`/course/${idOrSlug}`),
+  getCourseCombo: () =>
+    request<{ value: number; label: string }[]>("/course/combo"),
+  getCourse: (idOrSlug: string | number) =>
+    request<Course>(`/course/${idOrSlug}`),
   createCourse: (data: CreateCourseData) =>
     request<Course>("/course", {
       method: "POST",
@@ -143,13 +228,22 @@ export const api = {
 
   // Certificados
   getCertificates: () => request<Certificate[]>("/certificate"),
-  getCertificate: (idOrCode: string | number) => request<Certificate>(`/certificate/${idOrCode}`),
-  verifyCertificate: (code: string) => request<any>(`/certificate/verify/${code}`),
+  getCertificate: (idOrCode: string | number) =>
+    request<Certificate>(`/certificate/${idOrCode}`),
+  verifyCertificate: (code: string) =>
+    request<any>(`/certificate/verify/${code}`),
   checkEligibility: (studentId: number, courseId: number) =>
     request<any>(`/certificate/eligibility/${studentId}/${courseId}`),
   generateCertificate: (data: GenerateCertificateData) =>
     request<Certificate>("/certificate/generate", {
       method: "POST",
       body: JSON.stringify(data),
+    }),
+
+  // Autenticación
+  login: (email: string, password: string) =>
+    request<any>("/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
     }),
 };
