@@ -1,5 +1,8 @@
+"use client";
+
 import React from "react";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import { Carousel } from "@/components/ui/carousel/Carousel";
 import { PARTNERS_DATA } from "../data/partners";
 
 export function PartnersSection() {
@@ -16,11 +19,15 @@ export function PartnersSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Carousel
+          slideClassName="flex-[0_0_88%] xs:flex-[0_0_80%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%]"
+          showCounter
+          className="px-1"
+        >
           {PARTNERS_DATA.map((partner) => (
             <div
               key={partner.id}
-              className="p-6 rounded-2xl bg-white border border-line shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between"
+              className="h-full p-6 rounded-2xl bg-white border border-line shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
@@ -45,7 +52,7 @@ export function PartnersSection() {
               </div>
             </div>
           ))}
-        </div>
+        </Carousel>
       </div>
     </section>
   );
