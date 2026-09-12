@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { COURSES_DATA } from "../data/courses";
 import { CourseCard } from "./CourseCard";
+import { Carousel } from "@/components/ui/carousel/Carousel";
 
 const TABS = [
   { id: "all", label: "Todos los programas" },
@@ -55,12 +56,18 @@ export function CourseFilters() {
         })}
       </div>
 
-      {/* Courses Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-        {filteredCourses.map((course) => (
-          <CourseCard key={course.id} course={course} />
-        ))}
-      </div>
+      {/* Courses Carousel - una sola fila con scroll/drag y flechas de navegación */}
+      {filteredCourses.length > 0 && (
+        <Carousel
+          key={activeTab}
+          slideClassName="flex-[0_0_88%] xs:flex-[0_0_80%] sm:flex-[0_0_55%] lg:flex-[0_0_33.333%]"
+          className="px-1"
+        >
+          {filteredCourses.map((course) => (
+            <CourseCard key={course.id} course={course} />
+          ))}
+        </Carousel>
+      )}
 
       {filteredCourses.length === 0 && (
         <div className="py-16 text-center text-ink-soft font-serif bg-bg-alt rounded-2xl border border-line">
