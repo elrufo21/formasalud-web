@@ -12,7 +12,7 @@ export function Header() {
   const links = [
     { href: "/", label: "Inicio", num: "01" },
     { href: "/cursos", label: "Cursos y Programas", num: "02" },
-    { href: "/quienes-somos", label: "Institucional", num: "03" },
+    { href: "/quienes-somos", label: "Quiénes somos", num: "03" },
     { href: "/contacto", label: "Contacto", num: "04" },
   ];
 
@@ -64,16 +64,14 @@ export function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`text-[13px] font-medium py-2 px-3 flex items-center gap-1.5 transition-colors rounded-md ${
-                    isActive
-                      ? "text-navy font-semibold bg-bg-alt"
-                      : "text-ink-soft hover:text-navy hover:bg-bg-alt/60"
-                  }`}
+                  className={`text-[13px] font-medium py-2 px-3 flex items-center gap-1.5 transition-colors rounded-md ${isActive
+                    ? "text-navy font-semibold bg-bg-alt"
+                    : "text-ink-soft hover:text-navy hover:bg-bg-alt/60"
+                    }`}
                 >
                   <span
-                    className={`font-mono text-[9.5px] ${
-                      isActive ? "text-gold font-bold" : "text-line-strong"
-                    }`}
+                    className={`font-mono text-[9.5px] ${isActive ? "text-gold font-bold" : "text-line-strong"
+                      }`}
                   >
                     {link.num}
                   </span>
@@ -134,9 +132,8 @@ export function Header() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className={`py-2 text-sm font-medium flex items-center gap-2.5 rounded-lg px-2 ${
-                  pathname === link.href ? "text-navy font-bold bg-bg-alt" : "text-ink-soft hover:text-navy"
-                }`}
+                className={`py-2 text-sm font-medium flex items-center gap-2.5 rounded-lg px-2 ${pathname === link.href ? "text-navy font-bold bg-bg-alt" : "text-ink-soft hover:text-navy"
+                  }`}
               >
                 <span className="font-mono text-xs text-gold font-bold">{link.num}</span>
                 {link.label}
