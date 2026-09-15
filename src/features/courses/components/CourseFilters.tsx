@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
-import { COURSES_DATA } from "../data/courses";
+import React, { useMemo, useState } from "react";
+import { COURSES_DATA, Course } from "../data/courses";
 import { CourseCard } from "./CourseCard";
-import { Carousel } from "@/components/ui/carousel/Carousel";
+import { CourseDetailModal } from "./CourseDetailModal";
 
 const TABS = [
   { id: "all", label: "Todos los programas" },
@@ -16,16 +16,29 @@ const TABS = [
 
 export function CourseFilters() {
   const [activeTab, setActiveTab] = useState("all");
+  const [search, setSearch] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
 
-  const filteredCourses =
-    activeTab === "all"
-      ? COURSES_DATA
-      : COURSES_DATA.filter((c) => c.category === activeTab);
+  const normalize = (value: string) =>
+    value
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+  const filteredCourses = useMemo(() => {
+    const byCategory =
+      activeTab === "all" ? COURSES_DATA : COURSES_DATA.filter((c) => c.category === activeTab);
+
+    const query = normalize(search.trim());
+    if (!query) return byCategory;
+
+    return byCategory.filter((c) => normalize(c.title).includes(query));
+  }, [activeTab, search]);
 
   return (
     <div>
       {/* Category Tabs Header - Responsive Horizontal Scroll */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 no-scrollbar border-b border-line">
+      <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-6 no-scrollbar border-b border-line">
         {TABS.map((tab) => {
           const isActive = activeTab === tab.id;
           const count =
@@ -56,30 +69,54 @@ export function CourseFilters() {
         })}
       </div>
 
-      {/* Courses Carousel - una sola fila con scroll/drag y flechas de navegación */}
-      {filteredCourses.length > 0 && (
-        <Carousel
-          key={activeTab}
-          slideClassName="flex-[0_0_88%] xs:flex-[0_0_80%] sm:flex-[0_0_55%] lg:flex-[0_0_33.333%]"
-          className="px-1"
+      {/* Buscador por nombre del curso */}
+      <div className="relative mb-8 max-w-md">
+        <svg
+          className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-soft pointer-events-none"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         >
+          <circle cx="11" cy="11" r="7" />
+          <path d="m21 21-4.35-4.35" />
+        </svg>
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Buscar curso por nombre..."
+          className="w-full pl-10 pr-4 py-3 rounded-full border border-line bg-white text-sm text-ink placeholder:text-ink-soft/70 focus:outline-none focus:ring-2 focus:ring-teal/30 focus:border-teal transition-all"
+        />
+      </div>
+
+      {/* Grilla normal de cursos (sin carrusel) */}
+      {filteredCourses.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
           {filteredCourses.map((course) => (
-            <CourseCard key={course.id} course={course} />
+            <CourseCard key={course.id} course={course} onViewDetails={setSelectedCourse} />
           ))}
-        </Carousel>
+        </div>
       )}
 
       {filteredCourses.length === 0 && (
         <div className="py-16 text-center text-ink-soft font-serif bg-bg-alt rounded-2xl border border-line">
-          <p className="text-base">No hay cursos disponibles en esta categoría por el momento.</p>
+          <p className="text-base">No hay cursos disponibles con esos criterios de búsqueda.</p>
           <button
-            onClick={() => setActiveTab("all")}
+            onClick={() => {
+              setActiveTab("all");
+              setSearch("");
+            }}
             className="mt-3 text-sm text-teal font-semibold hover:underline cursor-pointer"
           >
             Ver todos los programas
           </button>
         </div>
       )}
+
+      <CourseDetailModal course={selectedCourse} onClose={() => setSelectedCourse(null)} />
     </div>
   );
 }

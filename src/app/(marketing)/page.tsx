@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link";
 import {
   HeroSection,
   FlyersSection,
@@ -9,7 +8,7 @@ import {
   PartnersSection,
   TestimonialsSection,
 } from "@/features/landing";
-import { CourseFilters } from "@/features/courses/components/CourseFilters";
+import { CourseHomeGrid } from "@/features/courses/components/CourseHomeGrid";
 import { FaqSection } from "@/features/faq/components/FaqSection";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 
@@ -22,22 +21,16 @@ export default function HomePage() {
       {/* 2. Sección Cursos y Programas Académicos con Tabs Interactivos */}
       <section id="cursos" className="pt-4 pb-12 bg-paper">
         <div className="wrap">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
-            <div>
-              <Eyebrow>Oferta Académica 2026</Eyebrow>
-              <h2 className="text-3xl sm:text-4xl font-serif text-navy mt-3">
-                Cursos, Diplomados y Talleres Clínicos
-              </h2>
-              <p className="mt-2.5 text-sm sm:text-base max-w-xl text-ink-soft leading-relaxed">
-                Selecciona la categoría de tu interés. Programas certificados con horas lectivas y docentes especialistas de hospitales de referencia.
-              </p>
-            </div>
-            <Link href="/cursos" className="btn-fine flex-none">
-              Ver catálogo completo
-            </Link>
+          <div className="mb-8">
+            <h2 className="text-3xl sm:text-4xl font-serif text-navy mt-3">
+              Cursos, Diplomados y Talleres Clínicos
+            </h2>
+            <p className="mt-2.5 text-sm sm:text-base max-w-xl text-ink-soft leading-relaxed">
+              Programas certificados con horas lectivas y docentes especialistas de hospitales de referencia.
+            </p>
           </div>
 
-          <CourseFilters />
+          <CourseHomeGrid />
         </div>
       </section>
 
