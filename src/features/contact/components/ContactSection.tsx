@@ -1,13 +1,27 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 
 export function ContactSection() {
   return (
     <section className="pt-4 pb-16 px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden">
 
+      {/* =====================================
+          IMAGEN DE FONDO (Esquina Superior Derecha)
+      ===================================== */}
+      <div className="absolute top-0 right-0 w-full max-w-[650px] h-[350px] pointer-events-none z-0 opacity-90">
+        <Image
+          src="/images/contacto.png"
+          alt="Fondo decorativo contacto"
+          fill
+          className="object-cover object-right-top"
+          priority
+        />
+      </div>
+
       {/* Cabecera */}
-      <div className="max-w-7xl mx-auto relative mb-10">
+      <div className="max-w-7xl mx-auto relative mb-10 z-10">
         <div className="pt-2">
           <div className="flex items-center gap-2 mb-2">
             <span className="w-5 h-[2px] bg-[#d4a373]"></span>
@@ -122,7 +136,7 @@ export function ContactSection() {
             </form>
           </div>
 
-          {/* Tarjeta de Canales (5 columnas) - Contiene el bloque de personas exacto */}
+          {/* Tarjeta de Canales (5 columnas) */}
           <div className="lg:col-span-5 bg-[#f0f7f4] p-8 rounded-2xl border border-[#e1ede8] space-y-6">
 
             <div>
@@ -185,7 +199,7 @@ export function ContactSection() {
 
             </div>
 
-            {/* Bloque inferior interno de la tarjeta con el ícono de personas, textos y guion horizontal */}
+            {/* Bloque inferior interno de la tarjeta */}
             <div className="pt-4 border-t border-[#d8e8e2] flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <div className="text-[#0b5345] shrink-0">
@@ -210,8 +224,8 @@ export function ContactSection() {
 
       </div>
 
-      {/* Franja Inferior Completa (Con el libro abierto y texto largo original) */}
-      <div className="w-full bg-[#f0f7f4] border-t border-b border-[#e1ede8] py-6 px-4 sm:px-8 lg:px-16 mt-8">
+      {/* Franja Inferior Completa */}
+      <div className="w-full bg-[#f0f7f4] border-t border-b border-[#e1ede8] py-6 px-4 sm:px-8 lg:px-16 mt-8 relative z-10">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
 
           <div className="flex items-center gap-4">
