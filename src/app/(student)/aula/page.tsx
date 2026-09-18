@@ -26,7 +26,7 @@ export default function StudentDashboardPage() {
         const myCerts = certs.filter(
           (c) =>
             c.student_id === user?.user_id ||
-            c.student?.email.toLowerCase() === user?.email.toLowerCase() ||
+            c.student?.email?.toLowerCase() === user?.email.toLowerCase() ||
             c.student_name?.toLowerCase().includes(user?.name.toLowerCase() || "")
         );
 

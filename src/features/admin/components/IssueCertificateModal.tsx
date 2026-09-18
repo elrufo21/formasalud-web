@@ -113,8 +113,8 @@ export function IssueCertificateModal({ isOpen, onClose, onSuccess }: IssueCerti
           />
           <Input
             label="Código Manual (Opcional)"
-            placeholder="Ej: FS-2026-9999"
-            helperText="Si lo dejas vacío, se autogenera"
+            placeholder="Ej: REG-0072-2026"
+            helperText="Formato actual: REG-0000-AAAA. Si lo dejas vacío, se autogenera."
             error={errors.certificate_code?.message}
             {...register("certificate_code")}
           />

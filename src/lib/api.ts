@@ -136,6 +136,7 @@ export interface Course {
 }
 
 export interface Certificate {
+  valid?: boolean;
   certificate_id: number;
   certificate_code: string;
   certificate_type: "approval" | "participation";
@@ -148,10 +149,11 @@ export interface Certificate {
   course_title?: string;
   student?: {
     user_id: number;
-    name: string;
+    name?: string;
+    full_name?: string;
     document_type?: string;
     document_number?: string;
-    email: string;
+    email?: string;
   };
   course?: {
     course_id: number;
@@ -231,7 +233,7 @@ export const api = {
   getCertificate: (idOrCode: string | number) =>
     request<Certificate>(`/certificate/${idOrCode}`),
   verifyCertificate: (code: string) =>
-    request<any>(`/certificate/verify/${code}`),
+    request<Certificate | Certificate[]>(`/certificate/verify/${code}`),
   checkEligibility: (studentId: number, courseId: number) =>
     request<any>(`/certificate/eligibility/${studentId}/${courseId}`),
   generateCertificate: (data: GenerateCertificateData) =>

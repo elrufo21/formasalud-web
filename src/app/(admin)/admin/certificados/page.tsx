@@ -1,17 +1,29 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
+import dynamic from "next/dynamic";
 import { ColumnDef } from "@tanstack/react-table";
-import { Award, RefreshCw, QrCode, ExternalLink, CheckCircle } from "lucide-react";
-import { api, Certificate, API_URL } from "@/lib/api";
+import { Award, RefreshCw, QrCode, ExternalLink, CheckCircle, Eye } from "lucide-react";
+import { api, Certificate } from "@/lib/api";
 import { AdminHeader } from "@/features/admin/components/AdminHeader";
 import { DataTable } from "@/components/ui/table/DataTable";
 import { IssueCertificateModal } from "@/features/admin/components/IssueCertificateModal";
+import { mapCertificateToPayload } from "@/features/certificates/utils";
+import { CertificateDownloadButton } from "@/features/certificates/components/CertificateDownloadButton";
+
+const CertificateViewerModal = dynamic(
+  () =>
+    import("@/features/certificates/components/CertificateViewerModal").then(
+      (mod) => mod.CertificateViewerModal
+    ),
+  { ssr: false }
+);
 
 export default function CertificatesAdminPage() {
   const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCert, setSelectedCert] = useState<Certificate | null>(null);
 
   const fetchCertificates = async () => {
     setLoading(true);
@@ -94,17 +106,32 @@ export default function CertificatesAdminPage() {
       },
       {
         id: "actions",
-        header: "Verificación",
+        header: "Acciones / Verificación",
         cell: ({ row }) => (
-          <a
-            href={`${API_URL}/certificate/verify/${row.original.certificate_code}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs font-semibold text-teal hover:text-tealdeep"
-          >
-            <span>Verificar QR</span>
-            <ExternalLink className="w-3 h-3" />
-          </a>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setSelectedCert(row.original)}
+              className="p-1.5 rounded-lg border border-line bg-white hover:bg-bg-alt text-navy transition-colors cursor-pointer"
+              title="Ver Diploma Oficial"
+            >
+              <Eye className="w-3.5 h-3.5 text-navy" />
+            </button>
+            <CertificateDownloadButton
+              data={mapCertificateToPayload(row.original)}
+              label="PDF"
+              variant="secondary"
+              className="py-1 px-2.5 text-[11px]"
+            />
+            <a
+              href={`/verificar/${row.original.certificate_code}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-teal hover:text-tealdeep ml-1"
+            >
+              <span>QR</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          </div>
         ),
       },
     ],
@@ -149,6 +176,12 @@ export default function CertificatesAdminPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSuccess={fetchCertificates}
+      />
+
+      <CertificateViewerModal
+        isOpen={!!selectedCert}
+        onClose={() => setSelectedCert(null)}
+        data={selectedCert ? mapCertificateToPayload(selectedCert) : null}
       />
     </div>
   );
