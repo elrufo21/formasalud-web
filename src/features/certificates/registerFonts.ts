@@ -1,12 +1,40 @@
 import { Font } from "@react-pdf/renderer";
+import fs from "node:fs";
+import path from "node:path";
 
 const GLOBAL_FLAG = "__FMS_PDF_FONTS_REGISTERED__";
 
+function getBaseUrl(): string {
+  if (typeof window !== "undefined") {
+    return window.location.origin;
+  }
+  if (process.env.NEXT_PUBLIC_APP_URL) {
+    return process.env.NEXT_PUBLIC_APP_URL;
+  }
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  return "https://formasalud-web.vercel.app";
+}
+
 const getFontSrc = (fileName: string) => {
   if (typeof window === "undefined") {
-    return `${process.cwd().replace(/\\/g, "/")}/public/fonts/${fileName}`;
+    // Si el archivo existe físicamente en el disco (desarrollo local / standalone)
+    const localPath = path.join(process.cwd(), "public", "fonts", fileName);
+    try {
+      if (fs.existsSync(localPath)) {
+        return localPath.replace(/\\/g, "/");
+      }
+    } catch {
+      // Ignorar y usar URL remota
+    }
   }
-  return `${window.location.origin}/fonts/${fileName}`;
+  // En Vercel Serverless, los archivos de public/ se descargan desde la CDN pública
+  const baseUrl = getBaseUrl();
+  return `${baseUrl}/fonts/${fileName}`;
 };
 
 export function registerFonts() {
@@ -38,25 +66,26 @@ export function registerFonts() {
       ],
     });
 
+    // Fuentes remotas con CDN global de alta disponibilidad
     Font.register({
       family: "GreatVibes",
-      src: "https://fonts.gstatic.com/s/greatvibes/v19/RWmMoKWR9v4ksMfaWd_JN9XLiaQoDmlH.ttf",
+      src: "https://cdn.jsdelivr.net/fontsource/fonts/great-vibes@latest/latin-400-normal.ttf",
     });
 
     Font.register({
       family: "CinzelDeco",
-      src: "https://fonts.gstatic.com/s/cinzeldecorative/v16/daaHSScvJGqLYhG8nNt8KPPswUAPnh7URs4lY0yY.ttf",
+      src: "https://cdn.jsdelivr.net/fontsource/fonts/cinzel-decorative@latest/latin-400-normal.ttf",
     });
 
     Font.register({
       family: "Cinzel",
       fonts: [
         {
-          src: "https://fonts.gstatic.com/s/cinzel/v23/8vIU7ww63mVu7gtR-kwKxNvkNOjw-tbnTYrvDE5ZdqU.ttf",
+          src: "https://cdn.jsdelivr.net/fontsource/fonts/cinzel@latest/latin-400-normal.ttf",
           fontWeight: 400,
         },
         {
-          src: "https://fonts.gstatic.com/s/cinzel/v23/8vIU7ww63mVu7gtR-kwKxNvkNOjw-uDiTYrvDE5ZdqU.ttf",
+          src: "https://cdn.jsdelivr.net/fontsource/fonts/cinzel@latest/latin-700-normal.ttf",
           fontWeight: 700,
         },
       ],
@@ -66,15 +95,15 @@ export function registerFonts() {
       family: "Lato",
       fonts: [
         {
-          src: "https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wWA.ttf",
+          src: "https://cdn.jsdelivr.net/fontsource/fonts/lato@latest/latin-300-normal.ttf",
           fontWeight: 300,
         },
         {
-          src: "https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjxAwXg.ttf",
+          src: "https://cdn.jsdelivr.net/fontsource/fonts/lato@latest/latin-400-normal.ttf",
           fontWeight: 400,
         },
         {
-          src: "https://fonts.gstatic.com/s/lato/v24/S6u9w4BMUTPHh6UVSwaPGQ.ttf",
+          src: "https://cdn.jsdelivr.net/fontsource/fonts/lato@latest/latin-700-normal.ttf",
           fontWeight: 700,
         },
       ],

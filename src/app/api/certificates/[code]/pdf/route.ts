@@ -1,6 +1,7 @@
 import { renderToBuffer } from "@react-pdf/renderer";
 import { readFile, writeFile, unlink, mkdir, stat } from "node:fs/promises";
 import path from "node:path";
+import os from "node:os";
 import { api, Certificate } from "@/lib/api";
 import { CertificatePdfDocument } from "@/features/certificates/CertificatePdfDocument";
 import { mapCertificateToPayload } from "@/features/certificates/utils";
@@ -8,7 +9,8 @@ import { mapCertificateToPayload } from "@/features/certificates/utils";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const CACHE_DIR = process.env.CERTIFICATES_CACHE_DIR || path.join(process.cwd(), "tmp", "certificates_cache");
+// En Vercel Serverless / AWS Lambda, el único directorio con permisos de escritura es /tmp
+const CACHE_DIR = process.env.CERTIFICATES_CACHE_DIR || path.join(os.tmpdir(), "certificates_cache");
 
 async function getCachedFile(filePath: string): Promise<Buffer | null> {
   try {
@@ -22,9 +24,43 @@ async function getCachedFile(filePath: string): Promise<Buffer | null> {
   return null;
 }
 
-async function imageDataUrl(fileName: string) {
-  const file = await readFile(path.join(process.cwd(), "public", "certificates", fileName));
-  return `data:image/png;base64,${file.toString("base64")}`;
+async function imageDataUrl(fileName: string, origin: string): Promise<string> {
+  // 1. Intentar leer desde el disco local
+  const localPath = path.join(process.cwd(), "public", "certificates", fileName);
+  try {
+    const file = await readFile(localPath);
+    return `data:image/png;base64,${file.toString("base64")}`;
+  } catch {
+    // En Vercel Serverless Function los assets están en la CDN pública
+  }
+
+  // 2. Fallback: Descarga desde el origin de la petición (Vercel CDN)
+  try {
+    const publicUrl = `${origin}/certificates/${fileName}`;
+    const res = await fetch(publicUrl);
+    if (res.ok) {
+      const ab = await res.arrayBuffer();
+      const buf = Buffer.from(ab);
+      return `data:image/png;base64,${buf.toString("base64")}`;
+    }
+  } catch (err) {
+    console.warn(`No se pudo cargar la imagen ${fileName} desde ${origin}:`, err);
+  }
+
+  // 3. Fallback de respaldo con dominio directo de Vercel
+  try {
+    const fallbackUrl = `https://formasalud-web.vercel.app/certificates/${fileName}`;
+    const res = await fetch(fallbackUrl);
+    if (res.ok) {
+      const ab = await res.arrayBuffer();
+      const buf = Buffer.from(ab);
+      return `data:image/png;base64,${buf.toString("base64")}`;
+    }
+  } catch (err) {
+    console.error(`Fallo definitivo al cargar la imagen ${fileName}:`, err);
+  }
+
+  throw new Error(`No se pudo encontrar la imagen de plantilla: ${fileName}`);
 }
 
 export async function GET(
@@ -48,7 +84,6 @@ export async function GET(
     const cachedFilePath = path.join(CACHE_DIR, `${code.replace(/[^a-zA-Z0-9-]/g, "_")}.pdf`);
 
     if (certificate.valid === false || certificate.status === "revoked") {
-      // Eliminar de caché si estaba almacenado
       try {
         await unlink(cachedFilePath);
       } catch {
@@ -61,7 +96,7 @@ export async function GET(
     const download = requestUrl.searchParams.get("download") === "1";
     const forceRefresh = requestUrl.searchParams.get("refresh") === "1" || requestUrl.searchParams.get("nocache") === "1";
 
-    // 1. Verificar si ya existe en caché en disco
+    // 1. Verificar si ya existe en caché
     if (!forceRefresh) {
       const cachedBuffer = await getCachedFile(cachedFilePath);
       if (cachedBuffer) {
@@ -76,15 +111,16 @@ export async function GET(
       }
     }
 
-    // 2. Si no está en caché o se solicitó refresco, compilar on-the-fly
+    // 2. Compilar PDF cargando imágenes con fallback a Vercel CDN
+    const origin = requestUrl.origin;
     const [logoLeftUrl, logoRightUrl, sealUrl, signatureLeftUrl, signatureRightUrl, backgroundUrl] =
       await Promise.all([
-        imageDataUrl("logofms.png"),
-        imageDataUrl("ausp.png"),
-        imageDataUrl("cello.png"),
-        imageDataUrl("fra.png"),
-        imageDataUrl("firmaMiguel.png"),
-        imageDataUrl("coche-paro-hospital.png"),
+        imageDataUrl("logofms.png", origin),
+        imageDataUrl("ausp.png", origin),
+        imageDataUrl("cello.png", origin),
+        imageDataUrl("fra.png", origin),
+        imageDataUrl("firmaMiguel.png", origin),
+        imageDataUrl("coche-paro-hospital.png", origin),
       ]);
 
     const data = mapCertificateToPayload(certificate, {
@@ -99,7 +135,7 @@ export async function GET(
     const document = CertificatePdfDocument({ data });
     const buffer = await renderToBuffer(document);
 
-    // 3. Guardar en disco en segundo plano para próximas consultas
+    // 3. Guardar en disco en segundo plano en /tmp para próximas consultas
     try {
       await mkdir(CACHE_DIR, { recursive: true });
       await writeFile(cachedFilePath, buffer);
