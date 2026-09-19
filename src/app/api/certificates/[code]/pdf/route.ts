@@ -117,8 +117,12 @@ export async function GET(
     });
   } catch (error) {
     console.error(`No se pudo generar el certificado ${code}:`, error);
+    const detail = error instanceof Error ? error.message : String(error);
     return Response.json(
-      { message: "No se pudo generar el certificado" },
+      {
+        message: "No se pudo generar el certificado",
+        error: detail,
+      },
       { status: 500 }
     );
   }
