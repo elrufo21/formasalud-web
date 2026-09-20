@@ -12,37 +12,42 @@ type HeroImagePosition = "left" | "right";
 interface AboutHeroProps {
   imagePosition?: HeroImagePosition;
   imageSrc?: string;
-
+  /**
+   * Punto de la foto que queda en el centro del recuadro (object-position).
+   * Sube el % X para mover a la enfermera hacia la izquierda (más al centro),
+   * bájalo para moverla hacia la derecha.
+   */
+  imageFocus?: string;
   eyebrow?: string;
   title?: string;
   highlightedTitle?: string;
   description?: string;
-
   quote?: string;
 }
 
-export default function AboutHero({
-  imagePosition = "left",
-  imageSrc = "/images/quienes-somos-hero.png",
+const SHARP_MASK =
+  "linear-gradient(to right, transparent 0%, #000 24%, #000 76%, transparent 100%)";
+const SOFT_MASK =
+  "linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%)";
 
+export default function AboutHero({
+  imagePosition = "right",
+  imageSrc = "/images/quienes-somos-hero.png",
+  imageFocus = "100% center",
   eyebrow = "QUIÉNES SOMOS",
   title = "Comprometidos con",
   highlightedTitle = "la formación en salud",
-
   description = `Somos un centro de capacitación en salud que impulsa el
   crecimiento profesional de médicos, enfermeros y personal de
   salud, a través de programas actualizados, prácticos y con enfoque
   en la realidad del país.`,
-
   quote = "Profesionales mejor preparados para una sociedad más saludable",
 }: AboutHeroProps) {
   const imageRight = imagePosition === "right";
 
   return (
-    <section className="relative w-full h-[calc(80vh-102px)] min-h-[500px] overflow-hidden bg-[#eef8f8]">
-      {/* =====================================
-          IMAGEN DE FONDO GENERAL CON LÍNEAS
-      ===================================== */}
+    <section className="relative w-full h-[calc(100vh-102px)] min-h-[600px] overflow-hidden bg-[#eef8f8]">
+      {/* IMAGEN DE FONDO GENERAL CON LÍNEAS */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <Image
           src="/images/formacion-conocimientos.png"
@@ -53,78 +58,67 @@ export default function AboutHero({
         />
       </div>
 
-      {/* =====================================
-          IMAGEN — CON DIFUMINADO EN AMBOS LADOS
-      ===================================== */}
+      {/* CONTENEDOR DE LA IMAGEN: centro nítido + bordes borrosos en degradado */}
       <div
-        className="absolute top-0 bottom-0 w-full lg:w-[55%] overflow-hidden z-10"
+        className="absolute top-0 bottom-0 w-full lg:w-[60%] overflow-hidden z-10 pointer-events-none"
         style={
           imageRight
-            ? { right: "max(1.5rem, calc((100vw - 1440px) / 2 + 1rem))" }
-            : { left: "max(1.5rem, calc((100vw - 1440px) / 2 + 1rem))" }
+            ? { right: "calc(max(1.5rem, (100vw - 1440px) / 2 + 1rem) + 4vw)" }
+            : { left: "calc(max(1.5rem, (100vw - 1440px) / 2 + 1rem) + 4vw)" }
         }
       >
-        {/* Imagen */}
-        <div className="absolute inset-0">
-          <div
-            className="absolute inset-0"
-            style={{
-              WebkitMaskImage:
-                "linear-gradient(90deg, transparent 0%, black 34%, black 66%, transparent 100%)",
-              maskImage:
-                "linear-gradient(90deg, transparent 0%, black 34%, black 66%, transparent 100%)",
-            }}
-          >
-            <Image
-              src={imageSrc}
-              alt="Personal médico y de salud de FORMASALUD"
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 55vw"
-              className="object-cover object-center"
-            />
-          </div>
-
-          {/* Velo adicional muy suave — refuerza la fusión con el fondo sin cortes visibles */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                "linear-gradient(90deg, #eef8f8 0%, rgba(238,248,248,0.55) 20%, rgba(238,248,248,0) 42%, rgba(238,248,248,0) 58%, rgba(238,248,248,0.55) 80%, #eef8f8 100%)",
-            }}
+        {/* 1. CAPA BORROSA (debajo): versión liviana, igual se desenfoca */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 z-10"
+          style={{ WebkitMaskImage: SOFT_MASK, maskImage: SOFT_MASK }}
+        >
+          <Image
+            src={imageSrc}
+            alt=""
+            fill
+            sizes="40vw"
+            className="object-cover blur-[16px] scale-110"
+            style={{ objectPosition: imageFocus }}
           />
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(238,248,248,0.5) 0%, rgba(238,248,248,0) 24%, rgba(238,248,248,0) 76%, rgba(238,248,248,0.4) 100%)",
-            }}
+        </div>
+
+        {/* 2. CAPA NÍTIDA (encima): imagen original sin compresión ni redimensionado */}
+        <div
+          className="absolute inset-0 z-20"
+          style={{ WebkitMaskImage: SHARP_MASK, maskImage: SHARP_MASK }}
+        >
+          <Image
+            src={imageSrc}
+            alt="Personal médico y de salud de FORMASALUD"
+            fill
+            priority
+            unoptimized
+            className="object-cover"
+            style={{ objectPosition: imageFocus }}
           />
         </div>
 
         {/* FRASE SUPERIOR */}
         <div
-          className={`absolute top-[65px] z-20 max-w-[215px] ${
-            imageRight
-              ? "right-[35px] lg:right-[42px] text-right"
-              : "left-[35px] lg:left-[42px] text-left"
-          }`}
+          className={`absolute top-[65px] z-30 max-w-[215px] ${imageRight
+            ? "right-[20px] lg:right-[35px] text-right"
+            : "left-[20px] lg:left-[35px] text-left"
+            }`}
         >
           <p className="font-serif italic text-[12px] sm:text-[13px] leading-[1.45] text-[#536b74]">
             &ldquo;{quote}&rdquo;
           </p>
           <div
-            className={`w-[30px] h-[2px] bg-[#e7a51c] mt-3 ${
-              imageRight ? "ml-auto" : "mr-auto"
-            }`}
+            className={`w-[30px] h-[2px] bg-[#e7a51c] mt-3 ${imageRight ? "ml-auto" : "mr-auto"
+              }`}
           />
         </div>
 
         {/* CRUZ */}
         <div
-          className={`absolute top-[50%] -translate-y-1/2 opacity-[0.18] z-10 ${
-            imageRight ? "right-[35px]" : "left-[35px]"
-          }`}
+          className={`absolute top-[50%] -translate-y-1/2 opacity-[0.18] z-30 ${imageRight ? "right-[25px]" : "left-[25px]"
+            }`}
         >
           <svg
             className="w-[95px] h-[95px] text-[#45aaa2]"
@@ -143,16 +137,14 @@ export default function AboutHero({
 
         {/* TEXTO INFERIOR */}
         <div
-          className={`absolute bottom-[42px] z-20 ${
-            imageRight
-              ? "right-[35px] lg:right-[42px] text-right"
-              : "left-[35px] lg:left-[42px] text-left"
-          }`}
+          className={`absolute bottom-[42px] z-30 ${imageRight
+            ? "right-[20px] lg:right-[35px] text-right"
+            : "left-[20px] lg:left-[35px] text-left"
+            }`}
         >
           <div
-            className={`flex flex-col gap-[2px] ${
-              imageRight ? "items-end" : "items-start"
-            }`}
+            className={`flex flex-col gap-[2px] ${imageRight ? "items-end" : "items-start"
+              }`}
           >
             <span className="font-mono text-[9px] font-bold tracking-[0.25em] text-[#08796e]">
               SALUD
@@ -171,20 +163,17 @@ export default function AboutHero({
         </div>
       </div>
 
-      {/* =====================================
-          CONTENEDOR DE TEXTO
-      ===================================== */}
+      {/* CONTENEDOR DE TEXTO */}
       <div className="relative z-30 w-full h-full max-w-[1440px] mx-auto px-6 lg:px-12 pointer-events-none">
         <div
           className={`flex h-full ${imageRight ? "justify-start" : "justify-end"}`}
         >
           <div
-            className={`flex flex-col justify-center h-full w-full lg:max-w-[41%] pointer-events-auto -translate-y-4 ${
-              imageRight ? "pr-0 lg:pr-8" : "pl-0 lg:pl-8"
-            }`}
+            className={`flex flex-col justify-center h-full w-full lg:max-w-[42%] pointer-events-auto -translate-y-4 ${imageRight ? "pr-0 lg:pr-4" : "pl-0 lg:pl-4"
+              }`}
           >
             {/* Etiqueta */}
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-4">
               <span className="w-[30px] h-[2px] bg-[#e7a51c]" />
               <span className="font-mono text-[10px] font-bold tracking-[0.25em] text-[#0b2039]">
                 {eyebrow}
@@ -193,7 +182,7 @@ export default function AboutHero({
 
             {/* Título */}
             <h1
-              className={`${montserrat.className} font-extrabold leading-[1.22] tracking-[-0.02em] text-[#071b35] whitespace-nowrap text-[26px] sm:text-[30px] lg:text-[32px] xl:text-[50px]`}
+              className={`${montserrat.className} font-extrabold leading-[1.22] tracking-[-0.02em] text-[#071b35] whitespace-nowrap text-[26px] sm:text-[30px] lg:text-[32px] xl:text-[46px]`}
             >
               {title}
               <br />
@@ -201,12 +190,12 @@ export default function AboutHero({
             </h1>
 
             {/* Descripción */}
-            <p className="mt-5 max-w-[500px] text-[15px] sm:text-[16px] leading-[1.6] text-[#536772]">
+            <p className="mt-4 max-w-[460px] text-[15px] sm:text-[16px] leading-[1.6] text-[#536772]">
               {description}
             </p>
 
             {/* CARACTERÍSTICAS */}
-            <div className="mt-7 border-t border-[#d2e0e1] pt-5">
+            <div className="mt-6 border-t border-[#d2e0e1] pt-4">
               <div className="flex items-center flex-wrap gap-y-4">
                 {/* FORMACIÓN */}
                 <div className="flex items-center flex-1 min-w-[110px]">
@@ -308,7 +297,7 @@ export default function AboutHero({
             </div>
 
             {/* BOTÓN */}
-            <div className="mt-7">
+            <div className="mt-6">
               <a
                 href="#contacto"
                 className="inline-flex items-center gap-3 bg-[#08796e] hover:bg-[#06675e] text-white text-[14px] font-semibold px-6 py-3.5 rounded-[4px] transition-all duration-200"
@@ -320,6 +309,6 @@ export default function AboutHero({
           </div>
         </div>
       </div>
-    </section>
+    </section >
   );
 }
