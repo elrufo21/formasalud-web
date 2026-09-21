@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { ImageFrame } from "@/components/ui/ImageFrame";
 
 export function HeroSection() {
   const [videoEnded, setVideoEnded] = useState(false);
@@ -122,29 +122,20 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* Columna Derecha: Logo Oficial FORMASALUD revelado tras los 8s del video */}
-          <div className="flex-1 w-full max-w-[280px] sm:max-w-[340px] lg:max-w-[400px] flex items-center justify-center lg:justify-end self-center">
+          {/* Columna Derecha: Flyer del próximo curso, revelado tras los 8s del video */}
+          <div className="flex-1 w-full max-w-[280px] sm:max-w-[320px] lg:max-w-[360px] flex items-center justify-center lg:justify-end self-center">
             <div
-              className={`relative w-[220px] sm:w-[280px] lg:w-[330px] xl:w-[370px] aspect-square transition-all duration-1000 ease-out flex items-center justify-center ${
+              className={`w-[220px] sm:w-[260px] lg:w-[300px] xl:w-[330px] transition-all duration-1000 ease-out ${
                 videoEnded
                   ? "opacity-100 scale-100 translate-y-0"
                   : "opacity-0 scale-90 translate-y-2 pointer-events-none"
               }`}
             >
-              {/* Halo dorado ambiente */}
-              <div className="absolute inset-2 rounded-full bg-gold/20 blur-2xl -z-10 animate-pulse" />
-
-              {/* Logo Oficial en Alta Resolución */}
-              <div className="relative w-full h-full drop-shadow-[0_12px_30px_rgba(0,0,0,0.65)]">
-                <Image
-                  src="/images/logo.png"
-                  alt="Emblema Oficial FORMASALUD"
-                  fill
-                  sizes="(max-width: 640px) 220px, (max-width: 1024px) 280px, 370px"
-                  priority
-                  className="object-contain"
-                />
-              </div>
+              <ImageFrame
+                src="/images/flyers/coche-de-paro-uci-emergencias.jpg"
+                alt="Curso Internacional: Manejo del Coche de Paro en Áreas Críticas UCI y Emergencias"
+                priority
+              />
             </div>
           </div>
         </div>
