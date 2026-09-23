@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Shield, User, ArrowRight, Sparkles } from "lucide-react";
-import { useAuthStore, Role } from "../store/useAuthStore";
+import { Shield, User, ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
+import { useHydratedAuth, Role } from "../store/useAuthStore";
 import { Input } from "@/components/ui/Input";
 
 const loginSchema = z.object({
@@ -20,10 +20,20 @@ type LoginRole = LoginFormData["role"];
 
 export function LoginForm() {
   const router = useRouter();
-  const { login, demoLogin } = useAuthStore();
+  const { login, demoLogin, isAuthenticated, role: activeRole, user: activeUser, isHydrated, logout } = useHydratedAuth();
   const [role, setRole] = useState<LoginRole>("admin");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (isHydrated && isAuthenticated) {
+      if (activeRole === "admin") {
+        router.replace("/admin");
+      } else {
+        router.replace("/aula");
+      }
+    }
+  }, [isHydrated, isAuthenticated, activeRole, router]);
 
   const {
     register,
@@ -77,6 +87,39 @@ export function LoginForm() {
       router.push("/aula");
     }
   };
+
+  if (isHydrated && isAuthenticated) {
+    return (
+      <div className="w-full max-w-md mx-auto bg-white rounded-2xl border border-line shadow-xl p-6 sm:p-8 text-center space-y-4">
+        <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto border border-emerald-200">
+          <CheckCircle2 className="w-6 h-6" />
+        </div>
+        <div>
+          <h2 className="font-serif text-xl font-bold text-navy">Sesión Activa</h2>
+          <p className="text-xs text-ink-soft mt-1">
+            Has iniciado sesión como <strong className="text-navy">{activeUser?.name || (activeRole === "admin" ? "Administrador" : "Alumno")}</strong>. Redirigiendo...
+          </p>
+        </div>
+        <div className="pt-2 flex flex-col gap-2">
+          <button
+            type="button"
+            onClick={() => router.push(activeRole === "admin" ? "/admin" : "/aula")}
+            className="w-full py-2.5 px-4 rounded-xl bg-navy text-white font-semibold text-xs hover:bg-navyink transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span>Continuar a {activeRole === "admin" ? "Panel Admin" : "Aula Virtual"}</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => logout()}
+            className="w-full py-2 px-4 rounded-xl border border-line text-ink-soft hover:text-navy text-xs font-medium hover:bg-bg-alt transition-all cursor-pointer"
+          >
+            Cerrar sesión / Cambiar de cuenta
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-md mx-auto bg-white rounded-2xl border border-line shadow-xl p-6 sm:p-8">

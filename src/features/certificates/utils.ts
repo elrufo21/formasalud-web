@@ -33,8 +33,17 @@ export function mapCertificateToPayload(
     "Programa de Especialización";
 
   const code = cert.certificate_code || cert.code || "FS-2026-0001";
-  // ponytail: Estos dos registros urgentes no tienen campos de fecha/duración en la BD actual.
-  const urgentCertificate = code === "REG-0072-2026" || code === "REG-0073-2026";
+
+  const normalizedTitle = (courseTitle || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase();
+
+  const isCocheDeParo =
+    normalizedTitle.includes("COCHE DE PARO") ||
+    code.startsWith("REG-") ||
+    (cert as { course?: { slug?: string } }).course?.slug === "mdcracue" ||
+    (cert as { course_id?: number }).course_id === 5;
 
   const issueDate = cert.issued_at ? new Date(cert.issued_at) : new Date();
   const issueDay = String(issueDate.getDate()).padStart(2, "0");
@@ -45,10 +54,10 @@ export function mapCertificateToPayload(
   return {
     certificateCode: code,
     studentName,
-    documentNumber: urgentCertificate ? "" : cert.document_number || cert.student?.document_number || "",
+    documentNumber: cert.document_number || cert.student?.document_number || "",
     courseTitle,
-    hours: cert.hours || (urgentCertificate ? 4 : 40),
-    courseDateText: cert.course_date_text || (urgentCertificate ? "14 de agosto de 2026" : "año 2026"),
+    hours: cert.hours || (isCocheDeParo ? 4 : 40),
+    courseDateText: cert.course_date_text || (isCocheDeParo ? "14 de agosto de 2026" : "año 2026"),
     issueDateText,
     issueDay,
     issueMonth,

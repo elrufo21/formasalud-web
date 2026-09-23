@@ -1,22 +1,9 @@
 import React from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Inter, Montserrat } from "next/font/google";
 import AboutHero from "@/features/landing/components/AboutHero";
 import { TeamSection, TestimonialsSection } from "@/features/landing";
 import { CourseHomeGrid } from "@/features/courses/components/CourseHomeGrid";
-
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-});
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["800"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Quiénes Somos — FORMASALUD",
@@ -26,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function QuienesSomosPage() {
   return (
-    <main className={`flex-1 ${inter.className}`}>
+    <main className="flex-1">
       <AboutHero />
 
       {/* ===================================================
@@ -58,7 +45,7 @@ export default function QuienesSomosPage() {
               </div>
 
               <h2
-                className={`${montserrat.className} text-[34px] sm:text-[44px] lg:text-[50px] font-extrabold leading-[1.1] mb-5`}
+                className="text-[34px] sm:text-[44px] lg:text-[50px] font-extrabold leading-[1.1] mb-5"
               >
                 <span className="text-white">Formamos profesionales</span>{" "}
                 <br />
@@ -256,7 +243,7 @@ export default function QuienesSomosPage() {
             </div>
 
             <h2
-              className={`${montserrat.className} text-[36px] sm:text-[42px] font-extrabold tracking-tight mb-3`}
+              className="text-[36px] sm:text-[42px] font-extrabold tracking-tight mb-3"
             >
               <span className="text-[#063335]">Misión y</span>{" "}
               <span className="text-[#008f82]">Visión</span>
@@ -292,7 +279,7 @@ export default function QuienesSomosPage() {
                   </div>
 
                   <h3
-                    className={`${montserrat.className} text-[28px] font-bold text-[#063335] leading-none`}
+                    className="text-[28px] font-bold text-[#063335] leading-none"
                   >
                     Misión
                   </h3>
@@ -338,7 +325,7 @@ export default function QuienesSomosPage() {
                   </div>
 
                   <h3
-                    className={`${montserrat.className} text-[28px] font-bold text-[#008f82] leading-none`}
+                    className="text-[28px] font-bold text-[#008f82] leading-none"
                   >
                     Visión
                   </h3>

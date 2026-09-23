@@ -3,18 +3,31 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { StudentSidebar } from "@/features/student/components/StudentSidebar";
-import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import { useHydratedAuth } from "@/features/auth/store/useAuthStore";
 
 export default function StudentLayout({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, role, demoLogin } = useAuthStore();
+  const { isAuthenticated, isHydrated } = useHydratedAuth();
   const router = useRouter();
 
   useEffect(() => {
+    if (!isHydrated) return;
     if (!isAuthenticated) {
-      // Auto-iniciar sesión como alumno de demostración para facilidad de prueba inmediata
-      demoLogin("student");
+      router.push("/login");
     }
-  }, [isAuthenticated, demoLogin]);
+  }, [isAuthenticated, isHydrated, router]);
+
+  if (!isHydrated) {
+    return (
+      <div className="min-h-screen bg-bg-alt flex flex-col items-center justify-center gap-3">
+        <div className="w-8 h-8 rounded-full border-3 border-teal border-t-transparent animate-spin" />
+        <span className="text-xs font-semibold text-ink-soft">Cargando Aula Virtual...</span>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-bg-alt flex">

@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { useEffect, useState } from "react";
 import { api, ApiError } from "@/lib/api";
 
 export type Role = "admin" | "student" | "teacher";
@@ -20,6 +21,8 @@ interface AuthState {
   user: AuthUser | null;
   role: Role | null;
   isAuthenticated: boolean;
+  isHydrated: boolean;
+  setHydrated: (hydrated: boolean) => void;
   login: (email: string, password: string) => Promise<AuthUser>;
   registerStudent: (data: {
     name: string;
@@ -34,12 +37,21 @@ interface AuthState {
   logout: () => void;
 }
 
+const dummyStorage = {
+  getItem: () => null,
+  setItem: () => {},
+  removeItem: () => {},
+};
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
       user: null,
       role: null,
       isAuthenticated: false,
+      isHydrated: false,
+
+      setHydrated: (hydrated: boolean) => set({ isHydrated: hydrated }),
 
       login: async (email: string, password: string) => {
         const response = await api.login(email, password);
@@ -144,9 +156,60 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "formasalud_auth_storage",
+      storage: createJSONStorage(() =>
+        typeof window !== "undefined" ? window.localStorage : dummyStorage,
+      ),
+      partialize: (state) => ({
+        user: state.user,
+        role: state.role,
+        isAuthenticated: state.isAuthenticated,
+      }),
+      onRehydrateStorage: () => (state, error) => {
+        if (error) {
+          console.error("Error al restaurar sesión de FormaSalud:", error);
+        }
+        state?.setHydrated(true);
+      },
     },
   ),
 );
+
+// Sincronización automática de sesión entre pestañas
+if (typeof window !== "undefined") {
+  window.addEventListener("storage", (event) => {
+    if (event.key === "formasalud_auth_storage") {
+      useAuthStore.persist?.rehydrate?.();
+    }
+  });
+}
+
+/**
+ * Hook para consumir la sesión asegurando que Zustand ya se sincronizó con el almacenamiento local
+ */
+export function useHydratedAuth() {
+  const store = useAuthStore();
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    if (store.isHydrated || useAuthStore.persist?.hasHydrated?.()) {
+      setHydrated(true);
+      if (!store.isHydrated) {
+        store.setHydrated(true);
+      }
+      return;
+    }
+    const unsub = useAuthStore.persist?.onFinishHydration?.(() => {
+      setHydrated(true);
+      store.setHydrated(true);
+    });
+    return () => unsub?.();
+  }, [store]);
+
+  return {
+    ...store,
+    isHydrated: hydrated || store.isHydrated,
+  };
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === "object";
@@ -155,3 +218,4 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 function isRole(value: unknown): value is Role {
   return value === "admin" || value === "student" || value === "teacher";
 }
+

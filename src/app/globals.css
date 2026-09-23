@@ -3,9 +3,10 @@
 @import "shadcn/tailwind.css";
 
 @theme {
-  --font-serif: var(--font-fraunces), Georgia, serif;
-  --font-sans: var(--font-inter), system-ui, sans-serif;
-  --font-mono: var(--font-ibm-plex-mono), monospace;
+  --font-serif: var(--font-montserrat), sans-serif;
+  --font-sans: var(--font-montserrat), sans-serif;
+  --font-mono: var(--font-montserrat), monospace;
+  --font-montserrat: var(--font-montserrat), sans-serif;
 
   --color-navy: #0F2942;
   --color-navyink: #081826;
@@ -60,38 +61,50 @@
   --radius: 0.25rem;
 }
 
-body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-inter), system-ui, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
+@layer base {
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-montserrat), sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
 
-h1, h2, h3, h4 {
-  font-family: var(--font-fraunces), Georgia, serif;
-  font-weight: 600;
-  color: var(--navy);
-  margin: 0;
-  letter-spacing: -0.012em;
-}
+  h1, h2, h3, h4 {
+    font-family: var(--font-montserrat), sans-serif;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0;
+    letter-spacing: -0.015em;
+  }
 
-em {
-  font-style: italic;
-  font-family: var(--font-fraunces), Georgia, serif;
-  color: inherit;
-}
+  em {
+    font-style: italic;
+    font-family: var(--font-montserrat), sans-serif;
+    color: inherit;
+  }
 
-p {
-  margin: 0;
-  line-height: 1.7;
-  color: var(--ink-soft);
-}
+  p {
+    margin: 0;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
 
-a {
-  text-decoration: none;
-  color: inherit;
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  section {
+    padding: 104px 0;
+  }
+
+  @media (max-width: 720px) {
+    section {
+      padding: 64px 0;
+    }
+  }
 }
 
 .wrap {
@@ -104,27 +117,6 @@ a {
   max-width: var(--maxw-narrow);
   margin: 0 auto;
   padding: 0 32px;
-}
-
-/*
-  IMPORTANTE: esta regla estaba antes SUELTA (fuera de cualquier @layer).
-  En Tailwind v4, el CSS que no está dentro de un @layer tiene más
-  prioridad en la cascada que las utilidades (pt-, py-, pb-, etc.),
-  sin importar la especificidad. Por eso ningún cambio de padding hecho
-  con clases de Tailwind en las secciones se reflejaba: este padding de
-  104px siempre ganaba. Al meterlo en @layer base, las utilidades vuelven
-  a poder sobreescribirlo normalmente.
-*/
-@layer base {
-  section {
-    padding: 104px 0;
-  }
-
-  @media (max-width: 720px) {
-    section {
-      padding: 64px 0;
-    }
-  }
 }
 
 @media (max-width: 720px) {
@@ -143,16 +135,16 @@ a {
 
 /* ---------- Eyebrow & Signature Devices ---------- */
 .mono {
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-montserrat), monospace;
 }
 
 .eyebrow {
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-montserrat), sans-serif;
   font-size: 12px;
   letter-spacing: .16em;
   text-transform: uppercase;
   color: var(--teal);
-  font-weight: 500;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -178,7 +170,7 @@ a {
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   padding: 13px 0;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-montserrat), sans-serif;
   font-size: 11px;
   letter-spacing: .09em;
   text-transform: uppercase;
@@ -195,7 +187,7 @@ a {
 .masthead-strip {
   background: var(--navy-ink);
   color: rgba(255, 255, 255, .55);
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-montserrat), sans-serif;
   font-size: 10.5px;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -316,10 +308,11 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-montserrat), sans-serif;
   font-size: 11px;
   letter-spacing: .12em;
   text-transform: uppercase;
+  font-weight: 600;
   padding: 13px 22px;
   border: 1px solid var(--line-strong);
   color: var(--navy);
@@ -363,10 +356,11 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-montserrat), sans-serif;
   font-size: 10.5px;
   letter-spacing: .14em;
   text-transform: uppercase;
+  font-weight: 600;
   color: var(--gold-pale);
   border: 1px solid rgba(239, 223, 174, .35);
   padding: 7px 14px;
@@ -420,7 +414,7 @@ a {
 
 .seal text {
   fill: var(--gold-pale);
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-montserrat), sans-serif;
 }
 
 .seal .mono-txt {
@@ -428,8 +422,9 @@ a {
 }
 
 .seal .fs {
-  font-family: var(--font-fraunces), Georgia, serif;
+  font-family: var(--font-montserrat), sans-serif;
   font-style: italic;
+  font-weight: 700;
   fill: var(--gold-pale);
 }
 
@@ -448,9 +443,9 @@ a {
 
 /* Dropcap */
 .dropcap:first-letter {
-  font-family: var(--font-fraunces), Georgia, serif;
+  font-family: var(--font-montserrat), sans-serif;
   font-size: 58px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--navy);
   float: left;
   line-height: .8;

@@ -1,11 +1,4 @@
 import Image from "next/image";
-import { Montserrat } from "next/font/google";
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["600", "700", "800"],
-  display: "swap",
-});
 
 type HeroImagePosition = "left" | "right";
 
@@ -182,7 +175,7 @@ export default function AboutHero({
 
             {/* Título */}
             <h1
-              className={`${montserrat.className} font-extrabold leading-[1.22] tracking-[-0.02em] text-[#071b35] whitespace-nowrap text-[26px] sm:text-[30px] lg:text-[32px] xl:text-[46px]`}
+              className="font-extrabold leading-[1.22] tracking-[-0.02em] text-[#071b35] whitespace-nowrap text-[26px] sm:text-[30px] lg:text-[32px] xl:text-[46px]"
             >
               {title}
               <br />
