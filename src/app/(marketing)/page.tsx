@@ -37,8 +37,8 @@ export default function HomePage() {
       {/* 3. Sección Flyers & Masterclasses / Próximos Cursos */}
       <FlyersSection />
 
-      {/* 4. Sección Equipo Directivo y Plana Docente */}
-      <TeamSection />
+      {/* 4. Sección Equipo Directivo y Plana Docente (Cambiado a Carrusel para el Home) */}
+      <TeamSection isCarousel={true} />
 
       {/* 5. Sección Certificación Oficial con Verificación QR */}
       <CertificateSection />

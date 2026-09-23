@@ -137,8 +137,8 @@ export function Carousel({
               onClick={() => scrollTo(index)}
               aria-label={`Ir al testimonio ${index + 1}`}
               className={`h-2 rounded-full transition-all duration-300 ${index === selectedIndex
-                  ? "w-7 bg-teal"
-                  : "w-2 bg-[#c9dddd] hover:bg-teal/50"
+                ? "w-7 bg-teal"
+                : "w-2 bg-[#c9dddd] hover:bg-teal/50"
                 }`}
             />
           ))}
