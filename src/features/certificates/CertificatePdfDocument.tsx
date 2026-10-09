@@ -53,6 +53,8 @@ export function CertificatePdfDocument({ data }: { data: FormasaludCertificatePa
       course: data.courseTitle,
       hours: data.hours,
       hoursUnit: data.hoursUnit,
+      approvalCertificate: data.certificateType === "approval",
+      hideCourseBackground: data.courseTitle.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().includes("OBSTETRICAS"),
       teacher1: data.gerenteGeneral || data.teacherName || "FRANCISCO PAUCAR BENITES",
       teacher2: data.coordinatorName || "ZAMBRANO CRUZ MIGUEL",
       idCertificado: data.certificateCode,

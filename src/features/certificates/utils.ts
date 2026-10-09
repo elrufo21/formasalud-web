@@ -67,6 +67,7 @@ export function mapCertificateToPayload(
     studentName,
     documentNumber: cert.document_number || cert.student?.document_number || "",
     courseTitle,
+    certificateType: cert.certificate_type === "approval" ? "approval" : "participation",
     hours: cert.hours || (isTriaje || isPancreatitis || isSpeaker ? 2 : isCocheDeParo ? 4 : 40),
     hoursUnit: cert.hours_unit || (isTriaje || isPancreatitis || isSpeaker ? "horas lectivas" : "horas académicas"),
     courseDateText: cert.course_date_text || (isTriaje ? "06 de octubre de 2026" : isPancreatitis ? "03 de octubre de 2026" : isCocheDeParo ? "14 de agosto de 2026" : "año 2026"),

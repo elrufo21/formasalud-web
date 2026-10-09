@@ -675,6 +675,7 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
   const ruc = data.ruc || "20613837613";
   const issueDateStr = issueDateFromParts(data);
   const nameText = data.name || "Nombres y Apellidos";
+  const compactName = data.triajeCertificate && nameText.length > 30;
   const approvalCertificate = data.triajeCertificate || data.pancreatitisCertificate;
   const speakerCertificate = data.speakerCertificate;
   const nameFontSize = getNameFontSize(nameText, approvalCertificate || speakerCertificate);
@@ -760,7 +761,8 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
         </View>
         <Text style={[styles.granted, data.triajeCertificate ? { top: 206 } : undefined]}>A:</Text>
         <Text
-          style={[styles.name, { fontSize: nameFontSize }, data.triajeCertificate ? { top: 218 } : undefined]}
+          style={[styles.name, { fontSize: nameFontSize }, data.triajeCertificate ? { top: 218 } : undefined,
+            compactName ? { fontFamily: "Lora", fontStyle: "italic", fontSize: 20, left: 120, width: 602 } : undefined]}
           wrap={false}
           hyphenationCallback={(word) => [word]}
         >

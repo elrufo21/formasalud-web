@@ -22,6 +22,8 @@ export interface FormasaludClassicData {
   course?: string;
   hours?: number;
   hoursUnit?: string;
+  approvalCertificate?: boolean;
+  hideCourseBackground?: boolean;
   teacher1?: string;
   teacher2?: string;
   idCertificado?: string;
@@ -679,12 +681,12 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
         <View style={styles.background}>
           <Background />
         </View>
-        <Image
+        {!data.hideCourseBackground && <Image
           src={resolveAsset(
             data.backgroundImage || "/certificates/coche-paro-hospital.png",
           )}
           style={styles.courseBackground}
-        />
+        />}
         {logoImage && <Image src={logoImage} style={styles.watermark} />}
         {logoImage && <Image src={logoImage} style={styles.logoPrimary} />}
         {secondaryLogoImage && (
@@ -708,7 +710,7 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
         </View>
 
         <Text style={styles.certificateTitle}>CERTIFICADO</Text>
-        <Text style={styles.certificateSubtitle}>DE PARTICIPACIÓN</Text>
+        <Text style={styles.certificateSubtitle}>{data.approvalCertificate ? "DE APROBACIÓN" : "DE PARTICIPACIÓN"}</Text>
         <Text style={styles.granted}>Otorgado a:</Text>
         <Text
           style={[styles.name, { fontSize: nameFontSize }]}
