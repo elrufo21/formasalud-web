@@ -17,6 +17,7 @@ export function CertificateDownloadButton({
   label = "Descargar Diploma (PDF)",
   variant = "primary",
 }: CertificateDownloadButtonProps) {
+  const pdfVersion = encodeURIComponent([data.courseDateText, data.issueDateText].filter(Boolean).join("|"));
   const baseStyle =
     "inline-flex items-center justify-center gap-2 font-semibold text-xs rounded-xl transition-all cursor-pointer px-4 py-2.5";
   
@@ -29,7 +30,7 @@ export function CertificateDownloadButton({
 
   return (
     <a
-      href={`/api/certificates/${encodeURIComponent(data.certificateCode)}/pdf?download=1&v=${encodeURIComponent(data.courseDateText || "")}`}
+      href={`/api/certificates/${encodeURIComponent(data.certificateCode)}/pdf?download=1&v=${pdfVersion}`}
       className={`${baseStyle} ${variantStyle} ${className}`}
     >
       <Download className="w-4 h-4 text-gold" />

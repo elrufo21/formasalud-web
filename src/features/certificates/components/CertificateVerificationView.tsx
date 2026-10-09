@@ -36,6 +36,9 @@ export async function CertificateVerificationView({ code }: { code: string }) {
   const payload: FormasaludCertificatePayload | null = error || !certificate
     ? null
     : mapCertificateToPayload(certificate);
+  const pdfVersion = payload
+    ? encodeURIComponent([payload.courseDateText, payload.issueDateText].filter(Boolean).join("|"))
+    : "";
 
   if (error || !payload) {
     return (
@@ -157,7 +160,7 @@ export async function CertificateVerificationView({ code }: { code: string }) {
             </h2>
           </div>
           <a
-            href={`/api/certificates/${encodeURIComponent(payload.certificateCode)}/pdf?v=${encodeURIComponent(payload.courseDateText || "")}`}
+            href={`/api/certificates/${encodeURIComponent(payload.certificateCode)}/pdf?v=${pdfVersion}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 rounded-xl border border-navy px-4 py-2.5 text-xs font-semibold text-navy hover:bg-navy hover:text-white transition-colors"
@@ -169,7 +172,7 @@ export async function CertificateVerificationView({ code }: { code: string }) {
 
         <div className="w-full h-[55vh] min-h-[360px] sm:h-[640px] rounded-2xl overflow-hidden border border-line bg-bg-alt shadow-inner">
           <iframe
-            src={`/api/certificates/${encodeURIComponent(payload.certificateCode)}/pdf?v=${encodeURIComponent(payload.courseDateText || "")}`}
+            src={`/api/certificates/${encodeURIComponent(payload.certificateCode)}/pdf?v=${pdfVersion}`}
             title={`Certificado ${payload.certificateCode}`}
             className="w-full h-full border-0"
           />
