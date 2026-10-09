@@ -69,7 +69,7 @@ export function registerFonts() {
     // Fuentes remotas con CDN global de alta disponibilidad
     Font.register({
       family: "GreatVibes",
-      src: "https://cdn.jsdelivr.net/fontsource/fonts/great-vibes@latest/latin-400-normal.ttf",
+      src: getFontSrc("great-vibes-regular.ttf"),
     });
 
     Font.register({

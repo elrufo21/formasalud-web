@@ -1,13 +1,10 @@
 import {
   Circle,
-  Defs,
   Document,
   Image,
-  LinearGradient,
   Page,
   Path,
   Rect,
-  Stop,
   StyleSheet,
   Svg,
   Text,
@@ -22,16 +19,22 @@ export interface FormasaludClassicData {
   course?: string;
   hours?: number;
   hoursUnit?: string;
+  triajeCertificate?: boolean;
+  pancreatitisCertificate?: boolean;
+  speakerCertificate?: boolean;
+  previewOnly?: boolean;
   teacher1?: string;
   teacher2?: string;
   idCertificado?: string;
   certificateCode?: string;
   coordinatorName?: string;
   sealImage?: string;
+  awardSealImage?: string;
   signatureLeftImage?: string;
   signatureRightImage?: string;
   logoImage?: string;
   secondaryLogoImage?: string;
+  sponsorLogoImage?: string;
   backgroundImage?: string;
   courseDay?: string;
   courseMonth?: string;
@@ -54,22 +57,23 @@ type CertificatePdf18Data = FormasaludClassicData;
 const W = 841.89;
 const H = 595.28;
 const NAVY = "#031D58";
-const BLUE = "#073D92";
-const TEAL = "#056878";
+const BLUE = "#0873B8";
+const TEAL = "#075A91";
 const GOLD = "#C99725";
-const GOLD_LIGHT = "#F6D66C";
 const PAPER = "#FFFDF8";
 
 const resolveAsset = (source?: string) => {
   if (!source || source.startsWith("http") || source.startsWith("data:")) {
     return source;
   }
-  if (/^[A-Za-z]:[\\/]/.test(source)) return source;
+  if (/^[A-Za-z]:[\\/]/.test(source)) {
+    return `file:///${source.replace(/\\/g, "/")}`;
+  }
 
   const publicPath = source.startsWith("/") ? source : `/${source}`;
-  return typeof window === "undefined"
-    ? `${process.cwd().replace(/\\/g, "/")}/public${publicPath}`
-    : `${window.location.origin}${publicPath}`;
+  if (typeof window !== "undefined") return `${window.location.origin}${publicPath}`;
+  const localPath = `${process.cwd().replace(/\\/g, "/")}/public${publicPath}`;
+  return /^[A-Za-z]:\//.test(localPath) ? `file:///${localPath}` : `file://${localPath}`;
 };
 
 const styles = StyleSheet.create({
@@ -82,52 +86,60 @@ const styles = StyleSheet.create({
     width: W,
     height: H,
     objectFit: "cover",
-    opacity: 0.32,
+    opacity: 0.16,
   },
   logoPrimary: {
     position: "absolute",
-    top: 42,
-    left: 69,
-    width: 126,
-    height: 126,
+    top: 34,
+    left: 30,
+    width: 82,
+    height: 82,
     objectFit: "contain",
   },
   logoSecondary: {
     position: "absolute",
-    top: 47,
-    right: 67,
-    width: 92,
-    height: 92,
+    top: 30,
+    right: 30,
+    width: 100,
+    height: 100,
+    objectFit: "contain",
+  },
+  logoSponsor: {
+    position: "absolute",
+    top: 31,
+    right: 24,
+    width: 83,
+    height: 83,
     objectFit: "contain",
   },
   watermark: {
     position: "absolute",
-    left: 292,
-    top: 188,
-    width: 258,
-    height: 258,
+    left: 300,
+    top: 245,
+    width: 220,
+    height: 220,
     objectFit: "contain",
     opacity: 0.045,
   },
   header: {
     position: "absolute",
-    top: 45,
-    left: 208,
-    width: 428,
+    top: 27,
+    left: 140,
+    width: 562,
     alignItems: "center",
   },
   eyebrow: {
     fontFamily: "Playfair",
     fontWeight: 700,
-    fontSize: 13.5,
+    fontSize: 10,
     color: NAVY,
   },
   brand: {
-    marginTop: 1,
+    marginTop: 0,
     fontFamily: "Playfair",
     fontWeight: 700,
-    fontSize: 35,
-    color: TEAL,
+    fontSize: 34,
+    color: NAVY,
     letterSpacing: 2.2,
   },
   taglineRow: {
@@ -135,11 +147,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  taglineLine: { width: 88, height: 0.8, backgroundColor: GOLD },
+  taglineLine: { width: 88, height: 0.8, backgroundColor: BLUE },
   taglineDot: {
     width: 5,
     height: 5,
-    backgroundColor: GOLD,
+    backgroundColor: BLUE,
     transform: "rotate(45deg)",
   },
   tagline: {
@@ -151,31 +163,28 @@ const styles = StyleSheet.create({
   },
   certificateTitle: {
     position: "absolute",
-    top: 128,
+    top: 119,
     left: 190,
     width: 474,
     fontFamily: "Playfair",
     fontWeight: 700,
-    fontSize: 41,
-    letterSpacing: 7.8,
+    fontSize: 45,
+    letterSpacing: 6,
     color: NAVY,
     textAlign: "center",
   },
   certificateSubtitle: {
     position: "absolute",
-    top: 171,
-    left: 190,
-    width: 474,
-    fontFamily: "Playfair",
-    fontWeight: 700,
-    fontSize: 15,
-    letterSpacing: 1.5,
-    color: NAVY,
-    textAlign: "center",
+    top: 167,
+    left: 282,
+    width: 278,
+    height: 25,
+    justifyContent: "center",
+    alignItems: "center",
   },
   granted: {
     position: "absolute",
-    top: 193,
+    top: 195,
     left: 220,
     width: 402,
     fontFamily: "Playfair",
@@ -186,12 +195,11 @@ const styles = StyleSheet.create({
   },
   name: {
     position: "absolute",
-    top: 209,
-    left: 40,
-    width: W - 80,
-    fontFamily: "Lora",
-    fontStyle: "italic",
-    fontSize: 30,
+    top: 207,
+    left: 190,
+    width: 474,
+    fontFamily: "GreatVibes",
+    fontSize: 39,
     color: NAVY,
     textAlign: "center",
   },
@@ -201,7 +209,7 @@ const styles = StyleSheet.create({
     left: 212,
     width: 428,
     height: 0.8,
-    backgroundColor: GOLD,
+    backgroundColor: BLUE,
   },
   nameDiamond: {
     position: "absolute",
@@ -209,7 +217,7 @@ const styles = StyleSheet.create({
     left: W / 2 - 3.8,
     width: 7.6,
     height: 7.6,
-    backgroundColor: GOLD,
+    backgroundColor: BLUE,
     transform: "rotate(45deg)",
   },
   main: {
@@ -321,9 +329,9 @@ const styles = StyleSheet.create({
   footerLink: { fontFamily: "Helvetica-Bold", fontSize: 8, color: BLUE },
   slogan: {
     position: "absolute",
-    left: 44,
-    bottom: 70,
-    width: 137,
+    right: 24,
+    bottom: 42,
+    width: 126,
     fontFamily: "Lora",
     fontStyle: "italic",
     fontWeight: 600,
@@ -338,28 +346,16 @@ const styles = StyleSheet.create({
 function Background() {
   return (
     <Svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
-      <Defs>
-        <LinearGradient id="gold18" x1="0" y1="0" x2="1" y2="1">
-          <Stop offset="0%" stopColor="#8B5A05" />
-          <Stop offset="32%" stopColor={GOLD_LIGHT} />
-          <Stop offset="57%" stopColor="#B47B10" />
-          <Stop offset="100%" stopColor="#FFE68C" />
-        </LinearGradient>
-        <LinearGradient id="navy18" x1="0" y1="0" x2="1" y2="1">
-          <Stop offset="0%" stopColor="#08728E" />
-          <Stop offset="50%" stopColor="#003968" />
-          <Stop offset="100%" stopColor="#001337" />
-        </LinearGradient>
-      </Defs>
       <Rect x="0" y="0" width={W} height={H} fill={PAPER} />
       <Rect
-        x="24"
-        y="24"
-        width={W - 48}
-        height={H - 48}
+        x="10"
+        y="10"
+        width={W - 20}
+        height={H - 20}
+        rx="5"
         fill="none"
-        stroke={GOLD}
-        strokeWidth="1.2"
+        stroke={BLUE}
+        strokeWidth="1.5"
       />
       <Rect
         x="28"
@@ -367,51 +363,66 @@ function Background() {
         width={W - 56}
         height={H - 56}
         fill="none"
-        stroke={GOLD}
+        stroke={BLUE}
         strokeWidth="0.45"
       />
 
       <Path
-        d="M0 0 H190 C135 17 85 48 48 94 C27 120 13 153 0 180 Z"
-        fill="url(#navy18)"
-      />
-      <Path d="M0 0 H82 C55 27 30 62 0 111 Z" fill="#075E7B" />
-      <Path
-        d="M76 0 H204 C143 17 91 49 49 101 C31 123 14 145 0 159 L0 130 C23 90 47 48 76 0 Z"
-        fill="url(#gold18)"
+        d="M0 0 H240 C155 28 87 76 0 180 Z"
+        fill="#0477B8"
       />
       <Path
-        d="M0 117 C36 65 73 26 121 0 H135 C87 33 48 78 0 143 Z"
-        fill="#001F50"
+        d="M0 0 H174 C104 26 48 70 0 132 Z"
+        fill="#22A7D8"
       />
-      <Path
-        d="M0 130 C39 75 81 31 132 0 H138 C87 37 44 84 0 143 Z"
-        fill={GOLD_LIGHT}
-        opacity="0.9"
-      />
+      <Path d="M0 0 H122 C74 25 32 59 0 98 Z" fill="#07539A" />
 
       <Path
-        d={`M${W} ${H} H${W - 208} C${W - 144} ${H - 16} ${W - 88} ${H - 52} ${W - 49} ${H - 101} C${W - 27} ${H - 129} ${W - 13} ${H - 159} ${W} ${H - 190} Z`}
-        fill="url(#navy18)"
+        d={`M${W} ${H} H${W - 240} C${W - 155} ${H - 28} ${W - 87} ${H - 76} ${W} ${H - 180} Z`}
+        fill="#0477B8"
       />
       <Path
-        d={`M${W} ${H} H${W - 112} C${W - 72} ${H - 27} ${W - 33} ${H - 67} ${W} ${H - 115} Z`}
-        fill="#075E7B"
+        d={`M${W} ${H} H${W - 174} C${W - 104} ${H - 26} ${W - 48} ${H - 70} ${W} ${H - 132} Z`}
+        fill="#22A7D8"
       />
       <Path
-        d={`M${W - 79} ${H} H${W - 218} C${W - 153} ${H - 17} ${W - 96} ${H - 53} ${W - 53} ${H - 107} C${W - 32} ${H - 133} ${W - 15} ${H - 155} ${W} ${H - 170} V${H - 135} C${W - 22} ${H - 91} ${W - 48} ${H - 45} ${W - 79} ${H} Z`}
-        fill="url(#gold18)"
+        d={`M${W} ${H} H${W - 122} C${W - 74} ${H - 25} ${W - 32} ${H - 59} ${W} ${H - 98} Z`}
+        fill="#07539A"
+      />
+    </Svg>
+  );
+}
+
+function PancreasIllustration() {
+  return (
+    <Svg
+      width={118}
+      height={94}
+      viewBox="0 0 118 94"
+      style={{ position: "absolute", top: 183, right: 18, opacity: 0.48 }}
+    >
+      <Path
+        d="M9 51 C17 37 27 28 38 31 C46 18 57 17 64 28 C76 19 87 25 88 38 C102 31 111 39 108 51 C104 63 91 66 81 59 C69 72 57 68 52 59 C40 71 28 65 25 57 C18 62 11 59 9 51Z"
+        fill="#F5C08C"
+        stroke="#D89056"
+        strokeWidth="2"
       />
       <Path
-        d={`M${W} ${H - 135} C${W - 31} ${H - 83} ${W - 72} ${H - 33} ${W - 126} ${H} H${W - 140} C${W - 86} ${H - 39} ${W - 41} ${H - 86} ${W} ${H - 153} Z`}
-        fill="#001F50"
-      />
-      <Path
-        d={`M${W} ${H - 144} C${W - 36} ${H - 84} ${W - 82} ${H - 31} ${W - 139} ${H}`}
+        d="M17 50 C34 45 44 51 55 48 C68 44 76 46 94 48 M44 34 C46 41 46 48 45 58 M75 31 C73 38 74 46 78 56"
         fill="none"
-        stroke={GOLD_LIGHT}
-        strokeWidth="2.2"
+        stroke="#BD7648"
+        strokeWidth="2"
+        strokeLinecap="round"
       />
+      <Path
+        d="M54 48 C61 43 64 37 64 29 M80 48 C87 43 91 38 92 31"
+        fill="none"
+        stroke="#4E9FBE"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <Circle cx="45" cy="49" r="2" fill="#F7E2C7" />
+      <Circle cx="79" cy="47" r="2" fill="#F7E2C7" />
     </Svg>
   );
 }
@@ -560,8 +571,8 @@ function VerificationBadge({ url }: { url: string }) {
     <View
       style={{
         position: "absolute",
-        right: 61,
-        bottom: 43,
+        right: 34,
+        bottom: 90,
         width: 78,
         padding: 4,
         paddingBottom: 3,
@@ -602,8 +613,16 @@ const dateFromParts = (data: CertificatePdf18Data) => {
   return "14 de agosto de 2026";
 };
 
-const getNameFontSize = (nameStr: string) => {
+const getNameFontSize = (nameStr: string, triaje = false) => {
   const len = (nameStr || "").trim().length;
+  if (triaje) {
+    if (len > 50) return 14;
+    if (len > 42) return 16;
+    if (len > 35) return 18;
+    if (len > 28) return 20;
+    if (len > 23) return 22;
+    return 24;
+  }
   if (len > 50) return 16;
   if (len > 42) return 18;
   if (len > 35) return 21;
@@ -652,21 +671,18 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
   const modality = data.modality || "Virtual";
   const coordinator =
     data.teacher2 || data.coordinatorName || "ZAMBRANO CRUZ MIGUEL";
-  const website = data.website || "www.formasalud.pe";
+  const website = data.website || "www.formasalud.org.pe";
   const ruc = data.ruc || "20613837613";
   const issueDateStr = issueDateFromParts(data);
   const nameText = data.name || "Nombres y Apellidos";
-  const internationalCourse = /^CURSO INTERNACIONAL\s+SOBRE\s+EL\s+/i.test(data.course || "");
-  const courseText = internationalCourse
-    ? (data.course || "").replace(/^CURSO INTERNACIONAL\s+SOBRE\s+EL\s+/i, "")
-    : data.course;
-  const titledName = /^(?:TEC\.|LIC\.|DR\.|DRA\.)\s/i.test(nameText)
-    ? nameText
-    : `LIC. ${nameText}`;
-  const nameFontSize = getNameFontSize(titledName);
+  const approvalCertificate = data.triajeCertificate || data.pancreatitisCertificate;
+  const speakerCertificate = data.speakerCertificate;
+  const nameFontSize = getNameFontSize(nameText, approvalCertificate || speakerCertificate);
   const logoImage = resolveAsset(data.logoImage);
   const secondaryLogoImage = resolveAsset(data.secondaryLogoImage);
+  const sponsorLogoImage = resolveAsset(data.sponsorLogoImage);
   const sealImage = resolveAsset(data.sealImage);
+  const awardSealImage = resolveAsset(data.awardSealImage || "/certificates/sellofms.png");
   const signatureLeftImage = resolveAsset(data.signatureLeftImage);
   const signatureRightImage = resolveAsset(data.signatureRightImage);
   const verificationUrl =
@@ -679,22 +695,23 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
         <View style={styles.background}>
           <Background />
         </View>
-        <Image
+        {!data.triajeCertificate && !data.pancreatitisCertificate && <Image
           src={resolveAsset(
             data.backgroundImage || "/certificates/coche-paro-hospital.png",
           )}
           style={styles.courseBackground}
-        />
+        />}
+        {data.pancreatitisCertificate && <PancreasIllustration />}
         {logoImage && <Image src={logoImage} style={styles.watermark} />}
         {logoImage && <Image src={logoImage} style={styles.logoPrimary} />}
         {secondaryLogoImage && (
-          <Image src={secondaryLogoImage} style={styles.logoSecondary} />
+          <Image src={secondaryLogoImage} style={[styles.logoSecondary, data.triajeCertificate ? { right: 115, width: 90, height: 90 } : undefined]} />
+        )}
+        {approvalCertificate && sponsorLogoImage && (
+          <Image src={sponsorLogoImage} style={styles.logoSponsor} />
         )}
 
         <View style={styles.header}>
-          <Text style={styles.eyebrow}>
-            CENTRO DE FORMACIÓN E INNOVACIÓN EN SALUD
-          </Text>
           <Text style={styles.brand}>FORMASALUD</Text>
           <View style={styles.taglineRow}>
             <View style={styles.taglineLine} />
@@ -707,18 +724,50 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
           </View>
         </View>
 
-        <Text style={styles.certificateTitle}>CERTIFICADO</Text>
-        <Text style={styles.certificateSubtitle}>DE PARTICIPACIÓN</Text>
-        <Text style={styles.granted}>Otorgado a:</Text>
         <Text
-          style={[styles.name, { fontSize: nameFontSize }]}
+          style={{
+            ...styles.eyebrow,
+            position: "absolute",
+            top: 107,
+            left: 300,
+            width: 242,
+            textAlign: "center",
+          }}
+        >
+          OTORGA EL PRESENTE
+        </Text>
+        <Text style={[styles.certificateTitle, data.triajeCertificate ? { top: 110 } : undefined]}>CERTIFICADO</Text>
+        <View style={[styles.certificateSubtitle, data.triajeCertificate ? { top: 176 } : undefined]}>
+          <Svg
+            width={278}
+            height={25}
+            viewBox="0 0 278 25"
+            style={{ position: "absolute" }}
+          >
+            <Path d="M0 0h278v25H0l15-12.5zM278 0l-15 12.5L278 25z" fill={BLUE} />
+          </Svg>
+          <Text
+            style={{
+              fontFamily: "Helvetica-Bold",
+              fontSize: 14,
+              letterSpacing: 1.5,
+              color: "#FFFFFF",
+              textAlign: "center",
+            }}
+          >
+              {speakerCertificate ? "DE PONENCIA" : approvalCertificate ? "DE APROBACIÓN" : "DE PARTICIPACIÓN"}
+          </Text>
+        </View>
+        <Text style={[styles.granted, data.triajeCertificate ? { top: 206 } : undefined]}>A:</Text>
+        <Text
+          style={[styles.name, { fontSize: nameFontSize }, data.triajeCertificate ? { top: 218 } : undefined]}
           wrap={false}
           hyphenationCallback={(word) => [word]}
         >
-          {titledName}
+          {nameText}
         </Text>
-        <View style={styles.nameRule} />
-        <View style={styles.nameDiamond} />
+        <View style={[styles.nameRule, data.triajeCertificate ? { top: 258 } : undefined]} />
+        <View style={[styles.nameDiamond, data.triajeCertificate ? { top: 254.6 } : undefined]} />
 
         <View
           style={{
@@ -727,7 +776,7 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
             top: 294,
             width: 155,
             borderRightWidth: 0.7,
-            borderRightColor: GOLD,
+            borderRightColor: BLUE,
           }}
         >
           <InfoItem kind="date" title="FECHA DEL CURSO">
@@ -746,22 +795,27 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
           </InfoItem>
         </View>
 
-        <View style={styles.main}>
+        <View style={[styles.main, data.triajeCertificate ? { top: 272 } : undefined]}>
           <Text style={styles.preamble}>
-            Por su participación y aprobación en el
+            {speakerCertificate
+              ? "En reconocimiento a su destacada labor como ponente internacional en el"
+              : approvalCertificate
+                ? "Por su participación y aprobación satisfactoria en el"
+                : "Por su valiosa participación en el"}
           </Text>
           <View style={styles.coursePill}>
-            <Text style={styles.coursePillText}>{internationalCourse ? "CURSO INTERNACIONAL:" : "CURSO TALLER:"}</Text>
+            <Text style={styles.coursePillText}>CURSO INTERNACIONAL:</Text>
           </View>
           <Text style={styles.course} hyphenationCallback={(word) => [word]}>
-            {courseText ||
+            {data.course ||
               "TALLER PRÁCTICO DE CÁLCULO Y ADMINISTRACIÓN DE DROGAS VASOACTIVAS EN ÁREAS CRÍTICAS: EMERGENCIAS Y UCI"}
           </Text>
           <Text style={styles.description}>
-            Desarrollado el {courseDate}, con una duración de {data.hours || 4}{" "}
-            {data.hoursUnit || "horas académicas"}.{"\n"}Su compromiso y participación activa
-            contribuyen al fortalecimiento del conocimiento y la práctica en la
-            atención de emergencias.
+            {speakerCertificate
+              ? `Por compartir sus conocimientos y experiencia profesional en el desarrollo del curso, realizado el ${courseDate}.\nOrganizado por FORMASALUD, con el auspicio de FisioUCI y Medical Service Perú.`
+              : approvalCertificate
+              ? `Desarrollado de manera virtual el ${courseDate}, con una duración de ${data.hours || 2} ${data.hoursUnit || "horas lectivas"}.\nOrganizado por FORMASALUD, con el auspicio de FisioUCI y Medical Service Perú.`
+              : `Desarrollado el ${courseDate}, con una duración de ${data.hours || 4} horas académicas.\nSu compromiso y participación activa contribuyen al fortalecimiento del conocimiento y la práctica de la enfermería avanzada.`}
           </Text>
         </View>
 
@@ -800,8 +854,23 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
           </View>
         </View>
 
-        <Text style={styles.slogan}>
-          ¡Juntos por una{"\n"}enfermería más segura!
+        <Image
+          src={awardSealImage}
+          style={{
+            position: "absolute",
+            right: 22,
+            top: 245,
+            width: 108,
+            height: 108,
+            objectFit: "contain",
+          }}
+        />
+        <Text style={[styles.slogan, data.triajeCertificate || speakerCertificate ? { left: 301, right: undefined, bottom: 36, width: 240, textAlign: "center", transform: "rotate(0deg)" } : undefined]}>
+          {speakerCertificate
+            ? "Gracias por compartir\ntu experiencia"
+            : data.pancreatitisCertificate
+              ? "¡Te esperamos!"
+              : "¡Juntos por una\nenfermería más segura!"}
         </Text>
         <VerificationBadge url={verificationUrl} />
         <View style={styles.footer}>
@@ -811,6 +880,25 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
             <Text style={styles.footerLink}>{website}</Text>
           </Text>
         </View>
+        {data.previewOnly && (
+          <Text
+            style={{
+              position: "absolute",
+              top: 284,
+              left: 168,
+              width: 505,
+              textAlign: "center",
+              fontFamily: "Helvetica-Bold",
+              fontSize: 31,
+              letterSpacing: 3,
+              color: "#566174",
+              opacity: 0.16,
+              transform: "rotate(-23deg)",
+            }}
+          >
+            VISTA PREVIA - SIN VALIDEZ
+          </Text>
+        )}
       </Page>
     </Document>
   );

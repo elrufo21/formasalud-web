@@ -113,11 +113,15 @@ export async function GET(
 
     // 2. Compilar PDF cargando imágenes con fallback a Vercel CDN
     const origin = requestUrl.origin;
-    const [logoLeftUrl, logoRightUrl, sealUrl, signatureLeftUrl, signatureRightUrl, backgroundUrl] =
+    const templateId = mapCertificateToPayload(certificate).templateId;
+    const triaje = templateId === "triaje-fisiouci";
+    const [logoLeftUrl, logoRightUrl, sponsorLogoUrl, sealUrl, awardSealUrl, signatureLeftUrl, signatureRightUrl, backgroundUrl] =
       await Promise.all([
         imageDataUrl("logofms.png", origin),
-        imageDataUrl("ausp.png", origin),
+        imageDataUrl(triaje ? "fisiouci.png" : "ausp.png", origin),
+        triaje ? imageDataUrl("ausp.png", origin) : Promise.resolve(undefined),
         imageDataUrl("cello.png", origin),
+        imageDataUrl("sellofms.png", origin),
         imageDataUrl("fra.png", origin),
         imageDataUrl("firmaMiguel.png", origin),
         imageDataUrl("coche-paro-hospital.png", origin),
@@ -126,7 +130,9 @@ export async function GET(
     const data = mapCertificateToPayload(certificate, {
       logoLeftUrl,
       logoRightUrl,
+      sponsorLogoUrl,
       sealUrl,
+      awardSealUrl,
       signatureLeftUrl,
       signatureRightUrl,
       backgroundUrl,
