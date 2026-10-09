@@ -56,7 +56,8 @@ export function mapCertificateToPayload(
     timeZone: "America/Lima", day: "2-digit", month: "long", year: "numeric",
   }).formatToParts(issueDate);
   const issueDay = issueParts.find((part) => part.type === "day")?.value || "01";
-  const issueMonthText = issueParts.find((part) => part.type === "month")?.value || "enero";
+  const issueMonthText = (issueParts.find((part) => part.type === "month")?.value || "enero")
+    .replace(/^setiembre$/i, "septiembre");
   const issueYearFull = issueParts.find((part) => part.type === "year")?.value || "2026";
   const issueMonth = new Intl.DateTimeFormat("en-US", { timeZone: "America/Lima", month: "2-digit" }).format(issueDate);
   const issueYear = issueYearFull.slice(-2);
