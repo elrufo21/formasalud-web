@@ -2,6 +2,7 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import { readFile, writeFile, unlink, mkdir, stat } from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
+import { createHash } from "node:crypto";
 import { api, Certificate } from "@/lib/api";
 import { CertificatePdfDocument } from "@/features/certificates/CertificatePdfDocument";
 import { mapCertificateToPayload } from "@/features/certificates/utils";
@@ -81,7 +82,8 @@ export async function GET(
     }
 
     const safeFileName = `Certificado_${code.replace(/[^a-zA-Z0-9-]/g, "_")}.pdf`;
-    const cachedFilePath = path.join(CACHE_DIR, `${code.replace(/[^a-zA-Z0-9-]/g, "_")}.pdf`);
+    const cacheVersion = createHash("sha256").update(JSON.stringify(certificate)).digest("hex").slice(0, 12);
+    const cachedFilePath = path.join(CACHE_DIR, `${code.replace(/[^a-zA-Z0-9-]/g, "_")}-${cacheVersion}.pdf`);
 
     if (certificate.valid === false || certificate.status === "revoked") {
       try {
@@ -104,7 +106,7 @@ export async function GET(
           headers: {
             "Content-Type": "application/pdf",
             "Content-Disposition": `${download ? "attachment" : "inline"}; filename="${safeFileName}"`,
-            "Cache-Control": "public, max-age=86400, s-maxage=86400",
+            "Cache-Control": "private, no-cache, must-revalidate",
             "X-Certificate-Cache": "HIT",
           },
         });
@@ -153,7 +155,7 @@ export async function GET(
       headers: {
         "Content-Type": "application/pdf",
         "Content-Disposition": `${download ? "attachment" : "inline"}; filename="${safeFileName}"`,
-        "Cache-Control": "public, max-age=86400, s-maxage=86400",
+        "Cache-Control": "private, no-cache, must-revalidate",
         "X-Certificate-Cache": "MISS",
       },
     });

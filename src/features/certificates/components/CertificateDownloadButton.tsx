@@ -29,7 +29,7 @@ export function CertificateDownloadButton({
 
   return (
     <a
-      href={`/api/certificates/${encodeURIComponent(data.certificateCode)}/pdf?download=1`}
+      href={`/api/certificates/${encodeURIComponent(data.certificateCode)}/pdf?download=1&v=${encodeURIComponent(data.courseDateText || "")}`}
       className={`${baseStyle} ${variantStyle} ${className}`}
     >
       <Download className="w-4 h-4 text-gold" />
