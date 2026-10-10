@@ -97,7 +97,8 @@ function Qr({ url, preview }: { url: string; preview?: boolean }) {
 
 export function SterilizationCertificate({ data }: { data: FormasaludCertificatePayload }) {
   const preview = data.previewOnly;
-  const nameSize = data.studentName.length > 45 ? 26 : data.studentName.length > 32 ? 32 : 42;
+  const displayName = data.studentName === "Nombre del participante" ? data.studentName : data.studentName.toLocaleLowerCase("es-PE").replace(/(^|[\s.])([a-záéíóúñ])/g, (_, separator: string, letter: string) => separator + letter.toLocaleUpperCase("es-PE"));
+  const nameSize = displayName.length > 45 ? 26 : displayName.length > 32 ? 32 : displayName.length > 26 ? 36 : 42;
   return <Document title="Certificado - Esterilización y Desinfección" author="FormaSalud" subject={preview ? "Modelo de certificado sin emisión" : "Certificado de aprobación"}>
     <Page size={[900, 600]} wrap={false} style={{ position: "relative", minHeight: 600, backgroundColor: "#F9FDFF", color: NAVY, fontFamily: "Helvetica" }}>
       <PdfImage src={asset(data.backgroundUrl || "/certificates/esterilizacion-fondo.png")} style={{ position: "absolute", left: 0, top: 0, width: 900, height: 600 }} />
@@ -111,7 +112,7 @@ export function SterilizationCertificate({ data }: { data: FormasaludCertificate
       <PdfImage src={asset(data.sponsorLogoUrl || "/certificates/ausp.png")} style={{ position: "absolute", left: 753, top: 20, width: 88, height: 88, objectFit: "contain" }} />
       <Text style={{ position: "absolute", top: 96, left: 231, width: 478, fontFamily: "Playfair", fontWeight: 700, fontSize: 50, letterSpacing: 1.2, textAlign: "center" }}>CERTIFICADO</Text>
       <Text style={{ position: "absolute", top: 160, left: 217, width: 484, fontFamily: "Helvetica-Bold", fontSize: 15, letterSpacing: 2, textAlign: "center" }}>OTORGADO A:</Text>
-      <Text style={{ position: "absolute", top: 174, left: 215, width: 485, fontFamily: "GreatVibes", fontSize: nameSize, textAlign: "center" }} hyphenationCallback={word => [word]}>{data.studentName}</Text>
+      <Text style={{ position: "absolute", top: 174, left: 215, width: 485, fontFamily: "GreatVibes", fontSize: nameSize, textAlign: "center" }} hyphenationCallback={word => [word]}>{displayName}</Text>
       <View style={{ position: "absolute", top: 218, left: 215, width: 484, height: 0.7, backgroundColor: NAVY }} />
       <View style={{ position: "absolute", left: 196, top: 157, width: 0.8, height: 178, backgroundColor: NAVY }} />
       <Info top={148} kind="date" title="FECHA DEL CURSO" text={data.courseDateText || "Del 06 de mayo al\n15 de junio de 2026"} />
