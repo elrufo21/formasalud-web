@@ -50,6 +50,7 @@ export function mapCertificateToPayload(
     normalizedTitle === "INTERVENCION DE ENFERMERIA EN EL AREA DE TRIAJE";
   const isPancreatitis = cert.template_key === "pancreatitis-formasalud" || normalizedTitle.includes("PANCREATITIS");
   const isSpeaker = (cert as { certificate_type?: string }).certificate_type === "speaker" || cert.template_key === "speaker-recognition";
+  const isSterilization = !isSpeaker && cert.template_key === "sterilization-formasalud";
 
   const issueDate = cert.issued_at ? new Date(cert.issued_at) : new Date();
   const issueParts = new Intl.DateTimeFormat("es-PE", {
@@ -69,25 +70,27 @@ export function mapCertificateToPayload(
     documentNumber: cert.document_number || cert.student?.document_number || "",
     courseTitle,
     certificateType: cert.certificate_type === "approval" ? "approval" : "participation",
-    hours: cert.hours || (isTriaje || isPancreatitis || isSpeaker ? 2 : isCocheDeParo ? 4 : 40),
+    hours: cert.hours || (isSterilization ? 90 : isTriaje || isPancreatitis || isSpeaker ? 2 : isCocheDeParo ? 4 : 40),
     hoursUnit: cert.hours_unit || (isTriaje || isPancreatitis || isSpeaker ? "horas lectivas" : "horas académicas"),
-    courseDateText: cert.course_date_text || (isTriaje ? "06 de octubre de 2026" : isPancreatitis ? "03 de octubre de 2026" : isCocheDeParo ? "14 de agosto de 2026" : "año 2026"),
+    courseDateText: cert.course_date_text || (isSterilization ? "Del 06 de mayo al 15 de junio de 2026" : isTriaje ? "06 de octubre de 2026" : isPancreatitis ? "03 de octubre de 2026" : isCocheDeParo ? "14 de agosto de 2026" : "año 2026"),
     issueDateText,
     issueDay,
     issueMonth,
     issueYear,
     role: isSpeaker ? "ponente" : "participante",
+    modality: isSterilization ? "Semipresencial (virtual + presencial)" : undefined,
     teacherName: cert.teacher_name || "Lic. Enf. Francisco Paucar Benites",
     coordinatorName: cert.coordinator_name || "Lic. Zambrano Cruz Miguel",
     gerenteGeneral: "Lic. Francisco Paucar Benites",
     logoLeftUrl: isTriaje || isPancreatitis || isSpeaker ? "/certificates/ausp.png" : "/certificates/logofms.png",
-    logoRightUrl: isTriaje || isPancreatitis || isSpeaker ? "/certificates/fisiouci.png" : "/certificates/ausp.png",
-    sponsorLogoUrl: isTriaje ? "/certificates/ausp.png" : undefined,
+    logoRightUrl: isTriaje || isPancreatitis || isSpeaker || isSterilization ? "/certificates/fisiouci.png" : "/certificates/ausp.png",
+    sponsorLogoUrl: isTriaje || isSterilization ? "/certificates/ausp.png" : undefined,
     signatureLeftUrl: "/certificates/fra.png",
     signatureRightUrl: "/certificates/firmaMiguel.png",
     sealUrl: "/certificates/cello.png",
+    backgroundUrl: isSterilization ? "/certificates/esterilizacion-fondo.png" : undefined,
     verificationUrl: getCertificateVerificationUrl(code),
-    templateId: isSpeaker ? "speaker-recognition" : isTriaje ? "triaje-fisiouci" : isPancreatitis ? "pancreatitis-formasalud" : "formasalud-classic",
+    templateId: isSpeaker ? "speaker-recognition" : isSterilization ? "sterilization-formasalud" : isTriaje ? "triaje-fisiouci" : isPancreatitis ? "pancreatitis-formasalud" : "formasalud-classic",
     ...overrides,
   };
 }

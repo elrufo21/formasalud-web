@@ -4,8 +4,12 @@ import { OfficialWaveCertificate } from "./templates/OfficialWaveCertificate";
 import { ClassicEleganceCertificate } from "./templates/ClassicEleganceCertificate";
 import { CertificatePdf18 as FormasaludClassicCertificate } from "./templates/FormasaludClassicCertificate";
 import { CertificatePdf18 as SpecializedCertificate } from "./templates/FormasaludSpecialCertificate";
+import { SterilizationCertificate } from "./templates/SterilizationCertificate";
 
 export function CertificatePdfDocument({ data }: { data: FormasaludCertificatePayload }) {
+  if (data.templateId === "sterilization-formasalud") {
+    return <SterilizationCertificate data={data} />;
+  }
   if (data.templateId === "classic-elegance") {
     return <ClassicEleganceCertificate data={data} />;
   }
