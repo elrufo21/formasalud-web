@@ -22,6 +22,7 @@ export interface FormasaludClassicData {
   triajeCertificate?: boolean;
   pancreatitisCertificate?: boolean;
   speakerCertificate?: boolean;
+  certificateType?: "approval" | "participation";
   previewOnly?: boolean;
   teacher1?: string;
   teacher2?: string;
@@ -676,7 +677,9 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
   const issueDateStr = issueDateFromParts(data);
   const nameText = data.name || "Nombres y Apellidos";
   const compactName = data.triajeCertificate && nameText.length > 30;
-  const approvalCertificate = data.triajeCertificate || data.pancreatitisCertificate;
+  const approvalCertificate = data.certificateType
+    ? data.certificateType === "approval"
+    : data.triajeCertificate || data.pancreatitisCertificate;
   const speakerCertificate = data.speakerCertificate;
   const nameFontSize = getNameFontSize(nameText, approvalCertificate || speakerCertificate);
   const logoImage = resolveAsset(data.logoImage);
@@ -722,13 +725,13 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
             src={secondaryLogoImage}
             style={[
               styles.logoSecondary,
-              data.triajeCertificate || speakerCertificate
+              data.triajeCertificate || data.pancreatitisCertificate || speakerCertificate
                 ? { right: 115, width: 90, height: 90 }
                 : undefined,
             ]}
           />
         )}
-        {(approvalCertificate || speakerCertificate) && sponsorLogoImage && (
+        {(approvalCertificate || speakerCertificate || data.pancreatitisCertificate) && sponsorLogoImage && (
           <Image src={sponsorLogoImage} style={styles.logoSponsor} />
         )}
 
@@ -815,6 +818,15 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
                 }
               : data.triajeCertificate
                 ? { top: 218 }
+                : data.pancreatitisCertificate && data.certificateType === "participation"
+                  ? {
+                      top: 218,
+                      fontFamily: "Helvetica",
+                      fontSize: 22,
+                      fontStyle: "normal",
+                      left: 120,
+                      width: 602,
+                    }
                 : compactName
                   ? {
                       fontFamily: "Lora",

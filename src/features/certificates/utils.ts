@@ -84,7 +84,7 @@ export function mapCertificateToPayload(
     academicDirector: "Lic. Francisco Paucar Benites",
     logoLeftUrl: isTriaje || isPancreatitis || isSpeaker ? "/certificates/ausp.png" : "/certificates/logofms.png",
     logoRightUrl: isTriaje || isPancreatitis || isSpeaker || isSterilization ? "/certificates/fisiouci.png" : "/certificates/ausp.png",
-    sponsorLogoUrl: isTriaje || isSterilization ? "/certificates/ausp.png" : undefined,
+    sponsorLogoUrl: isTriaje || isPancreatitis || isSterilization ? "/certificates/ausp.png" : undefined,
     signatureLeftUrl: "/certificates/fra.png",
     signatureRightUrl: "/certificates/firmaMiguel.png",
     sealUrl: "/certificates/cello.png",

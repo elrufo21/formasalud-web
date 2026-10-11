@@ -19,6 +19,7 @@ export function CertificatePdfDocument({ data }: { data: FormasaludCertificatePa
       course: data.courseTitle,
       hours: data.hours,
       hoursUnit: data.hoursUnit,
+      certificateType: data.certificateType,
       triajeCertificate: data.templateId === "triaje-fisiouci",
       pancreatitisCertificate:
         data.templateId === "pancreatitis-formasalud" ||

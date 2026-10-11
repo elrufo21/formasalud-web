@@ -118,6 +118,7 @@ export async function GET(
     const templateId = mapCertificateToPayload(certificate).templateId;
     const hasTwoSponsors =
       templateId === "triaje-fisiouci" ||
+      templateId === "pancreatitis-formasalud" ||
       templateId === "sterilization-formasalud" ||
       templateId === "speaker-recognition";
     const [logoLeftUrl, logoRightUrl, sponsorLogoUrl, sealUrl, awardSealUrl, signatureLeftUrl, signatureRightUrl, backgroundUrl] =
