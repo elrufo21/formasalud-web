@@ -702,7 +702,9 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
           )}
           style={styles.courseBackground}
         />}
-        {data.pancreatitisCertificate && <PancreasIllustration />}
+        {data.pancreatitisCertificate && !speakerCertificate && (
+          <PancreasIllustration />
+        )}
         {logoImage && <Image src={logoImage} style={styles.watermark} />}
         {logoImage && <Image src={logoImage} style={styles.logoPrimary} />}
         {secondaryLogoImage && (
@@ -761,8 +763,28 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
         </View>
         <Text style={[styles.granted, data.triajeCertificate ? { top: 206 } : undefined]}>A:</Text>
         <Text
-          style={[styles.name, { fontSize: nameFontSize }, data.triajeCertificate ? { top: 218 } : undefined,
-            compactName ? { fontFamily: "Lora", fontStyle: "italic", fontSize: 20, left: 120, width: 602 } : undefined]}
+          style={[
+            styles.name,
+            { fontSize: nameFontSize },
+            data.triajeCertificate ? { top: 218 } : undefined,
+            speakerCertificate
+              ? {
+                  fontFamily: "Helvetica",
+                  fontSize: 22,
+                  fontStyle: "normal",
+                  left: 120,
+                  width: 602,
+                }
+              : compactName
+                ? {
+                    fontFamily: "Lora",
+                    fontStyle: "italic",
+                    fontSize: 20,
+                    left: 120,
+                    width: 602,
+                  }
+                : undefined,
+          ]}
           wrap={false}
           hyphenationCallback={(word) => [word]}
         >
@@ -856,17 +878,19 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
           </View>
         </View>
 
-        <Image
-          src={awardSealImage}
-          style={{
-            position: "absolute",
-            right: 22,
-            top: 245,
-            width: 108,
-            height: 108,
-            objectFit: "contain",
-          }}
-        />
+        {!speakerCertificate && (
+          <Image
+            src={awardSealImage}
+            style={{
+              position: "absolute",
+              right: 22,
+              top: 245,
+              width: 108,
+              height: 108,
+              objectFit: "contain",
+            }}
+          />
+        )}
         <Text style={[styles.slogan, data.triajeCertificate || speakerCertificate ? { left: 301, right: undefined, bottom: 36, width: 240, textAlign: "center", transform: "rotate(0deg)" } : undefined]}>
           {speakerCertificate
             ? "Gracias por compartir\ntu experiencia"
