@@ -124,11 +124,10 @@ export function SterilizationCertificate({ data }: { data: FormasaludCertificate
         <Text style={{ textAlign: "center", fontFamily: "Helvetica-Bold", fontSize: 13, color: "#FFFFFF" }}>CURSO DE ACTUALIZACIÓN EN</Text>
       </View>
       <Text style={{ position: "absolute", left: 212, top: 265, width: 510, fontSize: 28, fontFamily: "Helvetica-Bold", textAlign: "center" }}>{data.courseTitle}</Text>
-      <Text style={{ position: "absolute", left: 215, top: 300, width: 490, fontSize: 11.5, textAlign: "center", color: "#07518D" }}>Desarrollado de manera semipresencial con una duración total de</Text>
-      <View style={{ position: "absolute", left: 346, top: 315, width: 224, borderRadius: 12, backgroundColor: BLUE, paddingVertical: 2 }}>
+      <View style={{ position: "absolute", left: 346, top: 300, width: 224, borderRadius: 12, backgroundColor: BLUE, paddingVertical: 2 }}>
         <Text style={{ textAlign: "center", fontFamily: "Helvetica-Bold", fontSize: 13, color: "#FFFFFF" }}>{data.hours || 90} HORAS ACADÉMICAS</Text>
       </View>
-      <Text style={{ position: "absolute", left: 226, top: 334, width: 470, fontFamily: "Helvetica-Bold", fontSize: 9.6, textAlign: "center", color: "#07518D" }}>(RANGO INTERMEDIO VÁLIDO PARA LA CERTIFICACIÓN).</Text>
+      <Text style={{ position: "absolute", left: 226, top: 319, width: 470, fontFamily: "Helvetica-Bold", fontSize: 9.6, textAlign: "center", color: "#07518D" }}>(RANGO INTERMEDIO VÁLIDO PARA LA CERTIFICACIÓN).</Text>
       {STERILIZATION_MODULES.map((module, i) => <View key={module.icon} style={{ position: "absolute", left: 106 + i * 161, top: 352, width: 154, height: 114, borderWidth: 0.7, borderColor: "#69B7E0", borderRadius: 8, backgroundColor: "#EDF8FF" }}>
         <View style={{ position: "absolute", left: 28, top: -7, width: 99, borderRadius: 10, backgroundColor: BLUE, paddingVertical: 3 }}>
           <Text style={{ textAlign: "center", color: "#FFFFFF", fontFamily: "Helvetica-Bold", fontSize: 10.5 }}>MÓDULO {i + 1}</Text>
