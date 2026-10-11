@@ -139,7 +139,7 @@ export interface Certificate {
   valid?: boolean;
   certificate_id: number;
   certificate_code: string;
-  certificate_type: "approval" | "participation";
+  certificate_type: "approval" | "participation" | "speaker";
   status: "active" | "revoked";
   issued_at: string;
   student_id?: number;
