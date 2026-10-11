@@ -681,6 +681,10 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
     ? data.certificateType === "approval"
     : data.triajeCertificate || data.pancreatitisCertificate;
   const speakerCertificate = data.speakerCertificate;
+  const updatedPancreatitisParticipant =
+    data.pancreatitisCertificate &&
+    data.certificateType === "participation" &&
+    !speakerCertificate;
   const nameFontSize = getNameFontSize(nameText, approvalCertificate || speakerCertificate);
   const logoImage = resolveAsset(data.logoImage);
   const secondaryLogoImage = resolveAsset(data.secondaryLogoImage);
@@ -705,7 +709,7 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
           )}
           style={styles.courseBackground}
         />}
-        {data.pancreatitisCertificate && !speakerCertificate && (
+        {data.pancreatitisCertificate && !speakerCertificate && !updatedPancreatitisParticipant && (
           <PancreasIllustration />
         )}
         {logoImage && <Image src={logoImage} style={styles.watermark} />}
@@ -714,7 +718,7 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
             src={logoImage}
             style={[
               styles.logoPrimary,
-              speakerCertificate
+              speakerCertificate || updatedPancreatitisParticipant
                 ? { top: 24, left: 24, width: 100, height: 100 }
                 : undefined,
             ]}
@@ -764,7 +768,9 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
           style={[
             styles.certificateTitle,
             data.triajeCertificate ? { top: 110 } : undefined,
-            speakerCertificate ? { fontSize: 52, left: 156, width: 530 } : undefined,
+            speakerCertificate || updatedPancreatitisParticipant
+              ? { fontSize: 52, left: 156, width: 530 }
+              : undefined,
           ]}
         >
           CERTIFICADO
@@ -772,7 +778,11 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
         <View
           style={[
             styles.certificateSubtitle,
-            speakerCertificate ? { top: 179 } : data.triajeCertificate ? { top: 176 } : undefined,
+            speakerCertificate || updatedPancreatitisParticipant
+              ? { top: 179 }
+              : data.triajeCertificate
+                ? { top: 176 }
+                : undefined,
           ]}
         >
           <Svg
@@ -798,7 +808,11 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
         <Text
           style={[
             styles.granted,
-            speakerCertificate ? { top: 207 } : data.triajeCertificate ? { top: 206 } : undefined,
+            speakerCertificate || updatedPancreatitisParticipant
+              ? { top: 207 }
+              : data.triajeCertificate
+                ? { top: 206 }
+                : undefined,
           ]}
         >
           {speakerCertificate ? "OTORGADO A:" : "A:"}
@@ -816,6 +830,15 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
                   left: 120,
                   width: 602,
                 }
+              : updatedPancreatitisParticipant
+                ? {
+                    top: 222,
+                    fontFamily: "Helvetica",
+                    fontSize: 22,
+                    fontStyle: "normal",
+                    left: 120,
+                    width: 602,
+                  }
               : data.triajeCertificate
                 ? { top: 218 }
                 : data.pancreatitisCertificate && data.certificateType === "participation"
@@ -845,13 +868,21 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
         <View
           style={[
             styles.nameRule,
-            speakerCertificate ? { top: 267 } : data.triajeCertificate ? { top: 258 } : undefined,
+            speakerCertificate || updatedPancreatitisParticipant
+              ? { top: 267 }
+              : data.triajeCertificate
+                ? { top: 258 }
+                : undefined,
           ]}
         />
         <View
           style={[
             styles.nameDiamond,
-            speakerCertificate ? { top: 263.6 } : data.triajeCertificate ? { top: 254.6 } : undefined,
+            speakerCertificate || updatedPancreatitisParticipant
+              ? { top: 263.6 }
+              : data.triajeCertificate
+                ? { top: 254.6 }
+                : undefined,
           ]}
         />
 
@@ -884,7 +915,11 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
         <View
           style={[
             styles.main,
-            speakerCertificate ? { top: 276 } : data.triajeCertificate ? { top: 272 } : undefined,
+            speakerCertificate || updatedPancreatitisParticipant
+              ? { top: 276 }
+              : data.triajeCertificate
+                ? { top: 272 }
+                : undefined,
           ]}
         >
           <Text style={styles.preamble}>
@@ -945,7 +980,7 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
           </View>
         </View>
 
-        {!speakerCertificate && (
+        {!speakerCertificate && !updatedPancreatitisParticipant && (
           <Image
             src={awardSealImage}
             style={{
@@ -958,7 +993,7 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
             }}
           />
         )}
-        <Text style={[styles.slogan, data.triajeCertificate || speakerCertificate ? { left: 301, right: undefined, bottom: 36, width: 240, textAlign: "center", transform: "rotate(0deg)" } : undefined]}>
+        <Text style={[styles.slogan, data.triajeCertificate || speakerCertificate || updatedPancreatitisParticipant ? { left: 301, right: undefined, bottom: 36, width: 240, textAlign: "center", transform: "rotate(0deg)" } : undefined]}>
           {speakerCertificate
             ? "Gracias por compartir\ntu experiencia"
             : data.pancreatitisCertificate
