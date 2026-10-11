@@ -780,7 +780,7 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
             { fontSize: nameFontSize },
             speakerCertificate
               ? {
-                  top: 215,
+                  top: 218,
                   fontFamily: "Helvetica",
                   fontSize: 22,
                   fontStyle: "normal",
@@ -807,13 +807,13 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
         <View
           style={[
             styles.nameRule,
-            speakerCertificate ? { top: 260 } : data.triajeCertificate ? { top: 258 } : undefined,
+            speakerCertificate ? { top: 263 } : data.triajeCertificate ? { top: 258 } : undefined,
           ]}
         />
         <View
           style={[
             styles.nameDiamond,
-            speakerCertificate ? { top: 256.6 } : data.triajeCertificate ? { top: 254.6 } : undefined,
+            speakerCertificate ? { top: 259.6 } : data.triajeCertificate ? { top: 254.6 } : undefined,
           ]}
         />
 
@@ -843,7 +843,12 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
           </InfoItem>
         </View>
 
-        <View style={[styles.main, data.triajeCertificate ? { top: 272 } : undefined]}>
+        <View
+          style={[
+            styles.main,
+            speakerCertificate ? { top: 272 } : data.triajeCertificate ? { top: 272 } : undefined,
+          ]}
+        >
           <Text style={styles.preamble}>
             {speakerCertificate
               ? "En reconocimiento a su destacada labor como ponente internacional en el"
