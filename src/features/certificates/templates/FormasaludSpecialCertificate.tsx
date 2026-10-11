@@ -706,11 +706,29 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
           <PancreasIllustration />
         )}
         {logoImage && <Image src={logoImage} style={styles.watermark} />}
-        {logoImage && <Image src={logoImage} style={styles.logoPrimary} />}
-        {secondaryLogoImage && (
-          <Image src={secondaryLogoImage} style={[styles.logoSecondary, data.triajeCertificate ? { right: 115, width: 90, height: 90 } : undefined]} />
+        {logoImage && (
+          <Image
+            src={logoImage}
+            style={[
+              styles.logoPrimary,
+              speakerCertificate
+                ? { top: 24, left: 24, width: 100, height: 100 }
+                : undefined,
+            ]}
+          />
         )}
-        {approvalCertificate && sponsorLogoImage && (
+        {secondaryLogoImage && (
+          <Image
+            src={secondaryLogoImage}
+            style={[
+              styles.logoSecondary,
+              data.triajeCertificate || speakerCertificate
+                ? { right: 115, width: 90, height: 90 }
+                : undefined,
+            ]}
+          />
+        )}
+        {(approvalCertificate || speakerCertificate) && sponsorLogoImage && (
           <Image src={sponsorLogoImage} style={styles.logoSponsor} />
         )}
 
@@ -739,11 +757,19 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
         >
           OTORGA EL PRESENTE
         </Text>
-        <Text style={[styles.certificateTitle, data.triajeCertificate ? { top: 110 } : undefined]}>CERTIFICADO</Text>
+        <Text
+          style={[
+            styles.certificateTitle,
+            data.triajeCertificate ? { top: 110 } : undefined,
+            speakerCertificate ? { fontSize: 52, left: 156, width: 530 } : undefined,
+          ]}
+        >
+          CERTIFICADO
+        </Text>
         <View
           style={[
             styles.certificateSubtitle,
-            speakerCertificate ? { top: 175 } : data.triajeCertificate ? { top: 176 } : undefined,
+            speakerCertificate ? { top: 179 } : data.triajeCertificate ? { top: 176 } : undefined,
           ]}
         >
           <Svg
@@ -769,7 +795,7 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
         <Text
           style={[
             styles.granted,
-            speakerCertificate ? { top: 203 } : data.triajeCertificate ? { top: 206 } : undefined,
+            speakerCertificate ? { top: 207 } : data.triajeCertificate ? { top: 206 } : undefined,
           ]}
         >
           {speakerCertificate ? "OTORGADO A:" : "A:"}
@@ -780,7 +806,7 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
             { fontSize: nameFontSize },
             speakerCertificate
               ? {
-                  top: 218,
+                  top: 222,
                   fontFamily: "Helvetica",
                   fontSize: 22,
                   fontStyle: "normal",
@@ -807,13 +833,13 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
         <View
           style={[
             styles.nameRule,
-            speakerCertificate ? { top: 263 } : data.triajeCertificate ? { top: 258 } : undefined,
+            speakerCertificate ? { top: 267 } : data.triajeCertificate ? { top: 258 } : undefined,
           ]}
         />
         <View
           style={[
             styles.nameDiamond,
-            speakerCertificate ? { top: 259.6 } : data.triajeCertificate ? { top: 254.6 } : undefined,
+            speakerCertificate ? { top: 263.6 } : data.triajeCertificate ? { top: 254.6 } : undefined,
           ]}
         />
 
@@ -846,7 +872,7 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
         <View
           style={[
             styles.main,
-            speakerCertificate ? { top: 272 } : data.triajeCertificate ? { top: 272 } : undefined,
+            speakerCertificate ? { top: 276 } : data.triajeCertificate ? { top: 272 } : undefined,
           ]}
         >
           <Text style={styles.preamble}>
