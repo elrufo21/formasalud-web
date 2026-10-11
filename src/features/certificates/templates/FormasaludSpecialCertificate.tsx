@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 7,
     fontFamily: "Playfair",
     fontWeight: 700,
-    fontSize: 7.7,
+    fontSize: 10.5,
     color: NAVY,
   },
   certificateTitle: {
