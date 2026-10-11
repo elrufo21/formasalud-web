@@ -81,7 +81,7 @@ export function mapCertificateToPayload(
     modality: isSterilization ? "Semipresencial (virtual + presencial)" : undefined,
     teacherName: cert.teacher_name || "Lic. Enf. Francisco Paucar Benites",
     coordinatorName: cert.coordinator_name || "Lic. Zambrano Cruz Miguel",
-    gerenteGeneral: "Lic. Francisco Paucar Benites",
+    academicDirector: "Lic. Francisco Paucar Benites",
     logoLeftUrl: isTriaje || isPancreatitis || isSpeaker ? "/certificates/ausp.png" : "/certificates/logofms.png",
     logoRightUrl: isTriaje || isPancreatitis || isSpeaker || isSterilization ? "/certificates/fisiouci.png" : "/certificates/ausp.png",
     sponsorLogoUrl: isTriaje || isSterilization ? "/certificates/ausp.png" : undefined,

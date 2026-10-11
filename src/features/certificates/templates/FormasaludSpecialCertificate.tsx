@@ -833,7 +833,7 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
               {data.teacher1 || "FRANCISCO PAUCAR BENITES"}
             </Text>
             <Text style={styles.signatureRole}>
-              GERENTE GENERAL{"\n"}FORMASALUD
+              DIRECTOR ACADÉMICO{"\n"}FORMASALUD
             </Text>
           </View>
           <View style={styles.sealBox}>

@@ -145,8 +145,8 @@ export function SterilizationCertificate({ data }: { data: FormasaludCertificate
       <PdfImage src={asset(data.signatureLeftUrl || "/certificates/fra.png")} style={{ position: "absolute", left: 185, top: 459, width: 154, height: 110, objectFit: "contain" }} />
       <PdfImage src={asset(data.signatureRightUrl || "/certificates/firmaMiguel.png")} style={{ position: "absolute", left: 549, top: 476, width: 148, height: 86, objectFit: "contain" }} />
       <Svg width={550} height={1} style={{ position: "absolute", left: 159, top: 540 }}><Line x1="0" y1="0" x2="190" y2="0" stroke={BLUE} strokeWidth="1" /><Line x1="375" y1="0" x2="550" y2="0" stroke={BLUE} strokeWidth="1" /></Svg>
-      <Text style={{ position: "absolute", left: 159, top: 546, width: 190, fontFamily: "Helvetica-Bold", fontSize: 9.5, textAlign: "center" }}>{data.gerenteGeneral || "FRANCISCO PAUCAR BENITES"}</Text>
-      <Text style={{ position: "absolute", left: 159, top: 559, width: 190, fontSize: 8.5, lineHeight: 1.3, textAlign: "center" }}>GERENTE GENERAL{"\n"}FORMASALUD</Text>
+      <Text style={{ position: "absolute", left: 159, top: 546, width: 190, fontFamily: "Helvetica-Bold", fontSize: 9.5, textAlign: "center" }}>{data.academicDirector || "FRANCISCO PAUCAR BENITES"}</Text>
+      <Text style={{ position: "absolute", left: 159, top: 559, width: 190, fontSize: 8.5, lineHeight: 1.3, textAlign: "center" }}>DIRECTOR ACADÉMICO{"\n"}FORMASALUD</Text>
       <PdfImage src={asset(data.sealUrl || "/certificates/cello.png")} style={{ position: "absolute", left: 394, top: 493, width: 95, height: 83, objectFit: "contain" }} />
       <Text style={{ position: "absolute", left: 526, top: 546, width: 191, fontFamily: "Helvetica-Bold", fontSize: 9.3, textAlign: "center" }}>{data.coordinatorName || "LIC. ZAMBRANO CRUZ MIGUEL"}</Text>
       <Text style={{ position: "absolute", left: 526, top: 559, width: 191, fontSize: 8.5, lineHeight: 1.3, textAlign: "center" }}>COORDINADOR ACADÉMICO{"\n"}FORMASALUD</Text>

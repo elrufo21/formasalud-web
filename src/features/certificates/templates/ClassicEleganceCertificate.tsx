@@ -393,9 +393,9 @@ export function ClassicEleganceCertificate({ data }: { data: FormasaludCertifica
             {firmaRight && <Image src={firmaRight} style={styles.signatureImage} />}
             <View style={styles.signatureLine} />
             <Text style={styles.signatureName}>
-              {data.gerenteGeneral || "LIC. BERTHA BENITES"}
+              {data.academicDirector || "LIC. FRANCISCO PAUCAR BENITES"}
             </Text>
-            <Text style={styles.signatureRole}>GERENTE GENERAL</Text>
+            <Text style={styles.signatureRole}>DIRECTOR ACADÉMICO</Text>
           </View>
         </View>
 

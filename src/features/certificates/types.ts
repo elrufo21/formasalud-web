@@ -19,7 +19,7 @@ export interface FormasaludCertificatePayload {
   issueYear?: string;
   teacherName?: string;
   coordinatorName?: string;
-  gerenteGeneral?: string;
+  academicDirector?: string;
   role?: "participante" | "ponente";
   previewOnly?: boolean;
   modality?: string;
