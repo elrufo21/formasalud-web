@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
     fontFamily: "Playfair",
     fontWeight: 700,
-    fontSize: 34,
+    fontSize: 40,
     color: NAVY,
     letterSpacing: 2.2,
   },
