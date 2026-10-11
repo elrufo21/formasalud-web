@@ -906,7 +906,7 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
               ? `Por compartir sus conocimientos y experiencia profesional en el desarrollo del curso, realizado el ${courseDate}.\nOrganizado por FORMASALUD, con el auspicio de FisioUCI y Medical Service Perú.`
               : approvalCertificate
               ? `Desarrollado de manera virtual el ${courseDate}, con una duración de ${data.hours || 2} ${data.hoursUnit || "horas lectivas"}.\nOrganizado por FORMASALUD, con el auspicio de FisioUCI y Medical Service Perú.`
-              : `Desarrollado el ${courseDate}, con una duración de ${data.hours || 4} horas académicas.\nSu compromiso y participación activa contribuyen al fortalecimiento del conocimiento y la práctica de la enfermería avanzada.`}
+              : `Desarrollado el ${courseDate}, con una duración de ${data.hours || 4} ${data.hoursUnit || "horas académicas"}.\nSu compromiso y participación activa contribuyen al fortalecimiento del conocimiento y la práctica de la enfermería avanzada.`}
           </Text>
         </View>
 
