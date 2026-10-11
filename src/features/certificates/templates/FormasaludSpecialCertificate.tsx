@@ -993,13 +993,15 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
             }}
           />
         )}
-        <Text style={[styles.slogan, data.triajeCertificate || speakerCertificate || updatedPancreatitisParticipant ? { left: 301, right: undefined, bottom: 36, width: 240, textAlign: "center", transform: "rotate(0deg)" } : undefined]}>
-          {speakerCertificate
-            ? "Gracias por compartir\ntu experiencia"
-            : data.pancreatitisCertificate
-              ? "¡Te esperamos!"
-              : "¡Juntos por una\nenfermería más segura!"}
-        </Text>
+        {!updatedPancreatitisParticipant && (
+          <Text style={[styles.slogan, data.triajeCertificate || speakerCertificate ? { left: 301, right: undefined, bottom: 36, width: 240, textAlign: "center", transform: "rotate(0deg)" } : undefined]}>
+            {speakerCertificate
+              ? "Gracias por compartir\ntu experiencia"
+              : data.pancreatitisCertificate
+                ? "¡Te esperamos!"
+                : "¡Juntos por una\nenfermería más segura!"}
+          </Text>
+        )}
         <VerificationBadge url={verificationUrl} />
         <View style={styles.footer}>
           <Text style={styles.footerText}>
