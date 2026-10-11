@@ -740,7 +740,12 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
           OTORGA EL PRESENTE
         </Text>
         <Text style={[styles.certificateTitle, data.triajeCertificate ? { top: 110 } : undefined]}>CERTIFICADO</Text>
-        <View style={[styles.certificateSubtitle, data.triajeCertificate ? { top: 176 } : undefined]}>
+        <View
+          style={[
+            styles.certificateSubtitle,
+            speakerCertificate ? { top: 175 } : data.triajeCertificate ? { top: 176 } : undefined,
+          ]}
+        >
           <Svg
             width={278}
             height={25}
@@ -761,37 +766,56 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
               {speakerCertificate ? "DE PONENCIA" : approvalCertificate ? "DE APROBACIÓN" : "DE PARTICIPACIÓN"}
           </Text>
         </View>
-        <Text style={[styles.granted, data.triajeCertificate ? { top: 206 } : undefined]}>A:</Text>
+        <Text
+          style={[
+            styles.granted,
+            speakerCertificate ? { top: 203 } : data.triajeCertificate ? { top: 206 } : undefined,
+          ]}
+        >
+          {speakerCertificate ? "OTORGADO A:" : "A:"}
+        </Text>
         <Text
           style={[
             styles.name,
             { fontSize: nameFontSize },
-            data.triajeCertificate ? { top: 218 } : undefined,
             speakerCertificate
               ? {
+                  top: 215,
                   fontFamily: "Helvetica",
                   fontSize: 22,
                   fontStyle: "normal",
                   left: 120,
                   width: 602,
                 }
-              : compactName
-                ? {
-                    fontFamily: "Lora",
-                    fontStyle: "italic",
-                    fontSize: 20,
-                    left: 120,
-                    width: 602,
-                  }
-                : undefined,
+              : data.triajeCertificate
+                ? { top: 218 }
+                : compactName
+                  ? {
+                      fontFamily: "Lora",
+                      fontStyle: "italic",
+                      fontSize: 20,
+                      left: 120,
+                      width: 602,
+                    }
+                  : undefined,
           ]}
           wrap={false}
           hyphenationCallback={(word) => [word]}
         >
           {nameText}
         </Text>
-        <View style={[styles.nameRule, data.triajeCertificate ? { top: 258 } : undefined]} />
-        <View style={[styles.nameDiamond, data.triajeCertificate ? { top: 254.6 } : undefined]} />
+        <View
+          style={[
+            styles.nameRule,
+            speakerCertificate ? { top: 260 } : data.triajeCertificate ? { top: 258 } : undefined,
+          ]}
+        />
+        <View
+          style={[
+            styles.nameDiamond,
+            speakerCertificate ? { top: 256.6 } : data.triajeCertificate ? { top: 254.6 } : undefined,
+          ]}
+        />
 
         <View
           style={{
