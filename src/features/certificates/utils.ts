@@ -9,6 +9,8 @@ type CertificateSource = Partial<Certificate> & {
   course_date_text?: string;
   teacher_name?: string;
   coordinator_name?: string;
+  template_key?: string;
+  hours_unit?: string;
 };
 
 export function getCertificateVerificationUrl(code: string) {
@@ -21,8 +23,8 @@ export function mapCertificateToPayload(
 ): FormasaludCertificatePayload {
   const studentName =
     cert.student_name ||
-    cert.student?.name ||
     cert.student?.full_name ||
+    ([cert.student?.name, (cert.student as { last_name?: string } | undefined)?.last_name].filter(Boolean).join(" ") || undefined) ||
     cert.full_name ||
     "Alumno FormaSalud";
 
@@ -41,38 +43,54 @@ export function mapCertificateToPayload(
 
   const isCocheDeParo =
     normalizedTitle.includes("COCHE DE PARO") ||
-    code.startsWith("REG-") ||
     (cert as { course?: { slug?: string } }).course?.slug === "mdcracue" ||
     (cert as { course_id?: number }).course_id === 5;
+  const isTriaje = cert.template_key === "triaje-fisiouci" ||
+    Number(cert.course_id ?? cert.course?.course_id) === 6 ||
+    normalizedTitle === "INTERVENCION DE ENFERMERIA EN EL AREA DE TRIAJE";
+  const isPancreatitis = cert.template_key === "pancreatitis-formasalud" || normalizedTitle.includes("PANCREATITIS");
+  const isSpeaker = (cert as { certificate_type?: string }).certificate_type === "speaker" || cert.template_key === "speaker-recognition";
+  const isSterilization = !isSpeaker && cert.template_key === "sterilization-formasalud";
 
   const issueDate = cert.issued_at ? new Date(cert.issued_at) : new Date();
-  const issueDay = String(issueDate.getDate()).padStart(2, "0");
-  const issueMonth = String(issueDate.getMonth() + 1).padStart(2, "0");
-  const issueYear = String(issueDate.getFullYear()).slice(-2);
-  const issueDateText = `${issueDay} de ${issueDate.toLocaleDateString("es-PE", { month: "long" })} del ${issueDate.getFullYear()}`;
+  const issueParts = new Intl.DateTimeFormat("es-PE", {
+    timeZone: "America/Lima", day: "2-digit", month: "long", year: "numeric",
+  }).formatToParts(issueDate);
+  const issueDay = issueParts.find((part) => part.type === "day")?.value || "01";
+  const issueMonthText = (issueParts.find((part) => part.type === "month")?.value || "enero")
+    .replace(/^setiembre$/i, "septiembre");
+  const issueYearFull = issueParts.find((part) => part.type === "year")?.value || "2026";
+  const issueMonth = new Intl.DateTimeFormat("en-US", { timeZone: "America/Lima", month: "2-digit" }).format(issueDate);
+  const issueYear = issueYearFull.slice(-2);
+  const issueDateText = `${issueDay} de ${issueMonthText} del ${issueYearFull}`;
 
   return {
     certificateCode: code,
     studentName,
     documentNumber: cert.document_number || cert.student?.document_number || "",
     courseTitle,
-    hours: cert.hours || (isCocheDeParo ? 4 : 40),
-    courseDateText: cert.course_date_text || (isCocheDeParo ? "14 de agosto de 2026" : "año 2026"),
+    certificateType: cert.certificate_type === "approval" ? "approval" : "participation",
+    hours: cert.hours || (isSterilization ? 90 : isTriaje || isPancreatitis || isSpeaker ? 2 : isCocheDeParo ? 4 : 40),
+    hoursUnit: cert.hours_unit || (isTriaje || isPancreatitis || isSpeaker ? "horas lectivas" : "horas académicas"),
+    courseDateText: cert.course_date_text || (isSterilization ? "Del 06 de mayo al 15 de junio de 2026" : isTriaje ? "06 de octubre de 2026" : isPancreatitis ? "03 de octubre de 2026" : isCocheDeParo ? "14 de agosto de 2026" : "año 2026"),
     issueDateText,
     issueDay,
     issueMonth,
     issueYear,
-    role: cert.certificate_type === "participation" ? "participante" : "participante",
+    role: isSpeaker ? "ponente" : "participante",
+    modality: isSterilization ? "Semipresencial (virtual + presencial)" : undefined,
     teacherName: cert.teacher_name || "Lic. Enf. Francisco Paucar Benites",
     coordinatorName: cert.coordinator_name || "Lic. Zambrano Cruz Miguel",
-    gerenteGeneral: "Lic. Francisco Paucar Benites",
-    logoLeftUrl: "/certificates/logofms.png",
-    logoRightUrl: "/certificates/ausp.png",
+    academicDirector: "Lic. Francisco Paucar Benites",
+    logoLeftUrl: isTriaje || isPancreatitis || isSpeaker ? "/certificates/ausp.png" : "/certificates/logofms.png",
+    logoRightUrl: isTriaje || isPancreatitis || isSpeaker || isSterilization ? "/certificates/fisiouci.png" : "/certificates/ausp.png",
+    sponsorLogoUrl: isTriaje || isPancreatitis || isSterilization ? "/certificates/ausp.png" : undefined,
     signatureLeftUrl: "/certificates/fra.png",
     signatureRightUrl: "/certificates/firmaMiguel.png",
     sealUrl: "/certificates/cello.png",
+    backgroundUrl: isSterilization ? "/certificates/esterilizacion-fondo.png" : undefined,
     verificationUrl: getCertificateVerificationUrl(code),
-    templateId: "formasalud-classic",
+    templateId: isSpeaker ? "speaker-recognition" : isSterilization ? "sterilization-formasalud" : isTriaje ? "triaje-fisiouci" : isPancreatitis ? "pancreatitis-formasalud" : "formasalud-classic",
     ...overrides,
   };
 }

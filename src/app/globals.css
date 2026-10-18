@@ -5,7 +5,7 @@
 @theme {
   --font-serif: var(--font-montserrat), sans-serif;
   --font-sans: var(--font-montserrat), sans-serif;
-  --font-mono: var(--font-montserrat), monospace;
+  --font-mono: var(--font-montserrat), sans-serif;
   --font-montserrat: var(--font-montserrat), sans-serif;
 
   --color-navy: #0F2942;
@@ -58,10 +58,15 @@
   --border: #E1E7E4;
   --input: #E1E7E4;
   --ring: #0E6E63;
-  --radius: 0.25rem;
+  --radius: 0.5rem;
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-montserrat), sans-serif;
+  }
+
   body {
     margin: 0;
     background: var(--paper);
@@ -71,12 +76,12 @@
     overflow-x: hidden;
   }
 
-  h1, h2, h3, h4 {
+  h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-montserrat), sans-serif;
     font-weight: 700;
     color: var(--navy);
     margin: 0;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.02em;
   }
 
   em {
@@ -97,12 +102,12 @@
   }
 
   section {
-    padding: 104px 0;
+    padding: 88px 0;
   }
 
-  @media (max-width: 720px) {
+  @media (max-width: 768px) {
     section {
-      padding: 64px 0;
+      padding: 56px 0;
     }
   }
 }
@@ -119,9 +124,9 @@
   padding: 0 32px;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 768px) {
   .wrap, .wrap-narrow {
-    padding: 0 20px;
+    padding: 0 18px;
   }
 }
 
@@ -135,27 +140,28 @@
 
 /* ---------- Eyebrow & Signature Devices ---------- */
 .mono {
-  font-family: var(--font-montserrat), monospace;
+  font-family: var(--font-montserrat), sans-serif;
 }
 
 .eyebrow {
   font-family: var(--font-montserrat), sans-serif;
-  font-size: 12px;
+  font-size: 11.5px;
   letter-spacing: .16em;
   text-transform: uppercase;
   color: var(--teal);
-  font-weight: 600;
-  display: flex;
+  font-weight: 700;
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .eyebrow::before {
   content: "";
-  width: 26px;
-  height: 1px;
+  width: 24px;
+  height: 2px;
   background: var(--gold);
   display: inline-block;
+  border-radius: 2px;
 }
 
 .eyebrow.on-dark {
@@ -163,7 +169,7 @@
 }
 
 .eyebrow.on-dark::before {
-  background: var(--gold-pale);
+  background: var(--gold);
 }
 
 .folio-bar {
@@ -186,18 +192,13 @@
 
 .masthead-strip {
   background: var(--navy-ink);
-  color: rgba(255, 255, 255, .55);
+  color: rgba(255, 255, 255, .65);
   font-family: var(--font-montserrat), sans-serif;
   font-size: 10.5px;
-  letter-spacing: .1em;
+  letter-spacing: .08em;
   text-transform: uppercase;
-  padding: 9px 0;
-}
-
-.masthead-strip .wrap {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* Corner registration marks */
@@ -232,11 +233,13 @@
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 9px;
-  padding: 14px 26px;
-  border-radius: 2px;
+  padding: 13px 24px;
+  border-radius: 12px;
+  font-family: var(--font-montserrat), sans-serif;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13.5px;
   letter-spacing: .01em;
   cursor: pointer;
   border: 1px solid transparent;
@@ -255,10 +258,12 @@
 .btn-primary {
   background: var(--teal);
   color: #fff;
+  box-shadow: 0 4px 14px rgba(14, 110, 99, 0.22);
 }
 
 .btn-primary:hover {
   background: var(--teal-deep);
+  box-shadow: 0 6px 20px rgba(7, 63, 56, 0.32);
 }
 
 .btn-line {
@@ -307,37 +312,31 @@
 .btn-fine {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   font-family: var(--font-montserrat), sans-serif;
-  font-size: 11px;
-  letter-spacing: .12em;
+  font-size: 11.5px;
+  letter-spacing: .1em;
   text-transform: uppercase;
   font-weight: 600;
   padding: 13px 22px;
+  border-radius: 12px;
   border: 1px solid var(--line-strong);
   color: var(--navy);
   position: relative;
   overflow: hidden;
-}
-
-.btn-fine::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 0;
-  height: 1.5px;
-  background: var(--gold);
-  transition: width .3s ease;
-}
-
-.btn-fine:hover::after {
-  width: 100%;
+  transition: all .2s ease;
 }
 
 .btn-fine.on-dark {
   color: #fff;
   border-color: rgba(255, 255, 255, .28);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.btn-fine.on-dark:hover {
+  border-color: var(--gold-pale);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* ---------- Textures ---------- */

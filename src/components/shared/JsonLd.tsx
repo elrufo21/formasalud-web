@@ -1,17 +1,17 @@
 import React from "react";
-import { COURSES_DATA } from "@/features/courses/data/courses";
 
 export function JsonLd() {
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
     name: "FORMASALUD",
-    legalName: "GRUPO PAUCAR PERÚ S.A.C.",
+    legalName: "FORMASALUD",
     taxID: "20613837613",
+    foundingDate: "2025-03-09",
     url: "https://formasalud.pe",
     logo: "https://formasalud.pe/images/logo.png",
     description:
-      "Centro de capacitación y formación médica continua en el Perú. Diplomados, cursos y talleres clínicos dictados por especialistas de hospitales de referencia.",
+      "Centro de capacitación especializado en la innovación y desarrollo académico para los profesionales de la salud en Lima, Perú.",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Lima",
@@ -20,7 +20,8 @@ export function JsonLd() {
     },
     contactPoint: {
       "@type": "ContactPoint",
-      telephone: "+51-999-999-999",
+      telephone: "+51-939-584-395",
+      email: "formasalud2025@gmail.com",
       contactType: "Customer Support",
       availableLanguage: ["Spanish"],
     },
@@ -31,50 +32,11 @@ export function JsonLd() {
     ],
   };
 
-  const courseListSchema = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    itemListElement: COURSES_DATA.map((course, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      item: {
-        "@type": "Course",
-        name: course.title,
-        description: course.description,
-        provider: {
-          "@type": "EducationalOrganization",
-          name: "FORMASALUD",
-          sameAs: "https://formasalud.pe",
-        },
-        hasCourseInstance: {
-          "@type": "CourseInstance",
-          courseMode: course.modality,
-          instructor: {
-            "@type": "Person",
-            name: course.speaker,
-            jobTitle: course.speakerSpecialty,
-          },
-        },
-        offers: {
-          "@type": "Offer",
-          price: course.price.replace("S/ ", ""),
-          priceCurrency: "PEN",
-          category: "Medical Training",
-          availability: "https://schema.org/InStock",
-        },
-      },
-    })),
-  };
-
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(courseListSchema) }}
       />
     </>
   );

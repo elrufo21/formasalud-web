@@ -18,7 +18,7 @@ export const FAQ_DATA: FaqItem[] = [
     num: "02",
     question: "¿Los diplomas y certificados cuentan con respaldo formal?",
     answer:
-      "Sí. Todos los certificados son emitidos por GRUPO PAUCAR PERÚ S.A.C. (RUC 20613837613) e incluyen código QR de verificación institucional y horas lectivas acreditadas.",
+      "Sí. Todas las certificaciones son emitidas por FORMASALUD (RUC 20613837613) y están respaldadas mediante convenios académicos nacionales e internacionales, incluyendo código QR de verificación institucional y horas lectivas acreditadas.",
   },
   {
     id: "matricula",

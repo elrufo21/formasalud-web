@@ -7,7 +7,6 @@ import { api, User, Course, Certificate } from "@/lib/api";
 import { AdminHeader } from "@/features/admin/components/AdminHeader";
 import { StatCard } from "@/components/ui/StatCard";
 import { UserModal } from "@/features/admin/components/UserModal";
-import { CourseModal } from "@/features/admin/components/CourseModal";
 import { IssueCertificateModal } from "@/features/admin/components/IssueCertificateModal";
 
 export default function AdminDashboardPage() {
@@ -17,7 +16,6 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(true);
 
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
-  const [isCourseModalOpen, setIsCourseModalOpen] = useState(false);
   const [isCertModalOpen, setIsCertModalOpen] = useState(false);
 
   const loadData = async () => {
@@ -169,11 +167,6 @@ export default function AdminDashboardPage() {
       <UserModal
         isOpen={isUserModalOpen}
         onClose={() => setIsUserModalOpen(false)}
-        onSuccess={loadData}
-      />
-      <CourseModal
-        isOpen={isCourseModalOpen}
-        onClose={() => setIsCourseModalOpen(false)}
         onSuccess={loadData}
       />
       <IssueCertificateModal

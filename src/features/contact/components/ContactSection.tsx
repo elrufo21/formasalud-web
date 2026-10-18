@@ -86,7 +86,7 @@ export function ContactSection() {
                   </label>
                   <input
                     type="text"
-                    placeholder="Ej. +51 999 999 999"
+                    placeholder="Ej. +51 939 584 395"
                     className="w-full px-4 py-3 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-[#0b5345] transition text-gray-800"
                     required
                   />
@@ -162,8 +162,15 @@ export function ContactSection() {
                 </div>
                 <div>
                   <p className="font-semibold text-[#0b1b3d] text-xs">WhatsApp / Teléfono</p>
-                  <p className="text-[#0b5345] font-bold text-sm mt-0.5">+51 999 999 999</p>
-                  <p className="text-[11px] text-gray-500 mt-0.5">Respuesta directa en horario de oficina.</p>
+                  <a
+                    href="https://wa.me/51939584395"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#0b5345] font-bold text-sm mt-0.5 block hover:underline"
+                  >
+                    +51 939 584 395
+                  </a>
+                  <p className="text-[11px] text-gray-500 mt-0.5">Respuesta directa en horario de atención.</p>
                 </div>
               </div>
 
@@ -176,8 +183,13 @@ export function ContactSection() {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-semibold text-[#0b1b3d] text-xs">Correo</p>
-                  <p className="text-[#0b5345] font-semibold text-sm mt-0.5">contacto@formasalud.pe</p>
+                  <p className="font-semibold text-[#0b1b3d] text-xs">Correo Electrónico</p>
+                  <a
+                    href="mailto:formasalud2025@gmail.com"
+                    className="text-[#0b5345] font-semibold text-sm mt-0.5 block hover:underline"
+                  >
+                    formasalud2025@gmail.com
+                  </a>
                   <p className="text-[11px] text-gray-500 mt-0.5">Para consultas institucionales, convenios y solicitudes formales.</p>
                 </div>
               </div>
@@ -191,9 +203,9 @@ export function ContactSection() {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-semibold text-[#0b1b3d] text-xs">Sede</p>
-                  <p className="text-[#0b1b3d] font-semibold text-sm mt-0.5">Lima, Perú</p>
-                  <p className="text-[10px] text-gray-400 tracking-wide uppercase mt-0.5">GRUPO PAUCAR PERÚ S.A.C.</p>
+                  <p className="font-semibold text-[#0b1b3d] text-xs">Ubicación Institucional</p>
+                  <p className="text-[#0b1b3d] font-semibold text-sm mt-0.5">Lima – Perú</p>
+                  <p className="text-[10px] text-gray-500 tracking-wide uppercase mt-0.5 font-semibold">FORMASALUD · RUC 20613837613</p>
                 </div>
               </div>
 

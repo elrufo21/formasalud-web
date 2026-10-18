@@ -14,7 +14,7 @@ const registerSchema = z.object({
   name: z.string().min(2, "Ingresa tu nombre"),
   last_name: z.string().min(2, "Ingresa tus apellidos"),
   email: z.string().email("Correo electrónico inválido"),
-  password: z.string().min(6, "La contraseña debe tener mínimo 6 caracteres"),
+  password: z.string().min(8, "La contraseña debe tener mínimo 8 caracteres"),
   document_type: z.enum(["dni", "ce", "passport", "other"]),
   document_number: z.string().min(8, "Ingresa un número de documento válido"),
   phone: z.string().min(7, "Ingresa un número telefónico").optional().or(z.literal("")),

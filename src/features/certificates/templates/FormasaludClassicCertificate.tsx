@@ -21,6 +21,9 @@ export interface FormasaludClassicData {
   name?: string;
   course?: string;
   hours?: number;
+  hoursUnit?: string;
+  approvalCertificate?: boolean;
+  hideCourseBackground?: boolean;
   teacher1?: string;
   teacher2?: string;
   idCertificado?: string;
@@ -655,7 +658,14 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
   const ruc = data.ruc || "20613837613";
   const issueDateStr = issueDateFromParts(data);
   const nameText = data.name || "Nombres y Apellidos";
-  const nameFontSize = getNameFontSize(nameText);
+  const internationalCourse = /^CURSO INTERNACIONAL\s+SOBRE\s+EL\s+/i.test(data.course || "");
+  const courseText = internationalCourse
+    ? (data.course || "").replace(/^CURSO INTERNACIONAL\s+SOBRE\s+EL\s+/i, "")
+    : data.course;
+  const titledName = /^(?:TEC\.|LIC\.|DR\.|DRA\.)\s/i.test(nameText)
+    ? nameText
+    : `LIC. ${nameText}`;
+  const nameFontSize = getNameFontSize(titledName);
   const logoImage = resolveAsset(data.logoImage);
   const secondaryLogoImage = resolveAsset(data.secondaryLogoImage);
   const sealImage = resolveAsset(data.sealImage);
@@ -671,12 +681,12 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
         <View style={styles.background}>
           <Background />
         </View>
-        <Image
+        {!data.hideCourseBackground && <Image
           src={resolveAsset(
             data.backgroundImage || "/certificates/coche-paro-hospital.png",
           )}
           style={styles.courseBackground}
-        />
+        />}
         {logoImage && <Image src={logoImage} style={styles.watermark} />}
         {logoImage && <Image src={logoImage} style={styles.logoPrimary} />}
         {secondaryLogoImage && (
@@ -700,14 +710,14 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
         </View>
 
         <Text style={styles.certificateTitle}>CERTIFICADO</Text>
-        <Text style={styles.certificateSubtitle}>DE PARTICIPACIÓN</Text>
+        <Text style={styles.certificateSubtitle}>{data.approvalCertificate ? "DE APROBACIÓN" : "DE PARTICIPACIÓN"}</Text>
         <Text style={styles.granted}>Otorgado a:</Text>
         <Text
           style={[styles.name, { fontSize: nameFontSize }]}
           wrap={false}
           hyphenationCallback={(word) => [word]}
         >
-          LIC. {nameText}
+          {titledName}
         </Text>
         <View style={styles.nameRule} />
         <View style={styles.nameDiamond} />
@@ -728,7 +738,7 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
           <InfoItem
             kind="time"
             title="DURACIÓN"
-          >{`${data.hours || 4} horas académicas`}</InfoItem>
+          >{`${data.hours || 4} ${data.hoursUnit || "horas académicas"}`}</InfoItem>
           <InfoItem
             kind="screen"
             title="MODALIDAD"
@@ -743,15 +753,15 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
             Por su participación y aprobación en el
           </Text>
           <View style={styles.coursePill}>
-            <Text style={styles.coursePillText}>CURSO TALLER:</Text>
+            <Text style={styles.coursePillText}>{internationalCourse ? "CURSO INTERNACIONAL:" : "CURSO TALLER:"}</Text>
           </View>
           <Text style={styles.course} hyphenationCallback={(word) => [word]}>
-            {data.course ||
+            {courseText ||
               "TALLER PRÁCTICO DE CÁLCULO Y ADMINISTRACIÓN DE DROGAS VASOACTIVAS EN ÁREAS CRÍTICAS: EMERGENCIAS Y UCI"}
           </Text>
           <Text style={styles.description}>
             Desarrollado el {courseDate}, con una duración de {data.hours || 4}{" "}
-            horas académicas.{"\n"}Su compromiso y participación activa
+            {data.hoursUnit || "horas académicas"}.{"\n"}Su compromiso y participación activa
             contribuyen al fortalecimiento del conocimiento y la práctica en la
             atención de emergencias.
           </Text>
@@ -769,7 +779,7 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
               {data.teacher1 || "FRANCISCO PAUCAR BENITES"}
             </Text>
             <Text style={styles.signatureRole}>
-              GERENTE GENERAL{"\n"}FORMASALUD
+              DIRECTOR ACADÉMICO{"\n"}FORMASALUD
             </Text>
           </View>
           <View style={styles.sealBox}>

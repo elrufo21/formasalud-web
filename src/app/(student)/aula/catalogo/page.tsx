@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { BookOpen, SearchX } from "lucide-react";
-import { api, Course } from "@/lib/api";
+import { api, PublicCourse } from "@/lib/api";
 import { StudentHeader } from "@/features/student/components/StudentHeader";
 import { EnrollModal } from "@/features/student/components/EnrollModal";
 import {
@@ -17,15 +17,15 @@ import {
 } from "@/features/student/components/CatalogFilters";
 
 export default function StudentCatalogPage() {
-  const [courses, setCourses] = useState<Course[]>([]);
+  const [courses, setCourses] = useState<PublicCourse[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [selectedCourse, setSelectedCourse] = useState<PublicCourse | null>(null);
   const [filters, setFilters] = useState<CatalogFiltersState>(DEFAULT_CATALOG_FILTERS);
 
   useEffect(() => {
     let cancelled = false;
     api
-      .getCourses()
+      .getPublicCourses()
       .then((data) => {
         if (!cancelled) setCourses(data);
       })

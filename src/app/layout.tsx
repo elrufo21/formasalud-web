@@ -12,11 +12,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://formasalud.pe"),
   title: {
-    default: "FORMASALUD — Centro de Capacitación y Formación Médica Continua",
+    default: "FORMASALUD — Innovación y Desarrollo Académico en Salud",
     template: "%s | FORMASALUD",
   },
   description:
-    "Centro especializado en formación médica continua en Perú. Diplomados, cursos clínicos y talleres de simulación dictados por especialistas de hospitales de referencia. Certificación oficial respaldada por GRUPO PAUCAR PERÚ S.A.C.",
+    "FORMASALUD es un centro de capacitación especializado en la innovación y desarrollo académico para los profesionales de la salud, comprometido con la formación continua, el fortalecimiento de competencias y la excelencia en la atención sanitaria.",
   keywords: [
     "cursos medicos peru",
     "diplomados en salud lima",
@@ -26,11 +26,10 @@ export const metadata: Metadata = {
     "ia en medicina",
     "simulacion clinica lima",
     "formasalud",
-    "grupo paucar peru",
   ],
-  authors: [{ name: "FORMASALUD - Grupo Paucar Perú S.A.C." }],
+  authors: [{ name: "FORMASALUD" }],
   creator: "FORMASALUD",
-  publisher: "GRUPO PAUCAR PERÚ S.A.C.",
+  publisher: "FORMASALUD",
   formatDetection: {
     email: false,
     address: false,

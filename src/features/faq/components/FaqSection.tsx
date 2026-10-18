@@ -1,7 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import { FadeIn, StaggerContainer, StaggerItem } from "@/components/ui/MotionReveal";
 import { FAQ_DATA } from "../data/faq";
 
 export function FaqSection() {
@@ -12,49 +15,83 @@ export function FaqSection() {
   };
 
   return (
-    <section className="py-20">
-      <div className="wrap max-w-[900px]">
-        <Eyebrow>Resolución de Dudas</Eyebrow>
-        <h2 className="text-3xl md:text-4xl font-serif text-navy mt-4">
-          Preguntas Frecuentes
-        </h2>
+    <section className="py-16 sm:py-20 bg-paper">
+      <div className="wrap max-w-[920px]">
+        <FadeIn className="text-center max-w-2xl mx-auto mb-10">
+          <Eyebrow className="justify-center">Resolución de Dudas</Eyebrow>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-navy mt-3 tracking-tight">
+            Preguntas Frecuentes
+          </h2>
+          <p className="mt-2.5 text-sm sm:text-base text-ink-soft leading-relaxed">
+            Todo lo que necesitas saber sobre nuestra modalidad de estudio, acceso al Aula Virtual y proceso de certificación.
+          </p>
+        </FadeIn>
 
-        <div className="faq-list border-t border-line mt-8">
+        <StaggerContainer staggerDelay={0.08} className="space-y-3">
           {FAQ_DATA.map((item) => {
             const isOpen = openId === item.id;
             return (
-              <div key={item.id} className="faq-item border-b border-line">
-                <button
-                  onClick={() => toggle(item.id)}
-                  className="faq-q w-full text-left flex justify-between items-center gap-5 py-6 font-serif text-lg font-medium text-navy cursor-pointer"
+              <StaggerItem key={item.id}>
+                <div
+                  className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
+                    isOpen
+                      ? "bg-bg-alt/70 border-teal/40 shadow-[0_8px_24px_rgba(15,41,66,0.06)]"
+                      : "bg-white border-line hover:border-line-strong"
+                  }`}
                 >
-                  <div className="flex items-center">
-                    <span className="n font-mono text-xs text-line-strong mr-3.5">
-                      {item.num}
-                    </span>
-                    <span>{item.question}</span>
-                  </div>
-                  <div
-                    className={`plus relative w-5 h-5 flex-none transition-transform ${
-                      isOpen ? "rotate-45" : ""
-                    }`}
+                  <button
+                    type="button"
+                    onClick={() => toggle(item.id)}
+                    className="w-full text-left flex justify-between items-center gap-4 p-5 sm:p-6 text-sm sm:text-base font-bold text-navy cursor-pointer"
+                    aria-expanded={isOpen}
                   >
-                    <span className="absolute w-3.5 h-[1.6px] bg-teal top-[9px] left-[3px]" />
-                    <span className="absolute w-[1.6px] h-3.5 bg-teal left-[9px] top-[3px]" />
-                  </div>
-                </button>
-                {isOpen && (
-                  <div className="faq-a pb-6 pl-9 pr-4">
-                    <p className="text-sm md:text-base text-ink-soft leading-relaxed max-w-2xl">
-                      {item.answer}
-                    </p>
-                  </div>
-                )}
-              </div>
+                    <div className="flex items-center gap-3.5">
+                      <span
+                        className={`w-7 h-7 rounded-lg text-xs font-extrabold flex items-center justify-center shrink-0 transition-colors ${
+                          isOpen
+                            ? "bg-teal text-white"
+                            : "bg-tealtint text-tealdeep"
+                        }`}
+                      >
+                        {item.num}
+                      </span>
+                      <span className="leading-snug">{item.question}</span>
+                    </div>
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
+                        isOpen
+                          ? "bg-teal/15 text-teal rotate-180"
+                          : "bg-bg-alt text-ink-soft"
+                      }`}
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </div>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        key="content"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <div className="px-5 sm:px-6 pb-5 sm:pb-6 pl-5 sm:pl-[4.25rem]">
+                          <p className="text-xs sm:text-sm text-ink-soft leading-relaxed">
+                            {item.answer}
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </StaggerItem>
             );
           })}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );
 }
+

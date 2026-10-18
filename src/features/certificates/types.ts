@@ -1,4 +1,4 @@
-export type CertificateTemplateId = "official-wave" | "classic-elegance" | "formasalud-classic";
+export type CertificateTemplateId = "official-wave" | "classic-elegance" | "formasalud-classic" | "triaje-fisiouci" | "pancreatitis-formasalud" | "speaker-recognition" | "sterilization-formasalud";
 
 
 export interface FormasaludCertificatePayload {
@@ -6,7 +6,9 @@ export interface FormasaludCertificatePayload {
   studentName: string;
   documentNumber?: string;
   courseTitle: string;
+  certificateType?: "approval" | "participation";
   hours?: number;
+  hoursUnit?: string;
   courseDateText?: string;
   issueDateText?: string;
   day?: string;
@@ -17,14 +19,17 @@ export interface FormasaludCertificatePayload {
   issueYear?: string;
   teacherName?: string;
   coordinatorName?: string;
-  gerenteGeneral?: string;
+  academicDirector?: string;
   role?: "participante" | "ponente";
+  previewOnly?: boolean;
   modality?: string;
   logoLeftUrl?: string;
   logoRightUrl?: string;
+  sponsorLogoUrl?: string;
   signatureLeftUrl?: string;
   signatureRightUrl?: string;
   sealUrl?: string;
+  awardSealUrl?: string;
   backgroundUrl?: string;
   verificationUrl?: string;
   templateId?: CertificateTemplateId;

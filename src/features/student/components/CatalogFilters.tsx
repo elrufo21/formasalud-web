@@ -2,7 +2,7 @@
 
 import React from "react";
 import { ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
-import { Course } from "@/lib/api";
+import { PublicCourse } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 /* -------------------------------------------------------------------------- */
@@ -15,10 +15,6 @@ export type SortOption = "recent" | "price-asc" | "price-desc" | "title";
 
 export interface CatalogFiltersState {
   search: string;
-  /** Solo visual: la categoría aún no existe en la BD */
-  category: string;
-  /** Solo visual: la modalidad aún no existe en la BD */
-  modality: string;
   price: PriceFilter;
   certificate: CertificateFilter;
   sort: SortOption;
@@ -26,30 +22,10 @@ export interface CatalogFiltersState {
 
 export const DEFAULT_CATALOG_FILTERS: CatalogFiltersState = {
   search: "",
-  category: "all",
-  modality: "all",
   price: "all",
   certificate: "all",
   sort: "recent",
 };
-
-// TODO: reemplazar por las categorías reales cuando existan en la BD
-const CATEGORIES = [
-  { id: "all", label: "Todos" },
-  { id: "diplomado", label: "Diplomados" },
-  { id: "curso", label: "Cursos Clínicos" },
-  { id: "taller", label: "Talleres Prácticos" },
-  { id: "gestion", label: "Gestión Sanitaria" },
-  { id: "ia", label: "IA & Salud Digital" },
-];
-
-// TODO: reemplazar por las modalidades reales cuando existan en la BD
-const MODALITIES = [
-  { value: "all", label: "Todas" },
-  { value: "virtual", label: "Virtual" },
-  { value: "presencial", label: "Presencial" },
-  { value: "hibrido", label: "Híbrido" },
-];
 
 const PRICES = [
   { value: "all", label: "Todos" },
@@ -80,7 +56,7 @@ const normalize = (value: string) =>
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
 
-export function applyCatalogFilters(courses: Course[], filters: CatalogFiltersState) {
+export function applyCatalogFilters(courses: PublicCourse[], filters: CatalogFiltersState) {
   const query = normalize(filters.search.trim());
 
   const result = courses.filter((course) => {
@@ -99,7 +75,7 @@ export function applyCatalogFilters(courses: Course[], filters: CatalogFiltersSt
     return true;
   });
 
-  const time = (c: Course) => new Date(c.published_at ?? c.created_at ?? 0).getTime() || 0;
+  const time = (c: PublicCourse) => new Date(c.published_at ?? 0).getTime() || 0;
 
   return [...result].sort((a, b) => {
     switch (filters.sort) {
@@ -223,36 +199,8 @@ export function CatalogFilters({
         </div>
       </div>
 
-      {/* Categorías (solo visual por ahora) */}
-      <div className="flex items-center gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -mx-1 px-1 pb-1">
-        {CATEGORIES.map((cat) => {
-          const isActive = filters.category === cat.id;
-          return (
-            <button
-              key={cat.id}
-              type="button"
-              onClick={() => update("category", cat.id)}
-              className={cn(
-                "px-3.5 py-1.5 rounded-full text-xs font-medium transition-all flex-none cursor-pointer",
-                isActive
-                  ? "bg-navy text-white shadow-sm font-semibold"
-                  : "bg-bg-alt text-ink-soft hover:bg-tealtint hover:text-navy border border-line",
-              )}
-            >
-              {cat.label}
-            </button>
-          );
-        })}
-      </div>
-
       {/* Filtros secundarios */}
       <div className="flex flex-wrap items-end gap-3 pt-3 border-t border-line">
-        <FilterSelect
-          label="Modalidad"
-          value={filters.modality}
-          options={MODALITIES}
-          onChange={(v) => update("modality", v)}
-        />
         <FilterSelect
           label="Precio"
           value={filters.price}

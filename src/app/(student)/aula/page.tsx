@@ -3,35 +3,21 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { BookOpen, Award, CheckCircle, ArrowRight, Clock, Sparkles } from "lucide-react";
-import { api, Certificate, Course } from "@/lib/api";
+import { api, Certificate } from "@/lib/api";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { StudentHeader } from "@/features/student/components/StudentHeader";
 
 export default function StudentDashboardPage() {
   const { user } = useAuthStore();
   const [myCertificates, setMyCertificates] = useState<Certificate[]>([]);
-  const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadStudentData() {
       setLoading(true);
       try {
-        const [certs, allCourses] = await Promise.all([
-          api.getCertificates().catch(() => []),
-          api.getCourses().catch(() => []),
-        ]);
-
-        // Filtrar certificados correspondientes a este alumno (o mostrar los emitidos)
-        const myCerts = certs.filter(
-          (c) =>
-            c.student_id === user?.user_id ||
-            c.student?.email?.toLowerCase() === user?.email.toLowerCase() ||
-            c.student_name?.toLowerCase().includes(user?.name.toLowerCase() || "")
-        );
-
-        setMyCertificates(myCerts.length > 0 ? myCerts : certs.slice(0, 2));
-        setCourses(allCourses);
+        const certs = await api.getMyCertificates().catch(() => []);
+        setMyCertificates(certs);
       } finally {
         setLoading(false);
       }

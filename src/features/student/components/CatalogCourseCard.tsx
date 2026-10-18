@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { ArrowRight, CheckCircle, GraduationCap, Sparkles, Tag } from "lucide-react";
-import { Course } from "@/lib/api";
+import { getPublicAssetUrl, PublicCourse } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 interface CatalogCourseCardProps {
-  course: Course;
-  onEnroll: (course: Course) => void;
+  course: PublicCourse;
+  onEnroll: (course: PublicCourse) => void;
 }
 
 // Degradados de la paleta institucional para cursos sin imagen
@@ -53,7 +54,8 @@ export function CatalogCourseCard({ course, onEnroll }: CatalogCourseCardProps) 
   const isFree = price === 0;
   const isNew = isNewCourse(course.published_at);
   const publishedLabel = formatPublishedDate(course.published_at);
-  const showImage = !!course.thumbnail_url && !imageError;
+  const imageUrl = getPublicAssetUrl(course.thumbnail_url);
+  const showImage = !!imageUrl && !imageError;
   const gradient = FALLBACK_GRADIENTS[course.course_id % FALLBACK_GRADIENTS.length];
 
   return (
@@ -61,13 +63,14 @@ export function CatalogCourseCard({ course, onEnroll }: CatalogCourseCardProps) 
       {/* Imagen del curso */}
       <div className="relative aspect-[16/9] overflow-hidden bg-bg-alt">
         {showImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={course.thumbnail_url!}
+          <Image
+            src={imageUrl!}
             alt={course.title}
-            loading="lazy"
+            fill
+            unoptimized={imageUrl!.includes("212.47.64.208")}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             onError={() => setImageError(true)}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <div

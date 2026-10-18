@@ -4,6 +4,7 @@ import Image from "next/image";
 import AboutHero from "@/features/landing/components/AboutHero";
 import { TeamSection, TestimonialsSection } from "@/features/landing";
 import { CourseHomeGrid } from "@/features/courses/components/CourseHomeGrid";
+import { getPublishedCourses } from "@/lib/public-courses";
 
 export const metadata: Metadata = {
   title: "Quiénes Somos — FORMASALUD",
@@ -11,7 +12,10 @@ export const metadata: Metadata = {
     "Compromiso académico con la salud pública y privada. FORMASALUD nace para responder a la necesidad de actualización constante del profesional de salud peruano.",
 };
 
-export default function QuienesSomosPage() {
+export const revalidate = 60;
+
+export default async function QuienesSomosPage() {
+  const courses = await getPublishedCourses();
   return (
     <main className="flex-1">
       <AboutHero />
@@ -54,12 +58,19 @@ export default function QuienesSomosPage() {
                 </span>
               </h2>
 
-              <p className="text-[#d0e1e1] text-[15px] sm:text-[17px] leading-[1.7] max-w-[620px]">
+              <p className="text-[#d0e1e1] text-[15px] sm:text-[16.5px] leading-[1.7] max-w-[620px] mb-4">
                 Empoderamos a los profesionales de la salud mediante programas
                 de capacitación innovadores y de alta calidad, proporcionando
                 herramientas científicas, tecnológicas y metodológicas que
                 fortalezcan sus competencias y optimicen su desempeño
                 profesional.
+              </p>
+
+              <p className="text-[#d0e1e1] text-[15px] sm:text-[16.5px] leading-[1.7] max-w-[620px]">
+                Nuestro propósito es contribuir a la mejora continua de la
+                calidad de atención en los servicios de salud, formando líderes
+                comprometidos con la excelencia, la innovación y el bienestar de
+                la comunidad.
               </p>
             </div>
 
@@ -396,7 +407,7 @@ export default function QuienesSomosPage() {
             </p>
           </div>
 
-          <CourseHomeGrid />
+          <CourseHomeGrid courses={courses} />
         </div>
       </section>
 

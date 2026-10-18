@@ -137,7 +137,7 @@ export function FlyerModal({ flyer, onClose }: FlyerModalProps) {
               Cerrar
             </button>
             <a
-              href={`https://wa.me/51999999999?text=${whatsappMessage}`}
+              href={`https://wa.me/51939584395?text=${whatsappMessage}`}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-primary !py-3 !px-6 text-sm font-semibold flex-1 sm:flex-none justify-center"

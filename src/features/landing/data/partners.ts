@@ -1,7 +1,11 @@
 export interface Partner {
   id: string;
   name: string;
-  category: "Sociedad Médica" | "Red Hospitalaria" | "Entidad Educativa" | "Acreditación";
+  category:
+    | "Acreditación Institucional"
+    | "Cooperación Académica"
+    | "Investigación Científica"
+    | "Intercambio Internacional";
   description: string;
   initials: string;
   location: string;
@@ -9,51 +13,49 @@ export interface Partner {
 
 export const PARTNERS_DATA: Partner[] = [
   {
-    id: "grup-paucar",
-    name: "GRUPO PAUCAR PERÚ S.A.C.",
-    category: "Acreditación",
-    description: "Entidad jurídica promotora y acreditadora oficial (RUC 20613837613).",
-    initials: "GP",
-    location: "Lima, Perú",
+    id: "formasalud-oficial",
+    name: "FORMASALUD — Innovación y Desarrollo Académico",
+    category: "Acreditación Institucional",
+    description:
+      "Centro de capacitación especializado en la formación continua y emisión de certificaciones oficiales (RUC 20613837613).",
+    initials: "FS",
+    location: "Lima – Perú",
   },
   {
-    id: "red-rebagliati",
-    name: "Red Asistencial Rebagliati - Colaboradores Docentes",
-    category: "Red Hospitalaria",
-    description: "Docentes médicos adscritos en los servicios de cuidados intensivos y urgencias.",
-    initials: "HN-EGM",
-    location: "Lima",
-  },
-  {
-    id: "soc-med-emergencias",
-    name: "Comité de Emergencias Médicas y Trauma",
-    category: "Sociedad Médica",
-    description: "Alianza técnica para la revisión y validación de protocolos clínicos de resucitación.",
-    initials: "CET",
+    id: "cooperacion-academica",
+    name: "Red de Convenios de Cooperación Académica",
+    category: "Cooperación Académica",
+    description:
+      "Alianzas estratégicas orientadas a fortalecer el diseño curricular de diplomados, cursos y programas de especialización.",
+    initials: "CA",
     location: "Nacional",
   },
   {
-    id: "colegios-profesionales",
-    name: "Colegios Profesionales de Salud",
-    category: "Entidad Educativa",
-    description: "Alineamiento curricular a los estándares y horas lectivas reconocidas para recertificación.",
-    initials: "CPS",
+    id: "investigacion-salud",
+    name: "Alianzas de Investigación y Evidencia Científica",
+    category: "Investigación Científica",
+    description:
+      "Desarrollo conjunto de programas de actualización basados en evidencia científica, calidad y seguridad del paciente.",
+    initials: "IC",
     location: "Perú",
   },
   {
-    id: "auditoria-calidad",
-    name: "Red de Auditores y Gestores en Salud del Perú",
-    category: "Acreditación",
-    description: "Intercambio de mejores prácticas y actualización en normativas SUSALUD.",
-    initials: "RAGS",
-    location: "Lima",
+    id: "intercambio-internacional",
+    name: "Convenios de Intercambio Académico Internacional",
+    category: "Intercambio Internacional",
+    description:
+      "Cooperación con docentes e instituciones internacionales para seminarios sobre innovación y nuevas tecnologías en salud.",
+    initials: "II",
+    location: "Internacional",
   },
   {
-    id: "simulacion-peru",
-    name: "Centro de Entrenamiento en Simulación Médica",
-    category: "Entidad Educativa",
-    description: "Infraestructura tecnológica y simuladores para talleres presenciales de vía aérea y trauma.",
-    initials: "SIM",
-    location: "Lima, Perú",
+    id: "capacitacion-clinica",
+    name: "Programas de Capacitación Clínica y Hospitalaria",
+    category: "Cooperación Académica",
+    description:
+      "Respaldo académico para talleres prácticos de procedimientos clínicos, asistenciales y simulación hospitalaria.",
+    initials: "CH",
+    location: "Lima – Perú",
   },
 ];
+

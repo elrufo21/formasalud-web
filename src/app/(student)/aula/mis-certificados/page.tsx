@@ -27,15 +27,8 @@ export default function StudentCertificatesPage() {
     async function loadCerts() {
       setLoading(true);
       try {
-        const data = await api.getCertificates();
-        // Mostrar certificados del alumno
-        const myCerts = data.filter(
-          (c) =>
-            c.student_id === user?.user_id ||
-            c.student?.email?.toLowerCase() === user?.email.toLowerCase() ||
-            c.student_name?.toLowerCase().includes(user?.name.toLowerCase() || "")
-        );
-        setCertificates(myCerts.length > 0 ? myCerts : data);
+        const data = await api.getMyCertificates();
+        setCertificates(data);
       } finally {
         setLoading(false);
       }

@@ -1,17 +1,16 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
+import Link from "next/link";
 import { ColumnDef } from "@tanstack/react-table";
-import { PlusCircle, RefreshCw, BookOpen, CheckCircle, Tag } from "lucide-react";
+import { PlusCircle, RefreshCw, BookOpen, CheckCircle, Tag, Pencil } from "lucide-react";
 import { api, Course } from "@/lib/api";
 import { AdminHeader } from "@/features/admin/components/AdminHeader";
 import { DataTable } from "@/components/ui/table/DataTable";
-import { CourseModal } from "@/features/admin/components/CourseModal";
 
 export default function CoursesAdminPage() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchCourses = async () => {
     setLoading(true);
@@ -100,6 +99,20 @@ export default function CoursesAdminPage() {
           </span>
         ),
       },
+      {
+        id: "actions",
+        header: "",
+        cell: ({ row }) => (
+          <Link
+            href={`/admin/cursos/${row.original.course_id}/editar`}
+            aria-label={`Editar ${row.original.title}`}
+            title="Editar curso"
+            className="inline-flex items-center justify-center rounded-lg border border-line p-2 text-ink-soft hover:bg-bg-alt hover:text-teal"
+          >
+            <Pencil className="h-4 w-4" />
+          </Link>
+        ),
+      },
     ],
     []
   );
@@ -118,13 +131,13 @@ export default function CoursesAdminPage() {
             >
               <RefreshCw className="w-4 h-4" />
             </button>
-            <button
-              onClick={() => setIsModalOpen(true)}
+            <Link
+              href="/admin/cursos/nuevo"
               className="px-4 py-2 rounded-xl bg-teal text-white text-xs font-semibold hover:bg-tealdeep transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
             >
               <PlusCircle className="w-3.5 h-3.5" />
               <span>Nuevo Curso</span>
-            </button>
+            </Link>
           </div>
         }
       />
@@ -138,11 +151,6 @@ export default function CoursesAdminPage() {
         />
       </main>
 
-      <CourseModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSuccess={fetchCourses}
-      />
     </div>
   );
 }

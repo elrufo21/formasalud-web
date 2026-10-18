@@ -386,7 +386,7 @@ export function OfficialWaveCertificate({ data }: { data: FormasaludCertificateP
 
           {/* Firmas y sello central */}
           <View style={styles.signaturesRow}>
-            {/* Firma izquierda: Docente / Gerente General */}
+            {/* Firma izquierda: docente / director académico */}
             <View style={styles.signatureBlock}>
               {firmaLeft ? (
                 <Image src={firmaLeft} style={styles.signatureImage} />
@@ -395,10 +395,10 @@ export function OfficialWaveCertificate({ data }: { data: FormasaludCertificateP
               )}
               <View style={styles.signatureLine} />
               <Text style={styles.signatureName}>
-                {data.teacherName || data.gerenteGeneral || "Lic. Enf. Francisco Paucar Benites"}
+                {data.academicDirector || data.teacherName || "Lic. Enf. Francisco Paucar Benites"}
               </Text>
               <Text style={styles.signatureRole}>
-                {data.gerenteGeneral ? "GERENTE GENERAL" : "DOCENTE"}
+                {data.academicDirector ? "DIRECTOR ACADÉMICO" : "DOCENTE"}
               </Text>
             </View>
 

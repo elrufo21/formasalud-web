@@ -49,15 +49,25 @@ async function getResponseData(response: Response): Promise<unknown> {
   return response.json().catch(() => undefined);
 }
 
-async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
-  const url = `${API_URL}${endpoint}`;
+async function request<T>(
+  endpoint: string,
+  options?: RequestInit,
+  sameOrigin = false,
+): Promise<T> {
+  const url = sameOrigin ? endpoint : `${API_URL}${endpoint}`;
+  const token = getStoredAccessToken();
+  const isFormData =
+    typeof FormData !== "undefined" && options?.body instanceof FormData;
   let res: Response;
 
   try {
     res = await fetch(url, {
       ...options,
       headers: {
-        "Content-Type": "application/json",
+        ...(!isFormData ? { "Content-Type": "application/json" } : {}),
+        ...(token && !endpoint.startsWith("/auth/")
+          ? { Authorization: `Bearer ${token}` }
+          : {}),
         ...options?.headers,
       },
     });
@@ -67,7 +77,12 @@ async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
       0,
       endpoint,
       null,
-      [{ code: "NETWORK_ERROR", message: "No se pudo conectar con el servidor" }],
+      [
+        {
+          code: "NETWORK_ERROR",
+          message: "No se pudo conectar con el servidor",
+        },
+      ],
     );
     console.error(`[API Error] ${endpoint}:`, error.message);
     throw error;
@@ -97,13 +112,31 @@ async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
       res.status,
       endpoint,
       data,
-      [{ code: "INVALID_RESPONSE", message: "La respuesta no sigue el contrato de la API" }],
+      [
+        {
+          code: "INVALID_RESPONSE",
+          message: "La respuesta no sigue el contrato de la API",
+        },
+      ],
     );
     console.error(`[API Error] ${endpoint}:`, error.message);
     throw error;
   }
 
   return response.data as T;
+}
+
+function getStoredAccessToken(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const stored = JSON.parse(
+      window.localStorage.getItem("formasalud_auth_storage") || "null",
+    );
+    const token = stored?.state?.accessToken;
+    return typeof token === "string" ? token : null;
+  } catch {
+    return null;
+  }
 }
 
 export interface User {
@@ -135,11 +168,85 @@ export interface Course {
   created_at?: string;
 }
 
+export type PublicCourse = Pick<
+  Course,
+  | "course_id"
+  | "title"
+  | "slug"
+  | "description"
+  | "short_description"
+  | "price"
+  | "certificate_included"
+  | "certificate_price"
+  | "thumbnail_url"
+  | "published_at"
+> & {
+  teachers?: PublicTeacher[];
+};
+
+export interface PublicTeacher {
+  name: string;
+  last_name: string;
+  profession?: string | null;
+  specialty?: string | null;
+  profile_photo_url?: string | null;
+}
+
+export interface TeacherProfile extends User {
+  profession: string | null;
+  specialty: string | null;
+  biography: string | null;
+  profile_photo_url: string | null;
+  cover_photo_url: string | null;
+  signature_url: string | null;
+  created_at?: string;
+}
+
+export interface SaveTeacherData {
+  name: string;
+  last_name: string;
+  email: string;
+  password?: string;
+  phone: string | null;
+  document_type: string | null;
+  document_number: string | null;
+  status: User["status"];
+  profession: string | null;
+  specialty: string | null;
+  biography: string | null;
+  profile_photo_url: string | null;
+  cover_photo_url: string | null;
+  signature_url: string | null;
+}
+
+export interface LoginResponse {
+  access_token: string;
+  expires_in: number;
+  user: Pick<User, "user_id" | "name" | "last_name" | "email"> & {
+    roles?: string[];
+    role?: string;
+    document_type?: string;
+    document_number?: string;
+    phone?: string;
+  };
+}
+
+export function getPublicAssetUrl(pathOrUrl?: string | null) {
+  if (!pathOrUrl) return undefined;
+  try {
+    const assetBaseUrl =
+      process.env.NEXT_PUBLIC_COURSE_IMAGE_BASE_URL || API_URL;
+    return new URL(pathOrUrl, `${assetBaseUrl}/`).toString();
+  } catch {
+    return undefined;
+  }
+}
+
 export interface Certificate {
   valid?: boolean;
   certificate_id: number;
   certificate_code: string;
-  certificate_type: "approval" | "participation";
+  certificate_type: "approval" | "participation" | "speaker";
   status: "active" | "revoked";
   issued_at: string;
   student_id?: number;
@@ -147,6 +254,10 @@ export interface Certificate {
   document_number?: string;
   course_id?: number;
   course_title?: string;
+  template_key?: string;
+  hours?: number;
+  hours_unit?: string;
+  course_date_text?: string;
   student?: {
     user_id: number;
     name?: string;
@@ -183,7 +294,49 @@ export interface CreateCourseData {
   price?: number;
   certificate_included?: boolean;
   certificate_price?: number;
-  thumbnail_url?: string;
+  thumbnail_url?: string | null;
+  status?: "draft" | "published" | "archived";
+  teacher_ids?: number[];
+  resources?: {
+    resource_type: "video" | "pdf" | "link" | "quiz" | "other";
+    title: string;
+    file_url?: string;
+    sort_order?: number;
+  }[];
+  certificate_configs?: {
+    certificate_type: "participation" | "approval";
+    template_id: number;
+    price?: number | null;
+  }[];
+}
+
+export interface CourseEditData extends Course {
+  teacher_ids: number[];
+  resources: {
+    resource_type: "video" | "pdf" | "link" | "quiz" | "other";
+    title: string;
+    file_url: string | null;
+    sort_order: number;
+  }[];
+  certificate_configs: {
+    certificate_type: "participation" | "approval";
+    template_id: number;
+    price: number | null;
+  }[];
+}
+
+export interface CourseFormOptions {
+  teachers?: {
+    value: number;
+    label: string;
+    profession: string | null;
+    specialty: string | null;
+  }[];
+  certificate_templates?: {
+    template_id: number;
+    name: string;
+    status: "active" | "inactive";
+  }[];
 }
 
 export interface GenerateCertificateData {
@@ -216,26 +369,89 @@ export const api = {
       method: "DELETE",
     }),
 
+  // Docentes: cuentas con rol teacher y perfil académico propio.
+  getTeachers: () => request<TeacherProfile[]>("/teacher"),
+  getTeacher: (id: number) => request<TeacherProfile>(`/teacher/${id}`),
+  createTeacher: (data: SaveTeacherData) =>
+    request<TeacherProfile>("/teacher", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  updateTeacher: (id: number, data: SaveTeacherData) =>
+    request<TeacherProfile>(`/teacher/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+  uploadTeacherImage: (file: File, signature = false) => {
+    const formData = new FormData();
+    formData.append("folder", signature ? "teacher-signatures" : "teachers");
+    formData.append("file", file);
+    return request<{ url: string }>("/upload", {
+      method: "POST",
+      body: formData,
+    });
+  },
+  getTeacherSignaturePreview: async (path: string) => {
+    const filename = path.split("/").pop();
+    if (!filename) return undefined;
+    const token = getStoredAccessToken();
+    const response = await fetch(
+      `${API_URL}/upload/signatures/${encodeURIComponent(filename)}`,
+      {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      },
+    );
+    if (!response.ok)
+      throw new Error("No se pudo cargar la firma privada del docente");
+    return URL.createObjectURL(await response.blob());
+  },
+
   // Cursos
   getCourses: () => request<Course[]>("/course"),
+  getPublicCourses: () => request<PublicCourse[]>("/courses"),
+  getPublicCourse: (slug: string) =>
+    request<PublicCourse>(`/courses/${encodeURIComponent(slug)}`),
   getCourseCombo: () =>
     request<{ value: number; label: string }[]>("/course/combo"),
+  getCourseFormOptions: () =>
+    request<CourseFormOptions>("/course/form-options"),
   getCourse: (idOrSlug: string | number) =>
     request<Course>(`/course/${idOrSlug}`),
+  getCourseForEdit: (courseId: number) =>
+    request<CourseEditData>(`/course/${courseId}/edit`),
   createCourse: (data: CreateCourseData) =>
     request<Course>("/course", {
       method: "POST",
       body: JSON.stringify(data),
     }),
+  updateCourse: (courseId: number, data: CreateCourseData) =>
+    request<Course>(`/course/${courseId}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+  uploadCourseImage: (file: File) => {
+    const formData = new FormData();
+    formData.append("folder", "courses");
+    formData.append("file", file);
+    return request<{ url: string }>(
+      "/api/course-image-upload",
+      {
+        method: "POST",
+        body: formData,
+      },
+      true,
+    );
+  },
 
   // Certificados
   getCertificates: () => request<Certificate[]>("/certificate"),
+  getMyCertificates: () => request<Certificate[]>("/certificate/mine"),
   getCertificate: (idOrCode: string | number) =>
     request<Certificate>(`/certificate/${idOrCode}`),
   verifyCertificate: (code: string) =>
     request<Certificate | Certificate[]>(`/certificate/verify/${code}`),
   checkEligibility: (studentId: number, courseId: number) =>
-    request<any>(`/certificate/eligibility/${studentId}/${courseId}`),
+    request<unknown>(`/certificate/eligibility/${studentId}/${courseId}`),
   generateCertificate: (data: GenerateCertificateData) =>
     request<Certificate>("/certificate/generate", {
       method: "POST",
@@ -244,8 +460,16 @@ export const api = {
 
   // Autenticación
   login: (email: string, password: string) =>
-    request<any>("/auth/login", {
+    request<LoginResponse>("/auth/login", {
       method: "POST",
       body: JSON.stringify({ email, password }),
     }),
+  registerStudent: (data: CreateUserData) =>
+    request<{ access_token: string; expires_in: number; user: User }>(
+      "/auth/register",
+      {
+        method: "POST",
+        body: JSON.stringify({ ...data, role: "student" }),
+      },
+    ),
 };

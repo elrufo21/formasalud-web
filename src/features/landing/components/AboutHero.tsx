@@ -27,14 +27,11 @@ export default function AboutHero({
   imagePosition = "right",
   imageSrc = "/images/quienes-somos-hero.png",
   imageFocus = "100% center",
-  eyebrow = "QUIÉNES SOMOS",
-  title = "Comprometidos con",
-  highlightedTitle = "la formación en salud",
-  description = `Somos un centro de capacitación en salud que impulsa el
-  crecimiento profesional de médicos, enfermeros y personal de
-  salud, a través de programas actualizados, prácticos y con enfoque
-  en la realidad del país.`,
-  quote = "Profesionales mejor preparados para una sociedad más saludable",
+  eyebrow = "¿QUIÉNES SOMOS?",
+  title = "Innovación y Desarrollo",
+  highlightedTitle = "Académico en Salud",
+  description = `FORMASALUD es un centro de capacitación especializado en la innovación y desarrollo académico para los profesionales de la salud, comprometido con la formación continua, el fortalecimiento de competencias y la excelencia en la atención sanitaria.`,
+  quote = "Innovación y Desarrollo Académico en Salud",
 }: AboutHeroProps) {
   const imageRight = imagePosition === "right";
 

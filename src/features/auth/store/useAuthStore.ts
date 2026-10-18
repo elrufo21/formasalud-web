@@ -21,8 +21,7 @@ interface AuthState {
   user: AuthUser | null;
   role: Role | null;
   isAuthenticated: boolean;
-  isHydrated: boolean;
-  setHydrated: (hydrated: boolean) => void;
+  accessToken: string | null;
   login: (email: string, password: string) => Promise<AuthUser>;
   registerStudent: (data: {
     name: string;
@@ -33,7 +32,6 @@ interface AuthState {
     document_type?: string;
     document_number?: string;
   }) => Promise<AuthUser>;
-  demoLogin: (role: Role) => void;
   logout: () => void;
 }
 
@@ -45,20 +43,18 @@ const dummyStorage = {
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       user: null,
       role: null,
       isAuthenticated: false,
-      isHydrated: false,
-
-      setHydrated: (hydrated: boolean) => set({ isHydrated: hydrated }),
-
+      accessToken: null,
       login: async (email: string, password: string) => {
         const response = await api.login(email, password);
         const value = isRecord(response.user) ? response.user : response;
+        const accessToken = typeof response.access_token === "string" ? response.access_token : null;
 
         if (
-          !isRecord(value) ||
+          !accessToken || !isRecord(value) ||
           typeof value.user_id !== "number" ||
           typeof value.name !== "string" ||
           typeof value.last_name !== "string" ||
@@ -77,7 +73,10 @@ export const useAuthStore = create<AuthState>()(
           ? value.roles.filter(isRole)
           : isRole(value.role)
             ? [value.role]
-            : ["student"];
+            : [];
+        if (roles.length === 0) {
+          throw new ApiError("La cuenta no tiene un rol válido", 403, "/auth/login");
+        }
         const role: Role = roles.includes("admin") ? "admin" : (roles[0] ?? "student");
         const authUser: AuthUser = {
           user_id: value.user_id,
@@ -91,15 +90,16 @@ export const useAuthStore = create<AuthState>()(
           role,
         };
 
-        set({ user: authUser, role, isAuthenticated: true });
+        set({ user: authUser, role, isAuthenticated: true, accessToken });
         return authUser;
       },
 
       registerStudent: async (data) => {
-        const created = await api.createUser({
+        const response = await api.registerStudent({
           ...data,
           role: "student",
         });
+        const created = response.user;
 
         const authUser: AuthUser = {
           user_id: created.user_id,
@@ -113,45 +113,12 @@ export const useAuthStore = create<AuthState>()(
           role: "student",
         };
 
-        set({ user: authUser, role: "student", isAuthenticated: true });
+        set({ user: authUser, role: "student", isAuthenticated: true, accessToken: response.access_token });
         return authUser;
       },
 
-      demoLogin: (role: Role) => {
-        if (role === "admin") {
-          set({
-            user: {
-              user_id: 999,
-              name: "Coordinación",
-              last_name: "Académica",
-              email: "admin@formasalud.pe",
-              document_number: "20613837613",
-              roles: ["admin"],
-              role: "admin",
-            },
-            role: "admin",
-            isAuthenticated: true,
-          });
-        } else {
-          set({
-            user: {
-              user_id: 1,
-              name: "Maritza",
-              last_name: "Huamán Cárdenas",
-              email: "maritza.huaman@formasalud.pe",
-              document_number: "47829104",
-              phone: "987654321",
-              roles: ["student"],
-              role: "student",
-            },
-            role: "student",
-            isAuthenticated: true,
-          });
-        }
-      },
-
       logout: () => {
-        set({ user: null, role: null, isAuthenticated: false });
+        set({ user: null, role: null, isAuthenticated: false, accessToken: null });
       },
     }),
     {
@@ -163,12 +130,19 @@ export const useAuthStore = create<AuthState>()(
         user: state.user,
         role: state.role,
         isAuthenticated: state.isAuthenticated,
+        accessToken: state.accessToken,
       }),
+      version: 1,
+      migrate: (persistedState) => {
+        const state = persistedState as Partial<AuthState>;
+        return state.accessToken
+          ? state
+          : { ...state, user: null, role: null, isAuthenticated: false, accessToken: null };
+      },
       onRehydrateStorage: () => (state, error) => {
         if (error) {
           console.error("Error al restaurar sesión de FormaSalud:", error);
         }
-        state?.setHydrated(true);
       },
     },
   ),
@@ -188,26 +162,24 @@ if (typeof window !== "undefined") {
  */
 export function useHydratedAuth() {
   const store = useAuthStore();
-  const [hydrated, setHydrated] = useState(false);
+  const [hydrated, setHydrated] = useState(
+    () => useAuthStore.persist?.hasHydrated?.() ?? false,
+  );
 
   useEffect(() => {
-    if (store.isHydrated || useAuthStore.persist?.hasHydrated?.()) {
+    if (useAuthStore.persist?.hasHydrated?.()) {
       setHydrated(true);
-      if (!store.isHydrated) {
-        store.setHydrated(true);
-      }
       return;
     }
     const unsub = useAuthStore.persist?.onFinishHydration?.(() => {
       setHydrated(true);
-      store.setHydrated(true);
     });
     return () => unsub?.();
-  }, [store]);
+  }, []);
 
   return {
     ...store,
-    isHydrated: hydrated || store.isHydrated,
+    isHydrated: hydrated || (useAuthStore.persist?.hasHydrated?.() ?? false),
   };
 }
 
