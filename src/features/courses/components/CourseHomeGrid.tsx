@@ -1,14 +1,11 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import type { PublicCourse } from '@/lib/api';
 import { CourseCard } from './CourseCard';
-import { CourseDetailModal } from './CourseDetailModal';
 import { Carousel } from '@/components/ui/carousel/Carousel';
 
 export function CourseHomeGrid({ courses }: { courses: PublicCourse[] }) {
-  const [selectedCourse, setSelectedCourse] = useState<PublicCourse | null>(null);
-
   if (!courses.length) {
     return <p className="py-8 text-sm text-ink-soft">Los cursos publicados aparecerán aquí.</p>;
   }
@@ -21,10 +18,9 @@ export function CourseHomeGrid({ courses }: { courses: PublicCourse[] }) {
         className="px-1"
       >
         {courses.map((course) => (
-          <CourseCard key={course.course_id} course={course} onViewDetails={setSelectedCourse} />
+          <CourseCard key={course.course_id} course={course} />
         ))}
       </Carousel>
-      <CourseDetailModal course={selectedCourse} onClose={() => setSelectedCourse(null)} />
     </div>
   );
 }

@@ -1,11 +1,12 @@
 import { getPublicAssetUrl, type PublicCourse } from '@/lib/api';
+import { slugify } from '@/lib/utils';
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Award, Calendar, Stethoscope, UserCheck } from 'lucide-react';
 
 interface CourseCardProps {
   course: PublicCourse;
-  onViewDetails: (course: PublicCourse) => void;
 }
 
 function publishedLabel(value?: string | null) {
@@ -20,7 +21,7 @@ function initials(name: string) {
   return name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join('').toUpperCase();
 }
 
-export function CourseCard({ course, onViewDetails }: CourseCardProps) {
+export function CourseCard({ course }: CourseCardProps) {
   const [imageError, setImageError] = useState(false);
   const imageUrl = getPublicAssetUrl(course.thumbnail_url);
   const price = Number(course.price ?? 0);
@@ -128,14 +129,13 @@ export function CourseCard({ course, onViewDetails }: CourseCardProps) {
               {price === 0 ? 'Gratuito' : `S/ ${price.toFixed(2)}`}
             </div>
           </div>
-          <button
-            type="button"
-            onClick={() => onViewDetails(course)}
+          <Link
+            href={`/cursos/${slugify(course.title)}`}
             className="btn btn-primary !py-2.5 !px-4 !text-xs font-bold cursor-pointer shrink-0 !rounded-xl"
           >
             <span>Ver detalles</span>
             <span className="arrow">→</span>
-          </button>
+          </Link>
         </div>
       </div>
     </article>
