@@ -103,10 +103,15 @@ export default function StudentDashboardPage() {
                 </div>
 
                 <div className="pt-4 mt-4 border-t border-line flex items-center justify-between">
-                  <span className="text-xs font-semibold text-teal flex items-center gap-1">
-                    <Award className="w-4 h-4 text-gold" />
-                    <span>Diploma Disponible</span>
-                  </span>
+                  {/* Botón Ver solicitado por el profesor */}
+                  <Link
+                    href={`/aula/curso/${cert.certificate_id}`}
+                    className="px-4 py-1.5 rounded-lg bg-teal text-white text-xs font-semibold hover:bg-tealdeep transition-colors flex items-center gap-1"
+                  >
+                    <span>Ver</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+
                   <Link
                     href="/aula/mis-certificados"
                     className="px-3 py-1.5 rounded-lg bg-navy text-white text-xs font-semibold hover:bg-navyink transition-colors"

@@ -3,11 +3,9 @@
 import React, { useMemo, useState } from 'react';
 import type { PublicCourse } from '@/lib/api';
 import { CourseCard } from './CourseCard';
-import { CourseDetailModal } from './CourseDetailModal';
 
 export function CourseFilters({ courses }: { courses: PublicCourse[] }) {
   const [search, setSearch] = useState('');
-  const [selectedCourse, setSelectedCourse] = useState<PublicCourse | null>(null);
   const normalize = (value: string) => value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   const filteredCourses = useMemo(() => {
     const query = normalize(search.trim());
@@ -32,7 +30,7 @@ export function CourseFilters({ courses }: { courses: PublicCourse[] }) {
       {filteredCourses.length ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
           {filteredCourses.map((course) => (
-            <CourseCard key={course.course_id} course={course} onViewDetails={setSelectedCourse} />
+            <CourseCard key={course.course_id} course={course} />
           ))}
         </div>
       ) : (
@@ -41,8 +39,6 @@ export function CourseFilters({ courses }: { courses: PublicCourse[] }) {
           {search && <button onClick={() => setSearch('')} className="mt-3 text-sm text-teal font-semibold hover:underline">Limpiar búsqueda</button>}
         </div>
       )}
-
-      <CourseDetailModal course={selectedCourse} onClose={() => setSelectedCourse(null)} />
     </div>
   );
 }
