@@ -90,11 +90,11 @@ export function Carousel({
       )}
 
       <div className="overflow-hidden px-1 py-3" ref={emblaRef}>
-        <div className="flex items-stretch -ml-4 sm:-ml-6">
+        <div className="flex -ml-4 sm:-ml-6">
           {childArray.map((child, index) => (
             <div
               key={index}
-              className={`min-w-0 shrink-0 grow-0 ${gapClassName} ${slideClassName} flex flex-col`}
+              className={`min-w-0 shrink-0 grow-0 ${gapClassName} ${slideClassName}`}
             >
               {child}
             </div>
@@ -106,11 +106,10 @@ export function Carousel({
         <button
           type="button"
           onClick={scrollPrev}
-          disabled={!canScrollPrev && options?.loop === false}
-          aria-label="Anterior"
-          className="absolute left-1.5 sm:left-2 lg:-left-4 top-1/2 z-30 flex h-9 w-9 sm:h-11 sm:w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-white/95 backdrop-blur-xs text-teal shadow-[0_6px_20px_rgba(15,41,66,0.14)] transition-all duration-200 hover:scale-105 hover:bg-teal hover:text-white cursor-pointer disabled:opacity-40"
+          aria-label="Testimonio anterior"
+          className="absolute left-0 top-1/2 z-30 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-white text-teal shadow-[0_5px_18px_rgba(15,61,74,0.15)] transition-all duration-200 hover:scale-105 hover:bg-teal hover:text-white sm:h-12 sm:w-12 lg:left-[-2px]"
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M15 18l-6-6 6-6" />
           </svg>
         </button>
@@ -120,11 +119,10 @@ export function Carousel({
         <button
           type="button"
           onClick={scrollNext}
-          disabled={!canScrollNext && options?.loop === false}
-          aria-label="Siguiente"
-          className="absolute right-1.5 sm:right-2 lg:-right-4 top-1/2 z-30 flex h-9 w-9 sm:h-11 sm:w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-white/95 backdrop-blur-xs text-teal shadow-[0_6px_20px_rgba(15,41,66,0.14)] transition-all duration-200 hover:scale-105 hover:bg-teal hover:text-white cursor-pointer disabled:opacity-40"
+          aria-label="Siguiente testimonio"
+          className="absolute right-0 top-1/2 z-30 flex h-11 w-11 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-white text-teal shadow-[0_5px_18px_rgba(15,61,74,0.15)] transition-all duration-200 hover:scale-105 hover:bg-teal hover:text-white sm:h-12 sm:w-12 lg:right-[-2px]"
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M9 18l6-6-6-6" />
           </svg>
         </button>
@@ -137,12 +135,11 @@ export function Carousel({
               key={index}
               type="button"
               onClick={() => scrollTo(index)}
-              aria-label={`Ir al elemento ${index + 1}`}
-              className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                index === selectedIndex
-                  ? "w-7 bg-teal"
-                  : "w-2 bg-line-strong hover:bg-teal/50"
-              }`}
+              aria-label={`Ir al testimonio ${index + 1}`}
+              className={`h-2 rounded-full transition-all duration-300 ${index === selectedIndex
+                ? "w-7 bg-teal"
+                : "w-2 bg-[#c9dddd] hover:bg-teal/50"
+                }`}
             />
           ))}
         </div>
