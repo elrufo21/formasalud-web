@@ -7,8 +7,10 @@ import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { ArrowLeft, BookPlus, ImagePlus, Info, Plus, Trash2 } from "lucide-react";
-import { api, CourseEditData, CourseFormOptions, getPublicAssetUrl } from "@/lib/api";
+import { api, CourseEditData, CourseFormOptions, CourseSyllabus, getPublicAssetUrl } from "@/lib/api";
 import { Input } from "@/components/ui/Input";
+import { CourseSyllabusEditor } from "./CourseSyllabusEditor";
+import { CourseCohortsManager } from "./CourseCohortsManager";
 
 const schema = z.object({
   title: z.string().min(5, "El título debe tener al menos 5 caracteres"),
@@ -19,6 +21,22 @@ const schema = z.object({
   certificate_included: z.boolean(),
   certificate_price: z.coerce.number().min(0, "El precio debe ser mayor o igual a 0").optional(),
   status: z.enum(["draft", "published", "archived"]),
+  program_type: z.string().optional(),
+  delivery_mode: z.string().optional(),
+  target_audience: z.string().optional(),
+  total_academic_hours: z.coerce.number().min(0).optional(),
+  synchronous_hours: z.coerce.number().min(0).optional(),
+  complementary_hours: z.coerce.number().min(0).optional(),
+  theory_hours: z.coerce.number().min(0).optional(),
+  practice_hours: z.coerce.number().min(0).optional(),
+  duration_weeks: z.coerce.number().min(0).optional(),
+  recommended_frequency: z.string().optional(),
+  min_passing_grade: z.coerce.number().min(0).max(20).optional(),
+  min_attendance_percent: z.coerce.number().min(0).max(100).optional(),
+  requires_all_practices_made_up: z.boolean().optional(),
+  makeup_counts_as_attendance: z.boolean().optional(),
+  requires_complementary_hours: z.boolean().optional(),
+  requires_critical_competencies: z.boolean().optional(),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -39,6 +57,7 @@ export function CourseCreateForm({ courseId }: { courseId?: number }) {
   const [optionsError, setOptionsError] = useState<string | null>(null);
   const [optionsLoading, setOptionsLoading] = useState(true);
   const [course, setCourse] = useState<CourseEditData | null>(null);
+  const [syllabus, setSyllabus] = useState<CourseSyllabus | null>(null);
   const [loadingCourse, setLoadingCourse] = useState(Boolean(courseId));
   const [removeImage, setRemoveImage] = useState(false);
   const [teacherIds, setTeacherIds] = useState<number[]>([]);
@@ -56,7 +75,26 @@ export function CourseCreateForm({ courseId }: { courseId?: number }) {
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { price: 0, certificate_included: true, certificate_price: 0, status: "draft" },
+    defaultValues: {
+      price: 0,
+      certificate_included: true,
+      certificate_price: 0,
+      status: "draft",
+      program_type: "course",
+      delivery_mode: "virtual_async",
+      total_academic_hours: 0,
+      synchronous_hours: 0,
+      complementary_hours: 0,
+      theory_hours: 0,
+      practice_hours: 0,
+      duration_weeks: 0,
+      min_passing_grade: 14,
+      min_attendance_percent: 0,
+      requires_all_practices_made_up: false,
+      makeup_counts_as_attendance: true,
+      requires_complementary_hours: false,
+      requires_critical_competencies: false,
+    },
   });
 
   const certificateIncluded = useWatch({ control, name: "certificate_included" });
@@ -90,9 +128,13 @@ export function CourseCreateForm({ courseId }: { courseId?: number }) {
   useEffect(() => {
     if (!courseId) return;
     let active = true;
-    api.getCourseForEdit(courseId).then((data) => {
+    Promise.all([
+      api.getCourseForEdit(courseId),
+      api.getCourseSyllabus(courseId).catch(() => null),
+    ]).then(([data, syllabusData]) => {
       if (!active) return;
       setCourse(data);
+      setSyllabus(syllabusData);
       reset({
         title: data.title ?? "",
         slug: data.slug ?? "",
@@ -102,6 +144,22 @@ export function CourseCreateForm({ courseId }: { courseId?: number }) {
         certificate_included: data.certificate_included ?? true,
         certificate_price: Number(data.certificate_price ?? 0),
         status: data.status ?? "draft",
+        program_type: data.program_type ?? "course",
+        delivery_mode: data.delivery_mode ?? "virtual_async",
+        target_audience: data.target_audience ?? "",
+        total_academic_hours: Number(data.total_academic_hours ?? 0),
+        synchronous_hours: Number(data.synchronous_hours ?? 0),
+        complementary_hours: Number(data.complementary_hours ?? 0),
+        theory_hours: Number(data.theory_hours ?? 0),
+        practice_hours: Number(data.practice_hours ?? 0),
+        duration_weeks: Number(data.duration_weeks ?? 0),
+        recommended_frequency: data.recommended_frequency ?? "",
+        min_passing_grade: Number(data.min_passing_grade ?? 14),
+        min_attendance_percent: Number(data.min_attendance_percent ?? 0),
+        requires_all_practices_made_up: Boolean(data.requires_all_practices_made_up),
+        makeup_counts_as_attendance: data.makeup_counts_as_attendance ?? true,
+        requires_complementary_hours: Boolean(data.requires_complementary_hours),
+        requires_critical_competencies: Boolean(data.requires_critical_competencies),
       });
       setTeacherIds(Array.isArray(data.teacher_ids) ? data.teacher_ids : []);
       setResources(Array.isArray(data.resources) ? data.resources.map((resource) => ({ ...resource, file_url: resource.file_url ?? "" })) : []);
@@ -133,6 +191,22 @@ export function CourseCreateForm({ courseId }: { courseId?: number }) {
         price: data.price,
         certificate_included: data.certificate_included,
         certificate_price: data.certificate_included ? undefined : data.certificate_price,
+        program_type: data.program_type || "course",
+        delivery_mode: data.delivery_mode || "virtual_async",
+        target_audience: data.target_audience?.trim() || undefined,
+        total_academic_hours: data.total_academic_hours ?? 0,
+        synchronous_hours: data.synchronous_hours ?? 0,
+        complementary_hours: data.complementary_hours ?? 0,
+        theory_hours: data.theory_hours ?? 0,
+        practice_hours: data.practice_hours ?? 0,
+        duration_weeks: data.duration_weeks ?? 0,
+        recommended_frequency: data.recommended_frequency?.trim() || undefined,
+        min_passing_grade: data.min_passing_grade ?? 14,
+        min_attendance_percent: data.min_attendance_percent ?? 0,
+        requires_all_practices_made_up: Boolean(data.requires_all_practices_made_up),
+        makeup_counts_as_attendance: Boolean(data.makeup_counts_as_attendance),
+        requires_complementary_hours: Boolean(data.requires_complementary_hours),
+        requires_critical_competencies: Boolean(data.requires_critical_competencies),
         ...(removeImage ? { thumbnail_url: null } : uploadedImage ? { thumbnail_url: uploadedImage.url } : {}),
         ...(courseId ? { status: data.status } : {}),
         teacher_ids: teacherIds.map(Number),
@@ -251,7 +325,95 @@ export function CourseCreateForm({ courseId }: { courseId?: number }) {
 
           <section className={sectionClass}>
             <div>
-              <p className="mb-1 text-[11px] font-bold uppercase tracking-widest text-teal">03 · Precio y certificado</p>
+              <p className="mb-1 text-[11px] font-bold uppercase tracking-widest text-teal">03 · Diseño Curricular (LMS)</p>
+              <h2 className={sectionTitleClass}>Estructura Académica y Reglas de Aprobación</h2>
+              <p className="mt-1 text-sm text-ink-soft">Define la modalidad, carga horaria y criterios académicos de la versión curricular activa ({course?.version_code ?? "v1.0"}).</p>
+            </div>
+            <div className="grid gap-5 md:grid-cols-3">
+              <label className="space-y-1.5">
+                <span className="block text-xs font-semibold uppercase tracking-wider text-ink-soft">Tipo de programa</span>
+                <select {...register("program_type")} className="w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-sm">
+                  <option value="course">Curso de capacitación</option>
+                  <option value="workshop">Taller práctico</option>
+                  <option value="diploma">Diplomado</option>
+                  <option value="specialization">Especialización</option>
+                </select>
+              </label>
+              <label className="space-y-1.5">
+                <span className="block text-xs font-semibold uppercase tracking-wider text-ink-soft">Modalidad</span>
+                <select {...register("delivery_mode")} className="w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-sm">
+                  <option value="in_person">Presencial</option>
+                  <option value="virtual_sync">Virtual sincrónico (en vivo)</option>
+                  <option value="virtual_async">Virtual asincrónico</option>
+                  <option value="hybrid">Híbrido / Semipresencial</option>
+                </select>
+              </label>
+              <Input label="Frecuencia recomendada" placeholder="Ej. 1 vez por semana (3h)" {...register("recommended_frequency")} />
+              <div className="md:col-span-3">
+                <Input label="Público objetivo" placeholder="Ej. Estudiantes, profesionales de la salud, brigadistas y público general" {...register("target_audience")} />
+              </div>
+              <Input label="Horas académicas totales" type="number" min="0" step="0.5" {...register("total_academic_hours")} />
+              <Input label="Horas presenciales / sincrónicas" type="number" min="0" step="0.5" {...register("synchronous_hours")} />
+              <Input label="Horas complementarias" type="number" min="0" step="0.5" {...register("complementary_hours")} />
+              <Input label="Horas teóricas" type="number" min="0" step="0.5" {...register("theory_hours")} />
+              <Input label="Horas prácticas" type="number" min="0" step="0.5" {...register("practice_hours")} />
+              <Input label="Duración (semanas)" type="number" min="0" step="1" {...register("duration_weeks")} />
+              <Input label="Nota mínima aprobatoria (0-20)" type="number" min="0" max="20" step="0.5" {...register("min_passing_grade")} />
+              <Input label="Asistencia mínima obligatoria (%)" type="number" min="0" max="100" step="1" {...register("min_attendance_percent")} />
+            </div>
+            <div className="grid gap-3 pt-2 sm:grid-cols-2">
+              <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-line bg-bg-alt p-3.5">
+                <input type="checkbox" className="mt-0.5 h-4 w-4 accent-teal" {...register("requires_all_practices_made_up")} />
+                <span>
+                  <span className="block text-xs font-bold text-navy">Exigir recuperación de prácticas</span>
+                  <span className="mt-0.5 block text-[11px] text-ink-soft">El alumno debe asistir o recuperar el 100% de sesiones prácticas obligatorias.</span>
+                </span>
+              </label>
+              <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-line bg-bg-alt p-3.5">
+                <input type="checkbox" className="mt-0.5 h-4 w-4 accent-teal" {...register("makeup_counts_as_attendance")} />
+                <span>
+                  <span className="block text-xs font-bold text-navy">Práctica recuperada convalida asistencia</span>
+                  <span className="mt-0.5 block text-[11px] text-ink-soft">La sesión recuperada suma como asistencia válida para el porcentaje mínimo.</span>
+                </span>
+              </label>
+              <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-line bg-bg-alt p-3.5">
+                <input type="checkbox" className="mt-0.5 h-4 w-4 accent-teal" {...register("requires_complementary_hours")} />
+                <span>
+                  <span className="block text-xs font-bold text-navy">Exigir actividades complementarias</span>
+                  <span className="mt-0.5 block text-[11px] text-ink-soft">Requiere completar el trabajo autónomo/complementario para aprobar.</span>
+                </span>
+              </label>
+              <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-line bg-bg-alt p-3.5">
+                <input type="checkbox" className="mt-0.5 h-4 w-4 accent-teal" {...register("requires_critical_competencies")} />
+                <span>
+                  <span className="block text-xs font-bold text-navy">Exigir competencias críticas (Gatekeepers)</span>
+                  <span className="mt-0.5 block text-[11px] text-ink-soft">Requiere aprobar las competencias prácticas obligatorias (ej. RCP, Hemorragias).</span>
+                </span>
+              </label>
+            </div>
+          </section>
+
+          {courseId && syllabus && (
+            <CourseSyllabusEditor
+              courseId={courseId}
+              syllabus={syllabus}
+              onRefresh={async () => {
+                const updated = await api.getCourseSyllabus(courseId);
+                setSyllabus(updated);
+              }}
+            />
+          )}
+
+          {courseId && (
+            <CourseCohortsManager
+              courseId={courseId}
+              teachers={teachers}
+            />
+          )}
+
+          <section className={sectionClass}>
+            <div>
+              <p className="mb-1 text-[11px] font-bold uppercase tracking-widest text-teal">04 · Precio y certificado</p>
               <h2 className={sectionTitleClass}>Regla comercial</h2>
               <p className="mt-1 text-sm text-ink-soft">Esto conserva la estructura actual del curso. No edita plantillas ni certificados ya emitidos.</p>
               {courseId && <label className="space-y-1.5"><span className="block text-xs font-semibold uppercase tracking-wider text-ink-soft">Estado</span><select {...register("status")} className="w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-sm"><option value="draft">Borrador</option><option value="published">Publicado</option><option value="archived">Archivado</option></select></label>}

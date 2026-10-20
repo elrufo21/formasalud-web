@@ -1,7 +1,14 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { PublicCourse } from "@/lib/api";
+import React, { useEffect, useState } from "react";
+import { api, CourseSyllabus, PublicCourse } from "@/lib/api";
+
+const deliveryModeLabel: Record<string, string> = {
+  in_person: "Presencial",
+  virtual_sync: "Virtual en vivo",
+  virtual_async: "Virtual asincrónico",
+  hybrid: "Híbrido / Semipresencial",
+};
 
 interface CourseDetailModalProps {
   course: PublicCourse | null;
@@ -9,6 +16,8 @@ interface CourseDetailModalProps {
 }
 
 export function CourseDetailModal({ course, onClose }: CourseDetailModalProps) {
+  const [syllabus, setSyllabus] = useState<CourseSyllabus | null>(null);
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
@@ -16,6 +25,9 @@ export function CourseDetailModal({ course, onClose }: CourseDetailModalProps) {
     if (course) {
       document.body.style.overflow = "hidden";
       window.addEventListener("keydown", handleKeyDown);
+      api.getCourseSyllabus(course.course_id).then(setSyllabus).catch(() => setSyllabus(null));
+    } else {
+      setSyllabus(null);
     }
     return () => {
       document.body.style.overflow = "unset";
@@ -76,6 +88,61 @@ export function CourseDetailModal({ course, onClose }: CourseDetailModalProps) {
               {course.description || course.short_description || "Consulta con un asesor académico para conocer el programa."}
             </p>
           </div>
+
+          {(Number(course.total_academic_hours ?? 0) > 0 || Number(course.duration_weeks ?? 0) > 0 || course.delivery_mode) && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+              <div className="p-3 rounded-xl bg-bg-alt border border-line text-xs">
+                <span className="font-mono uppercase text-[10px] text-ink-soft block">Modalidad</span>
+                <b className="text-navy">{deliveryModeLabel[course.delivery_mode ?? ""] ?? "Virtual"}</b>
+              </div>
+              {Number(course.total_academic_hours ?? 0) > 0 && (
+                <div className="p-3 rounded-xl bg-bg-alt border border-line text-xs">
+                  <span className="font-mono uppercase text-[10px] text-ink-soft block">Carga Académica</span>
+                  <b className="text-navy">{course.total_academic_hours} horas académicas</b>
+                </div>
+              )}
+              {Number(course.duration_weeks ?? 0) > 0 && (
+                <div className="p-3 rounded-xl bg-bg-alt border border-line text-xs">
+                  <span className="font-mono uppercase text-[10px] text-ink-soft block">Duración</span>
+                  <b className="text-navy">{course.duration_weeks} semanas</b>
+                </div>
+              )}
+            </div>
+          )}
+
+          {syllabus && syllabus.modules.length > 0 && (
+            <div className="space-y-3">
+              <span className="text-xs font-mono uppercase tracking-wider text-teal font-semibold block">
+                Plan de Estudios ({syllabus.modules.length} módulos)
+              </span>
+              <div className="space-y-2.5">
+                {syllabus.modules.map((mod) => (
+                  <div key={mod.module_id} className="rounded-xl border border-line bg-bg-alt p-3.5 space-y-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <b className="text-xs sm:text-sm text-navy">
+                        Módulo {mod.module_number}: {mod.title}
+                      </b>
+                      {mod.lessons?.length ? (
+                        <span className="text-[11px] font-mono text-teal font-semibold shrink-0">
+                          {mod.lessons.length} sesiones
+                        </span>
+                      ) : null}
+                    </div>
+                    {mod.lessons?.length > 0 && (
+                      <ul className="space-y-1 text-xs text-ink-soft pl-3 border-l-2 border-teal/30">
+                        {mod.lessons.map((lesson) => (
+                          <li key={lesson.lesson_id}>
+                            <span className="font-mono font-semibold text-navy">Clase {lesson.lesson_number}:</span>{" "}
+                            {lesson.title}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div>
             <span className="text-xs font-mono uppercase tracking-wider text-teal font-semibold block mb-1">

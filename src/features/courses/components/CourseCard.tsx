@@ -16,6 +16,13 @@ function publishedLabel(value?: string | null) {
     : `Publicado: ${date.toLocaleDateString('es-PE', { day: 'numeric', month: 'short', year: 'numeric' })}`;
 }
 
+const deliveryModeText: Record<string, string> = {
+  in_person: 'Presencial',
+  virtual_sync: 'Virtual en vivo',
+  virtual_async: 'Virtual',
+  hybrid: 'Semipresencial',
+};
+
 function initials(name: string) {
   return name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join('').toUpperCase();
 }
@@ -77,10 +84,18 @@ export function CourseCard({ course, onViewDetails }: CourseCardProps) {
 
       {/* Cuerpo de la Tarjeta */}
       <div className="p-5 sm:p-6 flex flex-col flex-1">
-        <span className="text-[11px] text-teal font-bold uppercase tracking-wider flex items-center gap-1.5 flex-none">
-          <Calendar className="w-3.5 h-3.5 text-teal shrink-0" />
-          <span>{publishedLabel(course.published_at)}</span>
-        </span>
+        <div className="flex flex-wrap items-center gap-2 text-[11px] text-teal font-bold uppercase tracking-wider flex-none">
+          <span className="flex items-center gap-1.5">
+            <Calendar className="w-3.5 h-3.5 text-teal shrink-0" />
+            <span>{publishedLabel(course.published_at)}</span>
+          </span>
+          {(Number(course.total_academic_hours ?? 0) > 0 || course.delivery_mode) && (
+            <span className="rounded-md bg-tealtint px-2 py-0.5 text-[10px] font-mono text-tealdeep">
+              {deliveryModeText[course.delivery_mode ?? ''] ?? 'Virtual'}
+              {Number(course.total_academic_hours ?? 0) > 0 ? ` · ${course.total_academic_hours} hrs` : ''}
+            </span>
+          )}
+        </div>
 
         {/* Título con altura consistente */}
         <div className="mt-2.5 min-h-[4.25rem] flex items-start overflow-hidden flex-none">
