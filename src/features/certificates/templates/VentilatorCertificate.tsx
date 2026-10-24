@@ -53,12 +53,12 @@ export function VentilatorCertificate({ data }: { data: FormasaludCertificatePay
       <View style={{ position: "absolute", left: 336, top: 311, width: 228, borderRadius: 12, backgroundColor: NAVY, paddingVertical: 5 }}>
         <Text style={{ fontFamily: "Helvetica-Bold", fontSize: 10.5, color: "#FFFFFF", textAlign: "center", letterSpacing: 1.2 }}>CURSO-TALLER PRESENCIAL</Text>
       </View>
-      <Text style={{ position: "absolute", left: 166, top: 341, width: 568, fontFamily: "Helvetica-Bold", fontSize: 29, lineHeight: 1.15, textAlign: "center" }}>DESVINCULACIÓN DEL{"\n"}VENTILADOR MECÁNICO</Text>
-      <Text style={{ position: "absolute", left: 177, top: 416, width: 546, fontSize: 11.2, lineHeight: 1.5, textAlign: "center", color: "#24547C" }}>Desarrollado de manera presencial en {data.courseDateText?.toLocaleLowerCase("es-PE") || "noviembre - diciembre de 2026"},{"\n"}con una duración de {data.hours || 4} horas lectivas. Organizado por FORMASALUD.</Text>
+      <Text style={{ position: "absolute", left: 166, top: 341, width: 568, fontFamily: "Helvetica-Bold", fontSize: 25, lineHeight: 1.15, textAlign: "center" }}>{data.courseTitle}</Text>
+      <Text style={{ position: "absolute", left: 177, top: 416, width: 546, fontSize: 11.2, lineHeight: 1.5, textAlign: "center", color: "#24547C" }}>Desarrollado de manera presencial el {data.courseDateText || "21 de octubre de 2026"},{"\n"}con una duración de {data.hours || 4} horas lectivas. Organizado por FORMASALUD.</Text>
 
       <View style={{ position: "absolute", left: 39, top: 203, width: 115, height: 216, backgroundColor: "#EFF8FD", borderRadius: 9, borderLeftWidth: 3, borderLeftColor: BLUE, padding: 10 }}>
         <Text style={{ fontSize: 7.7, fontFamily: "Helvetica-Bold", color: BLUE }}>FECHA DEL CURSO</Text>
-        <Text style={{ marginTop: 5, fontSize: 10, lineHeight: 1.3 }}>Noviembre -{"\n"}diciembre 2026</Text>
+        <Text style={{ marginTop: 5, fontSize: 10, lineHeight: 1.3 }}>{data.courseDateText || "21 de octubre de 2026"}</Text>
         <Text style={{ marginTop: 18, fontSize: 7.7, fontFamily: "Helvetica-Bold", color: BLUE }}>DURACIÓN</Text>
         <Text style={{ marginTop: 5, fontSize: 10 }}>{data.hours || 4} horas lectivas</Text>
         <Text style={{ marginTop: 18, fontSize: 7.7, fontFamily: "Helvetica-Bold", color: BLUE }}>MODALIDAD</Text>

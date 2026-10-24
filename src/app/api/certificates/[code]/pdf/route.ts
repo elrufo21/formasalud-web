@@ -83,7 +83,7 @@ export async function GET(
 
     const templateId = mapCertificateToPayload(certificate).templateId;
     const safeFileName = `Certificado_${code.replace(/[^a-zA-Z0-9-]/g, "_")}.pdf`;
-    const cacheVersion = createHash("sha256").update(JSON.stringify(certificate) + (templateId === "ventilator-formasalud" ? "design-v2" : "")).digest("hex").slice(0, 12);
+    const cacheVersion = createHash("sha256").update(JSON.stringify(certificate) + (templateId === "ventilator-formasalud" ? "design-v3" : "")).digest("hex").slice(0, 12);
     const cachedFilePath = path.join(CACHE_DIR, `${code.replace(/[^a-zA-Z0-9-]/g, "_")}-${cacheVersion}.pdf`);
 
     if (certificate.valid === false || certificate.status === "revoked") {

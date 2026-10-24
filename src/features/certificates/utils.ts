@@ -96,7 +96,7 @@ export function mapCertificateToPayload(
       templateId: "ventilator-formasalud" as const,
       hours: cert.hours || 4,
       hoursUnit: "horas lectivas",
-      courseDateText: cert.course_date_text || "Noviembre - diciembre de 2026",
+      courseDateText: cert.course_date_text || "21 de octubre de 2026",
       modality: "100 % presencial",
       logoRightUrl: "/certificates/fisiouci.png",
       sponsorLogoUrl: "/certificates/ausp.png",
