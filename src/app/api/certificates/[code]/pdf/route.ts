@@ -120,6 +120,7 @@ export async function GET(
       templateId === "triaje-fisiouci" ||
       templateId === "pancreatitis-formasalud" ||
       templateId === "sterilization-formasalud" ||
+      templateId === "ventilator-formasalud" ||
       templateId === "speaker-recognition";
     const [logoLeftUrl, logoRightUrl, sponsorLogoUrl, sealUrl, awardSealUrl, signatureLeftUrl, signatureRightUrl, backgroundUrl] =
       await Promise.all([
@@ -129,7 +130,7 @@ export async function GET(
         imageDataUrl("cello.png", origin),
         imageDataUrl("sellofms.png", origin),
         imageDataUrl("fra.png", origin),
-        imageDataUrl("firmaMiguel.png", origin),
+        imageDataUrl(templateId === "ventilator-formasalud" ? "bertha.png" : "firmaMiguel.png", origin),
         imageDataUrl(templateId === "sterilization-formasalud" ? "esterilizacion-fondo.png" : "coche-paro-hospital.png", origin),
       ]);
 

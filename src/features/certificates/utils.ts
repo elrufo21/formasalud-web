@@ -51,6 +51,7 @@ export function mapCertificateToPayload(
   const isPancreatitis = cert.template_key === "pancreatitis-formasalud" || normalizedTitle.includes("PANCREATITIS");
   const isSpeaker = (cert as { certificate_type?: string }).certificate_type === "speaker" || cert.template_key === "speaker-recognition";
   const isSterilization = !isSpeaker && cert.template_key === "sterilization-formasalud";
+  const isVentilator = !isSpeaker && cert.template_key === "ventilator-formasalud";
 
   const issueDate = cert.issued_at ? new Date(cert.issued_at) : new Date();
   const issueParts = new Intl.DateTimeFormat("es-PE", {
@@ -91,6 +92,16 @@ export function mapCertificateToPayload(
     backgroundUrl: isSterilization ? "/certificates/esterilizacion-fondo.png" : undefined,
     verificationUrl: getCertificateVerificationUrl(code),
     templateId: isSpeaker ? "speaker-recognition" : isSterilization ? "sterilization-formasalud" : isTriaje ? "triaje-fisiouci" : isPancreatitis ? "pancreatitis-formasalud" : "formasalud-classic",
+    ...(isVentilator ? {
+      templateId: "ventilator-formasalud" as const,
+      hours: cert.hours || 4,
+      hoursUnit: "horas lectivas",
+      courseDateText: cert.course_date_text || "Noviembre - diciembre de 2026",
+      modality: "100 % presencial",
+      logoRightUrl: "/certificates/fisiouci.png",
+      sponsorLogoUrl: "/certificates/ausp.png",
+      signatureRightUrl: "/certificates/bertha.png",
+    } : {}),
     ...overrides,
   };
 }

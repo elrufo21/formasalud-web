@@ -5,8 +5,12 @@ import { ClassicEleganceCertificate } from "./templates/ClassicEleganceCertifica
 import { CertificatePdf18 as FormasaludClassicCertificate } from "./templates/FormasaludClassicCertificate";
 import { CertificatePdf18 as SpecializedCertificate } from "./templates/FormasaludSpecialCertificate";
 import { SterilizationCertificate } from "./templates/SterilizationCertificate";
+import { VentilatorCertificate } from "./templates/VentilatorCertificate";
 
 export function CertificatePdfDocument({ data }: { data: FormasaludCertificatePayload }) {
+  if (data.templateId === "ventilator-formasalud") {
+    return <VentilatorCertificate data={data} />;
+  }
   if (data.templateId === "sterilization-formasalud") {
     return <SterilizationCertificate data={data} />;
   }
