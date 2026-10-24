@@ -100,7 +100,8 @@ export function mapCertificateToPayload(
       modality: "100 % presencial",
       logoRightUrl: "/certificates/fisiouci.png",
       sponsorLogoUrl: "/certificates/ausp.png",
-      signatureRightUrl: "/certificates/bertha.png",
+      signatureRightUrl: "/certificates/firmaMiguel.png",
+      backgroundUrl: "/certificates/ventilador-mecanico.png",
     } : {}),
     ...overrides,
   };

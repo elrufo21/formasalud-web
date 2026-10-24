@@ -81,8 +81,9 @@ export async function GET(
       return Response.json({ message: "Certificado no encontrado" }, { status: 404 });
     }
 
+    const templateId = mapCertificateToPayload(certificate).templateId;
     const safeFileName = `Certificado_${code.replace(/[^a-zA-Z0-9-]/g, "_")}.pdf`;
-    const cacheVersion = createHash("sha256").update(JSON.stringify(certificate)).digest("hex").slice(0, 12);
+    const cacheVersion = createHash("sha256").update(JSON.stringify(certificate) + (templateId === "ventilator-formasalud" ? "design-v2" : "")).digest("hex").slice(0, 12);
     const cachedFilePath = path.join(CACHE_DIR, `${code.replace(/[^a-zA-Z0-9-]/g, "_")}-${cacheVersion}.pdf`);
 
     if (certificate.valid === false || certificate.status === "revoked") {
@@ -115,7 +116,6 @@ export async function GET(
 
     // 2. Compilar PDF cargando imágenes con fallback a Vercel CDN
     const origin = requestUrl.origin;
-    const templateId = mapCertificateToPayload(certificate).templateId;
     const hasTwoSponsors =
       templateId === "triaje-fisiouci" ||
       templateId === "pancreatitis-formasalud" ||
@@ -130,8 +130,8 @@ export async function GET(
         imageDataUrl("cello.png", origin),
         imageDataUrl("sellofms.png", origin),
         imageDataUrl("fra.png", origin),
-        imageDataUrl(templateId === "ventilator-formasalud" ? "bertha.png" : "firmaMiguel.png", origin),
-        imageDataUrl(templateId === "sterilization-formasalud" ? "esterilizacion-fondo.png" : "coche-paro-hospital.png", origin),
+        imageDataUrl("firmaMiguel.png", origin),
+        imageDataUrl(templateId === "ventilator-formasalud" ? "ventilador-mecanico.png" : templateId === "sterilization-formasalud" ? "esterilizacion-fondo.png" : "coche-paro-hospital.png", origin),
       ]);
 
     const data = mapCertificateToPayload(certificate, {
