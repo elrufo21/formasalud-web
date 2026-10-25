@@ -97,7 +97,7 @@ export function mapCertificateToPayload(
       hours: cert.hours || 4,
       hoursUnit: "horas lectivas",
       courseDateText: cert.course_date_text || "21 de octubre de 2026",
-      modality: "100 % presencial",
+      modality: "100 % virtual",
       logoRightUrl: "/certificates/fisiouci.png",
       sponsorLogoUrl: "/certificates/ausp.png",
       signatureRightUrl: "/certificates/firmaMiguel.png",

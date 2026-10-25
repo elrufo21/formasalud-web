@@ -51,10 +51,10 @@ export function VentilatorCertificate({ data }: { data: FormasaludCertificatePay
       <View style={{ position: "absolute", left: 183, top: 276, width: 534, height: 0.7, backgroundColor: BLUE }} />
       <Text style={{ position: "absolute", left: 170, top: 289, width: 560, fontSize: 11.4, textAlign: "center" }}>Por su participación{data.certificateType === "approval" ? " y aprobación satisfactoria" : ""} en el</Text>
       <View style={{ position: "absolute", left: 336, top: 311, width: 228, borderRadius: 12, backgroundColor: NAVY, paddingVertical: 5 }}>
-        <Text style={{ fontFamily: "Helvetica-Bold", fontSize: 10.5, color: "#FFFFFF", textAlign: "center", letterSpacing: 1.2 }}>CURSO-TALLER PRESENCIAL</Text>
+        <Text style={{ fontFamily: "Helvetica-Bold", fontSize: 10.5, color: "#FFFFFF", textAlign: "center", letterSpacing: 1.2 }}>CURSO-TALLER VIRTUAL</Text>
       </View>
       <Text style={{ position: "absolute", left: 166, top: 341, width: 568, fontFamily: "Helvetica-Bold", fontSize: 25, lineHeight: 1.15, textAlign: "center" }}>{data.courseTitle}</Text>
-      <Text style={{ position: "absolute", left: 177, top: 416, width: 546, fontSize: 11.2, lineHeight: 1.5, textAlign: "center", color: "#24547C" }}>Desarrollado de manera presencial el {data.courseDateText || "21 de octubre de 2026"},{"\n"}con una duración de {data.hours || 4} horas lectivas. Organizado por FORMASALUD.</Text>
+      <Text style={{ position: "absolute", left: 177, top: 416, width: 546, fontSize: 11.2, lineHeight: 1.5, textAlign: "center", color: "#24547C" }}>Desarrollado de manera virtual el {data.courseDateText || "21 de octubre de 2026"},{"\n"}con una duración de {data.hours || 4} horas lectivas. Organizado por FORMASALUD.</Text>
 
       <View style={{ position: "absolute", left: 39, top: 203, width: 115, height: 216, backgroundColor: "#EFF8FD", borderRadius: 9, borderLeftWidth: 3, borderLeftColor: BLUE, padding: 10 }}>
         <Text style={{ fontSize: 7.7, fontFamily: "Helvetica-Bold", color: BLUE }}>FECHA DEL CURSO</Text>
@@ -62,7 +62,7 @@ export function VentilatorCertificate({ data }: { data: FormasaludCertificatePay
         <Text style={{ marginTop: 18, fontSize: 7.7, fontFamily: "Helvetica-Bold", color: BLUE }}>DURACIÓN</Text>
         <Text style={{ marginTop: 5, fontSize: 10 }}>{data.hours || 4} horas lectivas</Text>
         <Text style={{ marginTop: 18, fontSize: 7.7, fontFamily: "Helvetica-Bold", color: BLUE }}>MODALIDAD</Text>
-        <Text style={{ marginTop: 5, fontSize: 10 }}>100 % presencial</Text>
+        <Text style={{ marginTop: 5, fontSize: 10 }}>100 % virtual</Text>
         <Text style={{ marginTop: 18, fontSize: 7.7, fontFamily: "Helvetica-Bold", color: BLUE }}>CÓDIGO</Text>
         <Text style={{ marginTop: 5, fontSize: 9.4 }}>{data.certificateCode}</Text>
       </View>
@@ -73,15 +73,16 @@ export function VentilatorCertificate({ data }: { data: FormasaludCertificatePay
         </View>
         <Text style={{ width: 111, backgroundColor: NAVY, color: "#FFFFFF", borderRadius: 5, paddingVertical: 7, marginTop: 6, fontFamily: "Helvetica-Bold", textAlign: "center", fontSize: 7.8, lineHeight: 1.3 }}>{data.previewOnly ? "MODELO SIN EMISIÓN" : "Verifica la autenticidad\nde tu certificado"}</Text>
       </View>
-      <PdfImage src={asset(data.signatureLeftUrl || "/certificates/fra.png")} style={{ position: "absolute", left: 218, top: 444, width: 162, height: 73, objectFit: "contain" }} />
-      <PdfImage src={asset(data.signatureRightUrl || "/certificates/firmaMiguel.png")} style={{ position: "absolute", left: 538, top: 444, width: 162, height: 73, objectFit: "contain" }} />
+      {/* PNG margins differ; align the visible signatures on the same baseline. */}
+      <PdfImage src={asset(data.signatureLeftUrl || "/certificates/fra.png")} style={{ position: "absolute", left: 229, top: 444.5, width: 162, height: 73, objectFit: "contain" }} />
+      <PdfImage src={asset(data.signatureRightUrl || "/certificates/firmaMiguel.png")} style={{ position: "absolute", left: 540.5, top: 448, width: 162, height: 73, objectFit: "contain" }} />
       <View style={{ position: "absolute", left: 202, top: 510, width: 205, height: 0.7, backgroundColor: "#C9A44A" }} />
       <View style={{ position: "absolute", left: 518, top: 510, width: 205, height: 0.7, backgroundColor: "#C9A44A" }} />
-      <Text style={{ position: "absolute", left: 196, top: 516, width: 215, fontFamily: "Times-Bold", fontSize: 10, textAlign: "center" }}>Lic. Francisco Paucar Benites</Text>
-      <Text style={{ position: "absolute", left: 199, top: 529, width: 210, fontFamily: "Times-Bold", fontSize: 7.8, lineHeight: 1.25, textAlign: "center" }}>DIRECTOR ACADÉMICO{"\n"}FORMASALUD</Text>
+      <Text style={{ position: "absolute", left: 202, top: 516, width: 205, fontFamily: "Times-Bold", fontSize: 10, textAlign: "center" }}>Lic. Francisco Paucar Benites</Text>
+      <Text style={{ position: "absolute", left: 202, top: 529, width: 205, fontFamily: "Times-Bold", fontSize: 7.8, lineHeight: 1.25, textAlign: "center" }}>DIRECTOR ACADÉMICO{"\n"}FORMASALUD</Text>
       <PdfImage src={asset(data.sealUrl || "/certificates/cello.png")} style={{ position: "absolute", left: 422, top: 463, width: 78, height: 78, objectFit: "contain" }} />
-      <Text style={{ position: "absolute", left: 510, top: 516, width: 221, fontFamily: "Times-Bold", fontSize: 10, textAlign: "center" }}>Lic. Zambrano Cruz Miguel</Text>
-      <Text style={{ position: "absolute", left: 516, top: 529, width: 210, fontFamily: "Times-Bold", fontSize: 7.8, lineHeight: 1.25, textAlign: "center" }}>COORDINADOR ACADÉMICO{"\n"}FORMASALUD</Text>
+      <Text style={{ position: "absolute", left: 518, top: 516, width: 205, fontFamily: "Times-Bold", fontSize: 10, textAlign: "center" }}>Lic. Zambrano Cruz Miguel</Text>
+      <Text style={{ position: "absolute", left: 518, top: 529, width: 205, fontFamily: "Times-Bold", fontSize: 7.8, lineHeight: 1.25, textAlign: "center" }}>COORDINADOR ACADÉMICO{"\n"}FORMASALUD</Text>
       <Text style={{ position: "absolute", left: 142, top: 565, fontSize: 8, color: "#24547C" }}>Lima, {data.issueDateText}</Text>
       <Text style={{ position: "absolute", left: 602, top: 565, width: 250, textAlign: "right", fontSize: 7.8, color: "#24547C" }}>FORMASALUD | RUC: 20613837613 | formasalud.org.pe</Text>
     </Page>

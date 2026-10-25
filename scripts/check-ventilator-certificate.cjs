@@ -18,7 +18,7 @@ assert.equal(data.hours, 4);
 assert.equal(data.hoursUnit, "horas lectivas");
 assert.equal(data.courseDateText, "21 de octubre de 2026");
 assert.equal(map({ ...certificate, course_date_text: "Otra fecha" }).courseDateText, "Otra fecha");
-assert.equal(data.modality, "100 % presencial");
+assert.equal(data.modality, "100 % virtual");
 assert.equal(data.logoRightUrl, "/certificates/fisiouci.png");
 assert.equal(data.sponsorLogoUrl, "/certificates/ausp.png");
 assert.equal(data.signatureRightUrl, "/certificates/firmaMiguel.png");
