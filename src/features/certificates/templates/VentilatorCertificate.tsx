@@ -32,15 +32,15 @@ export function VentilatorCertificate({ data }: { data: FormasaludCertificatePay
         <Path d="M0 543C50 574 91 587 141 600H0Z" fill={NAVY} />
         <Path d="M32 143H868M32 551H868" stroke="#B1D9ED" strokeWidth="0.6" />
         <Path d="M35 157l16-9 16 9v18l-16 9-16-9zM67 175l16-9 16 9v18l-16 9-16-9zM35 193l16-9 16 9v18l-16 9-16-9zM67 428l16-9 16 9v18l-16 9-16-9zM99 446l16-9 16 9v18l-16 9-16-9zM35 446l16-9 16 9v18l-16 9-16-9zM67 464l16-9 16 9v18l-16 9-16-9zM793 157l16-9 16 9v18l-16 9-16-9zM825 175l16-9 16 9v18l-16 9-16-9zM793 193l16-9 16 9v18l-16 9-16-9zM825 499l16-9 16 9v18l-16 9-16-9zM793 517l16-9 16 9v18l-16 9-16-9z" fill="#E8F5FC" stroke="#C9E6F4" strokeWidth="0.6" />
-        <Path d="M174 173h45M681 173h45M224 173l4-4 4 4-4 4zM668 173l4-4 4 4-4 4zM177 115h416" fill="none" stroke="#C9A44A" strokeWidth="0.8" />
+        <Path d="M174 173h45M681 173h45M224 173l4-4 4 4-4 4zM668 173l4-4 4 4-4 4zM174 115h430" fill="none" stroke="#C9A44A" strokeWidth="0.8" />
         <Path d="M27 490C68 526 105 540 157 546M650 23C739 42 818 76 875 129" fill="none" stroke="#83CDEB" strokeWidth="0.65" />
       </Svg>
       <PdfImage src={asset(data.logoLeftUrl || "/certificates/logofms.png")} style={{ position: "absolute", left: 282, top: 159, width: 336, height: 336, objectFit: "contain", opacity: 0.065 }} />
       <PdfImage src={asset(data.backgroundUrl || "/certificates/ventilador-mecanico.png")} style={{ position: "absolute", left: 736, top: 326, width: 137, height: 213, objectFit: "contain", opacity: 0.65 }} />
 
       <PdfImage src={asset(data.logoLeftUrl || "/certificates/logofms.png")} style={{ position: "absolute", left: 50, top: 28, width: 100, height: 100, objectFit: "contain" }} />
-      <Text style={{ position: "absolute", left: 174, top: 43, width: 430, fontFamily: "Helvetica-Bold", fontSize: 46, letterSpacing: 0.4 }}>FORMASALUD</Text>
-      <Text style={{ position: "absolute", left: 177, top: 96, fontFamily: "Helvetica-Oblique", fontSize: 13, color: BLUE }}>Innovación y Desarrollo Académico en Salud</Text>
+      <Text style={{ position: "absolute", left: 174, top: 43, width: 430, fontFamily: "Helvetica-Bold", fontSize: 46, letterSpacing: 0.4, textAlign: "center" }}>FORMASALUD</Text>
+      <Text style={{ position: "absolute", left: 174, top: 96, width: 430, fontFamily: "Helvetica-Oblique", fontSize: 13, textAlign: "center", color: BLUE }}>Innovación y Desarrollo Académico en Salud</Text>
       <View style={{ position: "absolute", left: 629, top: 43, width: 1, height: 82, backgroundColor: "#B1D9ED" }} />
       <PdfImage src={asset(data.logoRightUrl || "/certificates/fisiouci.png")} style={{ position: "absolute", left: 647, top: 44, width: 85, height: 79, objectFit: "contain" }} />
       <PdfImage src={asset(data.sponsorLogoUrl || "/certificates/ausp.png")} style={{ position: "absolute", left: 753, top: 39, width: 88, height: 88, objectFit: "contain" }} />
@@ -51,7 +51,7 @@ export function VentilatorCertificate({ data }: { data: FormasaludCertificatePay
       <View style={{ position: "absolute", left: 183, top: 276, width: 534, height: 0.7, backgroundColor: BLUE }} />
       <Text style={{ position: "absolute", left: 170, top: 289, width: 560, fontSize: 11.4, textAlign: "center" }}>Por su participación{data.certificateType === "approval" ? " y aprobación satisfactoria" : ""} en el</Text>
       <View style={{ position: "absolute", left: 336, top: 311, width: 228, borderRadius: 12, backgroundColor: NAVY, paddingVertical: 5 }}>
-        <Text style={{ fontFamily: "Helvetica-Bold", fontSize: 10.5, color: "#FFFFFF", textAlign: "center", letterSpacing: 1.2 }}>CURSO-TALLER VIRTUAL</Text>
+        <Text style={{ fontFamily: "Helvetica-Bold", fontSize: 10.5, color: "#FFFFFF", textAlign: "center", letterSpacing: 1.2 }}>CURSO INTERNACIONAL</Text>
       </View>
       <Text style={{ position: "absolute", left: 166, top: 341, width: 568, fontFamily: "Helvetica-Bold", fontSize: 25, lineHeight: 1.15, textAlign: "center" }}>{data.courseTitle}</Text>
       <Text style={{ position: "absolute", left: 177, top: 416, width: 546, fontSize: 11.2, lineHeight: 1.5, textAlign: "center", color: "#24547C" }}>Desarrollado de manera virtual el {data.courseDateText || "21 de octubre de 2026"},{"\n"}con una duración de {data.hours || 4} horas lectivas. Organizado por FORMASALUD.</Text>
