@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, Sparkles, CheckCircle2, Calendar, Clock, UserCheck } from "lucide-react";
+import { ArrowUpRight, Sparkles, CheckCircle2, Calendar, Clock, UserCheck, MessageCircle } from "lucide-react";
 import { ImageFrame } from "@/components/ui/ImageFrame";
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
