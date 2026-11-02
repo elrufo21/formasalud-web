@@ -1,30 +1,60 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Award, Calendar, CheckCircle2, ChevronRight, MessageCircle, Stethoscope, UserCheck } from "lucide-react";
-import { getPublicAssetUrl, type PublicCourse } from "@/lib/api";
+import {
+  Award,
+  BookOpen,
+  Calendar,
+  CheckCircle2,
+  ChevronRight,
+  Clock,
+  MessageCircle,
+  Stethoscope,
+  UserCheck,
+} from "lucide-react";
+import {
+  api,
+  CourseSyllabus,
+  getPublicAssetUrl,
+  type PublicCourse,
+} from "@/lib/api";
 
 const SECTIONS = [
   { id: "descripcion", label: "Descripción" },
+  { id: "temario", label: "Plan de Estudios" },
   { id: "docentes", label: "Docentes" },
   { id: "certificacion", label: "Certificación" },
 ];
+
+const deliveryModeLabel: Record<string, string> = {
+  in_person: "Presencial",
+  virtual_sync: "Virtual en vivo",
+  virtual_async: "Virtual asincrónico",
+  hybrid: "Híbrido / Semipresencial",
+};
 
 function formatDate(value?: string | null) {
   if (!value) return null;
   const date = new Date(value);
   return Number.isNaN(date.getTime())
     ? null
-    : date.toLocaleDateString("es-PE", { day: "numeric", month: "long", year: "numeric" });
+    : date.toLocaleDateString("es-PE", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
 }
 
 export function CourseDetailView({ course }: { course: PublicCourse }) {
   const [imageError, setImageError] = useState(false);
+  const [syllabus, setSyllabus] = useState<CourseSyllabus | null>(null);
   const imageUrl = getPublicAssetUrl(course.thumbnail_url);
   const teachers = course.teachers ?? [];
-  const teacherNames = teachers.map((person) => `${person.name} ${person.last_name}`.trim()).join(", ");
+  const teacherNames = teachers
+    .map((person) => `${person.name} ${person.last_name}`.trim())
+    .join(", ");
   const price = Number(course.price ?? 0);
   const priceLabel = price === 0 ? "Consultar" : `S/ ${price.toFixed(2)}`;
   const publishedAt = formatDate(course.published_at);
@@ -37,18 +67,51 @@ export function CourseDetailView({ course }: { course: PublicCourse }) {
     `Hola FORMASALUD, me gustaría recibir el temario e información para inscribirme en: "${course.title}".`,
   );
 
+  useEffect(() => {
+    api
+      .getCourseSyllabus(course.course_id)
+      .then(setSyllabus)
+      .catch(() => setSyllabus(null));
+  }, [course.course_id]);
+
   return (
     <main className="flex-1 bg-bg-alt">
       <section className="!pt-6 sm:!pt-8 !pb-16 sm:!pb-20">
         <div className="wrap">
           {/* Breadcrumb */}
-          <nav aria-label="Ruta de navegación" className="mb-6 text-xs sm:text-sm text-ink-soft">
+          <nav
+            aria-label="Ruta de navegación"
+            className="mb-6 text-xs sm:text-sm text-ink-soft"
+          >
             <ol className="flex flex-wrap items-center gap-1.5">
-              <li><Link href="/" className="hover:text-teal transition-colors">Inicio</Link></li>
-              <li aria-hidden="true"><ChevronRight className="w-3.5 h-3.5" /></li>
-              <li><Link href="/cursos" className="hover:text-teal transition-colors">Cursos</Link></li>
-              <li aria-hidden="true"><ChevronRight className="w-3.5 h-3.5" /></li>
-              <li aria-current="page" className="font-semibold text-navy line-clamp-1 max-w-full">{course.title}</li>
+              <li>
+                <Link
+                  href="/"
+                  className="hover:text-teal transition-colors"
+                >
+                  Inicio
+                </Link>
+              </li>
+              <li aria-hidden="true">
+                <ChevronRight className="w-3.5 h-3.5" />
+              </li>
+              <li>
+                <Link
+                  href="/cursos"
+                  className="hover:text-teal transition-colors"
+                >
+                  Cursos
+                </Link>
+              </li>
+              <li aria-hidden="true">
+                <ChevronRight className="w-3.5 h-3.5" />
+              </li>
+              <li
+                aria-current="page"
+                className="font-semibold text-navy line-clamp-1 max-w-full"
+              >
+                {course.title}
+              </li>
             </ol>
           </nav>
 
@@ -59,7 +122,10 @@ export function CourseDetailView({ course }: { course: PublicCourse }) {
                 {course.title}
               </h1>
               <p className="mt-3 text-sm sm:text-base text-ink-soft">
-                Por <span className="font-semibold text-navy">{teacherNames || "Plana Docente FormaSalud"}</span>
+                Por{" "}
+                <span className="font-semibold text-navy">
+                  {teacherNames || "Plana Docente FormaSalud"}
+                </span>
               </p>
 
               <div className="relative mt-6 aspect-[16/9] rounded-2xl overflow-hidden border border-line shadow-[0_10px_30px_rgba(15,41,66,0.10)] bg-gradient-to-br from-navyink via-navy to-tealdeep">
@@ -85,7 +151,10 @@ export function CourseDetailView({ course }: { course: PublicCourse }) {
                 )}
               </div>
 
-              <nav aria-label="Secciones del curso" className="mt-6 flex gap-2 overflow-x-auto pb-1">
+              <nav
+                aria-label="Secciones del curso"
+                className="mt-6 flex gap-2 overflow-x-auto pb-1"
+              >
                 {SECTIONS.map((section) => (
                   <a
                     key={section.id}
@@ -101,14 +170,21 @@ export function CourseDetailView({ course }: { course: PublicCourse }) {
             {/* Enrollment card */}
             <aside className="lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:sticky lg:top-28">
               <div className="rounded-2xl bg-white border border-line shadow-[0_10px_30px_rgba(15,41,66,0.08)] p-5 sm:p-6">
-                <h2 className="text-base font-bold text-navy">¿Cómo te inscribes?</h2>
+                <h2 className="text-base font-bold text-navy">
+                  ¿Cómo te inscribes?
+                </h2>
                 <p className="mt-1 text-xs text-ink-soft leading-relaxed">
-                  Escríbenos por WhatsApp y un asesor académico te enviará el temario y los pasos para tu matrícula.
+                  Escríbenos por WhatsApp y un asesor académico te enviará el
+                  temario y los pasos para tu matrícula.
                 </p>
 
                 <div className="mt-5 rounded-xl border border-teal/25 bg-tealtint p-4">
-                  <span className="text-xs font-semibold text-tealdeep">Inversión única</span>
-                  <div className="mt-1 text-3xl font-extrabold text-navy leading-none">{priceLabel}</div>
+                  <span className="text-xs font-semibold text-tealdeep">
+                    Inversión única
+                  </span>
+                  <div className="mt-1 text-3xl font-extrabold text-navy leading-none">
+                    {priceLabel}
+                  </div>
                 </div>
 
                 <a
@@ -127,20 +203,48 @@ export function CourseDetailView({ course }: { course: PublicCourse }) {
                     <dt className="flex items-center gap-1.5 text-xs text-ink-soft">
                       <Award className="w-3.5 h-3.5 text-teal" /> Certificado
                     </dt>
-                    <dd className="mt-1 font-semibold text-navy">{certificateLabel}</dd>
+                    <dd className="mt-1 font-semibold text-navy">
+                      {certificateLabel}
+                    </dd>
                   </div>
                   <div>
                     <dt className="flex items-center gap-1.5 text-xs text-ink-soft">
                       <UserCheck className="w-3.5 h-3.5 text-teal" /> Docentes
                     </dt>
-                    <dd className="mt-1 font-semibold text-navy">{teachers.length || "Por confirmar"}</dd>
+                    <dd className="mt-1 font-semibold text-navy">
+                      {teachers.length || "Por confirmar"}
+                    </dd>
                   </div>
+                  {course.delivery_mode && (
+                    <div>
+                      <dt className="flex items-center gap-1.5 text-xs text-ink-soft">
+                        <BookOpen className="w-3.5 h-3.5 text-teal" /> Modalidad
+                      </dt>
+                      <dd className="mt-1 font-semibold text-navy">
+                        {deliveryModeLabel[course.delivery_mode] ??
+                          course.delivery_mode}
+                      </dd>
+                    </div>
+                  )}
+                  {Number(course.total_academic_hours ?? 0) > 0 && (
+                    <div>
+                      <dt className="flex items-center gap-1.5 text-xs text-ink-soft">
+                        <Clock className="w-3.5 h-3.5 text-teal" /> Carga
+                        Horaria
+                      </dt>
+                      <dd className="mt-1 font-semibold text-navy">
+                        {course.total_academic_hours} hrs académicas
+                      </dd>
+                    </div>
+                  )}
                   {publishedAt && (
                     <div className="col-span-2">
                       <dt className="flex items-center gap-1.5 text-xs text-ink-soft">
                         <Calendar className="w-3.5 h-3.5 text-teal" /> Publicado
                       </dt>
-                      <dd className="mt-1 font-semibold text-navy">{publishedAt}</dd>
+                      <dd className="mt-1 font-semibold text-navy">
+                        {publishedAt}
+                      </dd>
                     </div>
                   )}
                 </dl>
@@ -150,31 +254,127 @@ export function CourseDetailView({ course }: { course: PublicCourse }) {
             {/* Content sections */}
             <div className="min-w-0 lg:col-start-1 space-y-10">
               <section id="descripcion" className="!p-0 scroll-mt-28">
-                <h2 className="text-xl sm:text-2xl font-extrabold text-navy">Descripción</h2>
+                <h2 className="text-xl sm:text-2xl font-extrabold text-navy">
+                  Descripción
+                </h2>
                 <p className="mt-3 text-sm sm:text-base text-ink-soft leading-relaxed whitespace-pre-line">
-                  {course.description || course.short_description || "Consulta con un asesor académico para conocer el programa."}
+                  {course.description ||
+                    course.short_description ||
+                    "Consulta con un asesor académico para conocer el programa."}
                 </p>
               </section>
 
+              {syllabus && syllabus.modules?.length > 0 && (
+                <section id="temario" className="!p-0 scroll-mt-28 space-y-4">
+                  <div>
+                    <h2 className="text-xl sm:text-2xl font-extrabold text-navy">
+                      Plan de Estudios
+                    </h2>
+                    <p className="mt-1 text-xs sm:text-sm text-ink-soft">
+                      Estructura curricular organizada en{" "}
+                      {syllabus.modules.length} módulos y{" "}
+                      {syllabus.modules.reduce(
+                        (acc, m) => acc + (m.lessons?.length ?? 0),
+                        0,
+                      )}{" "}
+                      sesiones académicas.
+                    </p>
+                  </div>
+                  <div className="space-y-3">
+                    {syllabus.modules.map((mod) => (
+                      <div
+                        key={mod.module_id}
+                        className="rounded-2xl border border-line bg-white p-5 space-y-3"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <div>
+                            <span className="font-mono text-xs font-bold uppercase text-teal">
+                              Módulo {mod.module_number}
+                            </span>
+                            <h3 className="text-base font-bold text-navy">
+                              {mod.title}
+                            </h3>
+                          </div>
+                          {mod.lessons?.length ? (
+                            <span className="rounded-lg bg-bg-alt px-2.5 py-1 font-mono text-xs font-semibold text-navy border border-line">
+                              {mod.lessons.length} sesiones
+                            </span>
+                          ) : null}
+                        </div>
+                        {mod.description && (
+                          <p className="text-xs sm:text-sm text-ink-soft">
+                            {mod.description}
+                          </p>
+                        )}
+                        {mod.lessons?.length > 0 && (
+                          <div className="grid gap-2 sm:grid-cols-2 pt-1">
+                            {mod.lessons.map((lesson) => (
+                              <div
+                                key={lesson.lesson_id}
+                                className="rounded-xl border border-line bg-bg-alt/60 p-3 text-xs space-y-1"
+                              >
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="font-mono font-bold text-teal">
+                                    Clase {lesson.lesson_number}
+                                  </span>
+                                  <span className="font-mono text-[11px] text-ink-soft">
+                                    {lesson.academic_hours ?? 3} hrs
+                                  </span>
+                                </div>
+                                <p className="font-semibold text-navy">
+                                  {lesson.title}
+                                </p>
+                                {lesson.summary && (
+                                  <p className="text-[11px] text-ink-soft line-clamp-2">
+                                    {lesson.summary}
+                                  </p>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+
               <section id="docentes" className="!p-0 scroll-mt-28">
-                <h2 className="text-xl sm:text-2xl font-extrabold text-navy">Docentes</h2>
+                <h2 className="text-xl sm:text-2xl font-extrabold text-navy">
+                  Docentes
+                </h2>
                 <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {teachers.length ? teachers.map((person) => (
-                    <div key={`${person.name}-${person.last_name}`} className="flex items-center gap-3 bg-white p-4 rounded-xl border border-line">
-                      <div className="w-12 h-12 rounded-full bg-navy text-goldpale text-base flex items-center justify-center font-bold flex-none border border-gold overflow-hidden">
-                        {person.profile_photo_url ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={person.profile_photo_url} alt="" className="w-full h-full object-cover" />
-                        ) : `${person.name[0] ?? ""}${person.last_name[0] ?? ""}`}
+                  {teachers.length ? (
+                    teachers.map((person) => (
+                      <div
+                        key={`${person.name}-${person.last_name}`}
+                        className="flex items-center gap-3 bg-white p-4 rounded-xl border border-line"
+                      >
+                        <div className="w-12 h-12 rounded-full bg-navy text-goldpale text-base flex items-center justify-center font-bold flex-none border border-gold overflow-hidden">
+                          {person.profile_photo_url ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={person.profile_photo_url}
+                              alt=""
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            `${person.name[0] ?? ""}${person.last_name[0] ?? ""}`
+                          )}
+                        </div>
+                        <div className="min-w-0">
+                          <b className="text-navy text-sm sm:text-base block truncate">
+                            {person.name} {person.last_name}
+                          </b>
+                          <span className="text-xs text-ink-soft block truncate">
+                            {person.specialty ||
+                              person.profession ||
+                              "Docente FORMASALUD"}
+                          </span>
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <b className="text-navy text-sm sm:text-base block truncate">{person.name} {person.last_name}</b>
-                        <span className="text-xs text-ink-soft block truncate">
-                          {person.specialty || person.profession || "Docente FORMASALUD"}
-                        </span>
-                      </div>
-                    </div>
-                  )) : (
+                    ))
+                  ) : (
                     <div className="bg-white p-4 rounded-xl border border-line text-sm text-ink-soft">
                       Docente por confirmar
                     </div>
@@ -183,12 +383,21 @@ export function CourseDetailView({ course }: { course: PublicCourse }) {
               </section>
 
               <section id="certificacion" className="!p-0 scroll-mt-28">
-                <h2 className="text-xl sm:text-2xl font-extrabold text-navy">Certificación</h2>
+                <h2 className="text-xl sm:text-2xl font-extrabold text-navy">
+                  Certificación
+                </h2>
                 <div className="mt-4 flex items-start gap-3 bg-white p-4 sm:p-5 rounded-xl border border-line">
                   <CheckCircle2 className="w-5 h-5 text-teal shrink-0 mt-0.5" />
                   <p className="text-sm sm:text-base text-ink-soft leading-relaxed">
-                    {certificateLabel}. Los certificados FORMASALUD pueden validarse en línea mediante su código QR en{" "}
-                    <Link href="/verificar" className="font-semibold text-teal hover:underline">la página de verificación</Link>.
+                    {certificateLabel}. Los certificados FORMASALUD pueden
+                    validarse en línea mediante su código QR en{" "}
+                    <Link
+                      href="/verificar"
+                      className="font-semibold text-teal hover:underline"
+                    >
+                      la página de verificación
+                    </Link>
+                    .
                   </p>
                 </div>
               </section>

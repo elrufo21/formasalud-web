@@ -1,4 +1,4 @@
-export type CertificateTemplateId = "official-wave" | "classic-elegance" | "formasalud-classic" | "triaje-fisiouci" | "pancreatitis-formasalud" | "speaker-recognition" | "sterilization-formasalud";
+export type CertificateTemplateId = "official-wave" | "classic-elegance" | "formasalud-classic" | "triaje-fisiouci" | "pancreatitis-formasalud" | "speaker-recognition" | "sterilization-formasalud" | "ventilator-formasalud";
 
 
 export interface FormasaludCertificatePayload {
