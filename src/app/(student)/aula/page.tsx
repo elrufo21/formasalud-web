@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { BookOpen, Award, CheckCircle, ArrowRight, Clock, Sparkles } from "lucide-react";
+import { BookOpen, CheckCircle, ArrowRight, Clock } from "lucide-react";
 import { api, Certificate } from "@/lib/api";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { StudentHeader } from "@/features/student/components/StudentHeader";
@@ -76,51 +76,54 @@ export default function StudentDashboardPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {myCertificates.map((cert) => (
-              <div
-                key={cert.certificate_id}
-                className="p-5 rounded-2xl bg-white border border-line shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
-              >
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold font-mono uppercase border border-emerald-200">
-                      <CheckCircle className="w-3 h-3" />
-                      <span>Matrícula Activa</span>
-                    </span>
-                    <span className="font-mono text-[10px] text-ink-soft">
-                      Cod: {cert.certificate_code}
-                    </span>
+            {myCertificates.map((cert) => {
+              const targetCourseId =
+                cert.course_id || cert.course?.course_id || cert.certificate_id;
+              return (
+                <div
+                  key={cert.certificate_id}
+                  className="p-5 rounded-2xl bg-white border border-line shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold font-mono uppercase border border-emerald-200">
+                        <CheckCircle className="w-3 h-3" />
+                        <span>Matrícula Activa</span>
+                      </span>
+                      <span className="font-mono text-[10px] text-ink-soft">
+                        Cod: {cert.certificate_code}
+                      </span>
+                    </div>
+
+                    <h4 className="font-serif font-bold text-base text-navy leading-snug">
+                      {cert.course_title || cert.course?.title || "Programa Académico"}
+                    </h4>
+
+                    <p className="text-xs text-ink-soft flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-teal" />
+                      <span>Acceso continuo al Aula Virtual y clases grabadas</span>
+                    </p>
                   </div>
 
-                  <h4 className="font-serif font-bold text-base text-navy leading-snug">
-                    {cert.course_title || cert.course?.title || "Programa Académico"}
-                  </h4>
+                  <div className="pt-4 mt-4 border-t border-line flex items-center justify-between">
+                    <Link
+                      href={`/aula/curso/${targetCourseId}`}
+                      className="px-4 py-1.5 rounded-lg bg-teal text-white text-xs font-semibold hover:bg-tealdeep transition-colors flex items-center gap-1"
+                    >
+                      <span>Ver</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
 
-                  <p className="text-xs text-ink-soft flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-teal" />
-                    <span>Acceso continuo al Aula Virtual y clases grabadas</span>
-                  </p>
+                    <Link
+                      href="/aula/mis-certificados"
+                      className="px-3 py-1.5 rounded-lg bg-navy text-white text-xs font-semibold hover:bg-navyink transition-colors"
+                    >
+                      Ver Diploma
+                    </Link>
+                  </div>
                 </div>
-
-                <div className="pt-4 mt-4 border-t border-line flex items-center justify-between">
-                  {/* Botón Ver solicitado por el profesor */}
-                  <Link
-                    href={`/aula/curso/${cert.certificate_id}`}
-                    className="px-4 py-1.5 rounded-lg bg-teal text-white text-xs font-semibold hover:bg-tealdeep transition-colors flex items-center gap-1"
-                  >
-                    <span>Ver</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-
-                  <Link
-                    href="/aula/mis-certificados"
-                    className="px-3 py-1.5 rounded-lg bg-navy text-white text-xs font-semibold hover:bg-navyink transition-colors"
-                  >
-                    Ver Diploma
-                  </Link>
-                </div>
-              </div>
-            ))}
+              );
+            })}
 
             {myCertificates.length === 0 && !loading && (
               <div className="col-span-2 p-12 text-center bg-white rounded-2xl border border-line">

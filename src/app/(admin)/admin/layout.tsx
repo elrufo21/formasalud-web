@@ -11,7 +11,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     if (!isHydrated) return;
-    if (!isAuthenticated || role !== "admin") {
+    if (!isAuthenticated) {
+      router.push("/login");
+      return;
+    }
+    // Si es un estudiante, redirigir a su aula virtual
+    if (role === "student") {
+      router.push("/aula");
+      return;
+    }
+    // Si no es admin ni docente, redirigir
+    if (role !== "admin" && role !== "teacher") {
       router.push("/login");
     }
   }, [isAuthenticated, role, isHydrated, router]);
@@ -19,13 +29,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (!isHydrated) {
     return (
       <div className="min-h-screen bg-bg-alt flex flex-col items-center justify-center gap-3">
-        <div className="w-8 h-8 rounded-full border-3 border-navy border-t-transparent animate-spin" />
-        <span className="text-xs font-semibold text-ink-soft">Verificando sesión...</span>
+        <div className="w-8 h-8 rounded-full border-3 border-teal border-t-transparent animate-spin" />
+        <span className="text-xs font-semibold text-ink-soft">Cargando panel de gestión...</span>
       </div>
     );
   }
 
-  if (!isAuthenticated || role !== "admin") {
+  if (!isAuthenticated || (role !== "admin" && role !== "teacher")) {
     return null;
   }
 

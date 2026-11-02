@@ -15,7 +15,7 @@ export async function getPublishedCourses(): Promise<PublicCourse[]> {
   }
 }
 
-// The backend has no lookup by title-based slug, so match against the published list.
+// Match against either course.slug or slugify(course.title).
 export async function getPublishedCourseBySlug(slug: string): Promise<PublicCourse | null> {
   let decoded = slug;
   try {
@@ -26,5 +26,11 @@ export async function getPublishedCourseBySlug(slug: string): Promise<PublicCour
   const target = slugify(decoded); // also accepts accented URLs like /cursos/práctica-clínica
   if (!target) return null;
   const courses = await getPublishedCourses();
-  return courses.find((course) => slugify(course.title) === target) ?? null;
+  return (
+    courses.find(
+      (course) =>
+        slugify(course.slug || '') === target ||
+        slugify(course.title) === target,
+    ) ?? null
+  );
 }

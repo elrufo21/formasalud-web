@@ -164,6 +164,24 @@ export interface Course {
   certificate_price?: number | null;
   thumbnail_url?: string | null;
   status: "draft" | "published" | "archived";
+  program_type?: string | null;
+  delivery_mode?: "in_person" | "virtual_sync" | "virtual_async" | "hybrid" | string | null;
+  target_audience?: string | null;
+  active_version_id?: number | null;
+  version_code?: string | null;
+  total_academic_hours?: number | null;
+  synchronous_hours?: number | null;
+  complementary_hours?: number | null;
+  theory_hours?: number | null;
+  practice_hours?: number | null;
+  duration_weeks?: number | null;
+  recommended_frequency?: string | null;
+  min_passing_grade?: number | null;
+  min_attendance_percent?: number | null;
+  requires_all_practices_made_up?: boolean | null;
+  makeup_counts_as_attendance?: boolean | null;
+  requires_complementary_hours?: boolean | null;
+  requires_critical_competencies?: boolean | null;
   published_at?: string | null;
   created_at?: string;
 }
@@ -179,6 +197,18 @@ export type PublicCourse = Pick<
   | "certificate_included"
   | "certificate_price"
   | "thumbnail_url"
+  | "program_type"
+  | "delivery_mode"
+  | "target_audience"
+  | "total_academic_hours"
+  | "synchronous_hours"
+  | "complementary_hours"
+  | "theory_hours"
+  | "practice_hours"
+  | "duration_weeks"
+  | "recommended_frequency"
+  | "min_passing_grade"
+  | "min_attendance_percent"
   | "published_at"
 > & {
   teachers?: PublicTeacher[];
@@ -296,6 +326,22 @@ export interface CreateCourseData {
   certificate_price?: number;
   thumbnail_url?: string | null;
   status?: "draft" | "published" | "archived";
+  program_type?: string;
+  delivery_mode?: string;
+  target_audience?: string;
+  total_academic_hours?: number;
+  synchronous_hours?: number;
+  complementary_hours?: number;
+  theory_hours?: number;
+  practice_hours?: number;
+  duration_weeks?: number;
+  recommended_frequency?: string;
+  min_passing_grade?: number;
+  min_attendance_percent?: number;
+  requires_all_practices_made_up?: boolean;
+  makeup_counts_as_attendance?: boolean;
+  requires_complementary_hours?: boolean;
+  requires_critical_competencies?: boolean;
   teacher_ids?: number[];
   resources?: {
     resource_type: "video" | "pdf" | "link" | "quiz" | "other";
@@ -308,6 +354,241 @@ export interface CreateCourseData {
     template_id: number;
     price?: number | null;
   }[];
+}
+
+export interface CourseLessonItem {
+  lesson_id: number;
+  module_id?: number | null;
+  lesson_number: number;
+  week_number?: number | null;
+  month_number?: number | null;
+  title: string;
+  summary?: string | null;
+  lesson_type: "theory" | "practice" | "mixed" | "simulation" | "final_evaluation" | string;
+  academic_hours: number;
+  is_mandatory_practice: boolean;
+  syllabus_topics?: string[];
+  required_materials?: string[];
+  sort_order: number;
+  activities?: {
+    activity_id: number;
+    activity_type: string;
+    title: string;
+    instructions?: string | null;
+    credit_hours?: number;
+    is_mandatory: boolean;
+    content_config?: Record<string, unknown>;
+  }[];
+}
+
+export interface CourseModuleItem {
+  module_id: number;
+  module_number: number;
+  title: string;
+  description?: string | null;
+  sort_order: number;
+  lessons: CourseLessonItem[];
+}
+
+export interface CourseAssessmentItem {
+  assessment_id: number;
+  parent_assessment_id?: number | null;
+  module_id?: number | null;
+  lesson_id?: number | null;
+  code: string;
+  title: string;
+  description?: string | null;
+  assessment_type: string;
+  weight_percent: number;
+  max_score: number;
+  min_passing_score?: number | null;
+  is_critical_gatekeeper: boolean;
+  max_attempts?: number;
+  sort_order: number;
+}
+
+export interface CourseSyllabus {
+  version_id: number;
+  course_id: number;
+  version_code: string;
+  title: string;
+  status: string;
+  total_academic_hours: number;
+  synchronous_hours: number;
+  complementary_hours: number;
+  theory_hours: number;
+  practice_hours: number;
+  duration_weeks: number;
+  recommended_frequency?: string | null;
+  min_passing_grade: number;
+  min_attendance_percent: number;
+  requires_all_practices_made_up: boolean;
+  makeup_counts_as_attendance: boolean;
+  requires_complementary_hours: boolean;
+  requires_critical_competencies: boolean;
+  modules: CourseModuleItem[];
+  assessments: CourseAssessmentItem[];
+}
+
+export interface SaveCourseModulePayload {
+  version_id?: number;
+  module_id?: number;
+  module_number: number;
+  title: string;
+  description?: string;
+  sort_order?: number;
+}
+
+export interface SaveCourseLessonPayload {
+  version_id?: number;
+  lesson_id?: number;
+  module_id?: number | null;
+  lesson_number: number;
+  week_number?: number | null;
+  month_number?: number | null;
+  title: string;
+  summary?: string;
+  lesson_type?: string;
+  academic_hours?: number;
+  is_mandatory_practice?: boolean;
+  syllabus_topics?: string[];
+  required_materials?: string[];
+  sort_order?: number;
+}
+
+export interface SaveCourseAssessmentPayload {
+  version_id?: number;
+  assessment_id?: number;
+  parent_assessment_id?: number | null;
+  module_id?: number | null;
+  lesson_id?: number | null;
+  code: string;
+  title: string;
+  description?: string;
+  assessment_type?: string;
+  weight_percent?: number;
+  max_score?: number;
+  min_passing_score?: number | null;
+  is_critical_gatekeeper?: boolean;
+  max_attempts?: number;
+  sort_order?: number;
+}
+
+export interface CourseCohortSummary {
+  cohort_id: number;
+  course_id: number;
+  course_title: string;
+  version_id: number;
+  cohort_code: string;
+  name: string;
+  delivery_mode: string;
+  start_date?: string | null;
+  end_date?: string | null;
+  schedule_summary?: string | null;
+  venue_name?: string | null;
+  max_capacity?: number | null;
+  enrolled_count: number;
+  status: "planned" | "enrolling" | "in_progress" | "completed" | "cancelled" | string;
+}
+
+export interface CourseCohortSession {
+  cohort_session_id: number;
+  lesson_id: number;
+  session_number: number;
+  week_number?: number | null;
+  title: string;
+  lesson_type: string;
+  academic_hours: number;
+  is_mandatory_practice: boolean;
+  teacher_user_id?: number | null;
+  teacher_name?: string | null;
+  starts_at?: string | null;
+  ends_at?: string | null;
+  room_or_link?: string | null;
+  status: "scheduled" | "in_progress" | "completed" | "rescheduled" | "cancelled" | string;
+}
+
+export interface CourseCohortDetail extends CourseCohortSummary {
+  venue_address?: string | null;
+  meeting_link?: string | null;
+  price_override?: number | null;
+  sessions: CourseCohortSession[];
+}
+
+export interface SaveCourseCohortPayload {
+  version_id?: number;
+  cohort_code: string;
+  name: string;
+  delivery_mode?: string;
+  start_date?: string | null;
+  end_date?: string | null;
+  schedule_summary?: string | null;
+  venue_name?: string | null;
+  venue_address?: string | null;
+  meeting_link?: string | null;
+  max_capacity?: number | null;
+  price_override?: number | null;
+  status?: string;
+}
+
+export interface UpdateCohortSessionPayload {
+  teacher_user_id?: number | null;
+  starts_at?: string | null;
+  ends_at?: string | null;
+  room_or_link?: string | null;
+  status?: string;
+}
+
+export interface CourseEnrollmentItem {
+  enrollment_id: number;
+  student_id: number;
+  student_name: string;
+  document_number?: string | null;
+  email: string;
+  course_id: number;
+  course_title: string;
+  cohort_id?: number | null;
+  cohort_name?: string | null;
+  status: string;
+  payment_summary_status: string;
+  academic_status: string;
+  attendance_percent: number;
+  complementary_hours_done: number;
+  final_grade?: number | null;
+  critical_competencies_passed: boolean;
+  certificate_status: string;
+  enrolled_at: string;
+}
+
+export interface SessionAttendanceItem {
+  enrollment_id: number;
+  student_id: number;
+  student_name: string;
+  document_number?: string | null;
+  status: "present" | "late" | "absent" | "excused" | string;
+  has_record: boolean;
+  requires_makeup: boolean;
+  makeup_status: "not_required" | "pending" | "completed" | string;
+  notes?: string | null;
+  makeup_notes?: string | null;
+  makeup_at?: string | null;
+}
+
+export interface EnrollmentAssessmentGradeItem {
+  assessment_id: number;
+  parent_assessment_id?: number | null;
+  code: string;
+  title: string;
+  assessment_type: string;
+  weight_percent: number;
+  max_score: number;
+  min_passing_score?: number | null;
+  is_critical_gatekeeper: boolean;
+  sort_order: number;
+  score?: number | null;
+  passed?: boolean | null;
+  feedback?: string | null;
+  graded_at?: string | null;
 }
 
 export interface CourseEditData extends Course {
@@ -419,6 +700,138 @@ export const api = {
     request<Course>(`/course/${idOrSlug}`),
   getCourseForEdit: (courseId: number) =>
     request<CourseEditData>(`/course/${courseId}/edit`),
+  getCourseSyllabus: (courseId: number, versionId?: number) =>
+    request<CourseSyllabus>(
+      `/course/${courseId}/syllabus${versionId ? `?versionId=${versionId}` : ""}`,
+    ),
+  saveCourseModule: (courseId: number, data: SaveCourseModulePayload) =>
+    request<{ module_id: number }>(`/course/${courseId}/modules`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  deleteCourseModule: (courseId: number, moduleId: number) =>
+    request<{ deleted: boolean }>(`/course/${courseId}/modules/${moduleId}`, {
+      method: "DELETE",
+    }),
+  saveCourseLesson: (courseId: number, data: SaveCourseLessonPayload) =>
+    request<{ lesson_id: number }>(`/course/${courseId}/lessons`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  deleteCourseLesson: (courseId: number, lessonId: number) =>
+    request<{ deleted: boolean }>(`/course/${courseId}/lessons/${lessonId}`, {
+      method: "DELETE",
+    }),
+  saveCourseAssessment: (courseId: number, data: SaveCourseAssessmentPayload) =>
+    request<{ assessment_id: number }>(`/course/${courseId}/assessments`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  deleteCourseAssessment: (courseId: number, assessmentId: number) =>
+    request<{ deleted: boolean }>(
+      `/course/${courseId}/assessments/${assessmentId}`,
+      {
+        method: "DELETE",
+      },
+    ),
+  getCourseCohorts: (courseId: number) =>
+    request<CourseCohortSummary[]>(`/course/${courseId}/cohorts`),
+  getCourseCohortDetail: (courseId: number, cohortId: number) =>
+    request<CourseCohortDetail>(`/course/${courseId}/cohorts/${cohortId}`),
+  saveCourseCohort: (courseId: number, data: SaveCourseCohortPayload) =>
+    request<CourseCohortDetail>(`/course/${courseId}/cohorts`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  updateCohortSession: (
+    courseId: number,
+    cohortSessionId: number,
+    data: UpdateCohortSessionPayload,
+  ) =>
+    request<{ success: boolean; cohort_session_id: number }>(
+      `/course/${courseId}/cohorts/sessions/${cohortSessionId}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(data),
+      },
+    ),
+  getCourseEnrollments: (courseId: number, cohortId?: number) =>
+    request<CourseEnrollmentItem[]>(
+      `/course/${courseId}/enrollments${cohortId ? `?cohortId=${cohortId}` : ""}`,
+    ),
+  enrollStudentInCourse: (
+    courseId: number,
+    data: { student_id: number; cohort_id?: number | null; status?: string },
+  ) =>
+    request<CourseEnrollmentItem>(`/course/${courseId}/enrollments`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  getSessionAttendance: (courseId: number, cohortSessionId: number) =>
+    request<SessionAttendanceItem[]>(
+      `/course/${courseId}/cohorts/sessions/${cohortSessionId}/attendance`,
+    ),
+  recordSessionAttendance: (
+    courseId: number,
+    cohortSessionId: number,
+    records: {
+      enrollment_id: number;
+      status: "present" | "late" | "absent" | "excused";
+      notes?: string;
+    }[],
+  ) =>
+    request<{ success: boolean; cohort_session_id: number }>(
+      `/course/${courseId}/cohorts/sessions/${cohortSessionId}/attendance`,
+      {
+        method: "POST",
+        body: JSON.stringify({ records }),
+      },
+    ),
+  recordSessionMakeup: (
+    courseId: number,
+    cohortSessionId: number,
+    data: { enrollment_id: number; makeup_notes?: string },
+  ) =>
+    request<unknown>(
+      `/course/${courseId}/cohorts/sessions/${cohortSessionId}/makeup`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      },
+    ),
+  getEnrollmentAssessments: (courseId: number, enrollmentId: number) =>
+    request<EnrollmentAssessmentGradeItem[]>(
+      `/course/${courseId}/enrollments/${enrollmentId}/assessments`,
+    ),
+  gradeEnrollmentAssessment: (
+    courseId: number,
+    enrollmentId: number,
+    data: {
+      assessment_id: number;
+      score?: number | null;
+      passed?: boolean;
+      feedback?: string;
+    },
+  ) =>
+    request<unknown>(
+      `/course/${courseId}/enrollments/${enrollmentId}/assessments`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      },
+    ),
+  recalculateEnrollmentProgress: (
+    courseId: number,
+    enrollmentId: number,
+    data: { complementary_hours_done?: number; close_evaluation?: boolean },
+  ) =>
+    request<unknown>(
+      `/course/${courseId}/enrollments/${enrollmentId}/recalculate`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      },
+    ),
   createCourse: (data: CreateCourseData) =>
     request<Course>("/course", {
       method: "POST",

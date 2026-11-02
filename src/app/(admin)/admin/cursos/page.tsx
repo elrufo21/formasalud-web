@@ -8,6 +8,13 @@ import { api, Course } from "@/lib/api";
 import { AdminHeader } from "@/features/admin/components/AdminHeader";
 import { DataTable } from "@/components/ui/table/DataTable";
 
+const deliveryModeLabel: Record<string, string> = {
+  in_person: "Presencial",
+  virtual_sync: "Virtual en vivo",
+  virtual_async: "Virtual asincrónico",
+  hybrid: "Híbrido / Semipresencial",
+};
+
 export default function CoursesAdminPage() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
@@ -53,6 +60,26 @@ export default function CoursesAdminPage() {
             </div>
           </div>
         ),
+      },
+      {
+        id: "academic_structure",
+        header: "Estructura Académica",
+        cell: ({ row }) => {
+          const mode = deliveryModeLabel[row.original.delivery_mode ?? ""] ?? "Virtual / Estándar";
+          const hours = Number(row.original.total_academic_hours ?? 0);
+          const weeks = Number(row.original.duration_weeks ?? 0);
+          return (
+            <div className="space-y-0.5 text-xs">
+              <span className="inline-block rounded-md bg-navy/5 px-2 py-0.5 font-semibold text-navy">
+                {mode}
+              </span>
+              <p className="font-mono text-[11px] text-ink-soft">
+                {hours > 0 ? `${hours} hrs acad.` : "Sin horas def."}
+                {weeks > 0 ? ` · ${weeks} sem.` : ""}
+              </p>
+            </div>
+          );
+        },
       },
       {
         accessorKey: "price",
