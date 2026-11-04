@@ -11,6 +11,7 @@ type CertificateSource = Partial<Certificate> & {
   coordinator_name?: string;
   template_key?: string;
   hours_unit?: string;
+  internationalCourse?: boolean;
 };
 
 export function getCertificateVerificationUrl(code: string) {
@@ -52,6 +53,10 @@ export function mapCertificateToPayload(
   const isSpeaker = (cert as { certificate_type?: string }).certificate_type === "speaker" || cert.template_key === "speaker-recognition";
   const isSterilization = !isSpeaker && cert.template_key === "sterilization-formasalud";
   const isVentilator = !isSpeaker && cert.template_key === "ventilator-formasalud";
+  const isInternational =
+    Boolean(cert.internationalCourse) ||
+    normalizedTitle.includes("INTERNACIONAL") ||
+    normalizedTitle.includes("AREAS CRITICAS");
 
   const issueDate = cert.issued_at ? new Date(cert.issued_at) : new Date();
   const issueParts = new Intl.DateTimeFormat("es-PE", {
@@ -71,6 +76,7 @@ export function mapCertificateToPayload(
     documentNumber: cert.document_number || cert.student?.document_number || "",
     courseTitle,
     certificateType: cert.certificate_type === "approval" ? "approval" : "participation",
+    internationalCourse: isInternational,
     hours: cert.hours || (isSterilization ? 90 : isTriaje || isPancreatitis || isSpeaker ? 2 : isCocheDeParo ? 4 : 40),
     hoursUnit: cert.hours_unit || (isTriaje || isPancreatitis || isSpeaker ? "horas lectivas" : "horas académicas"),
     courseDateText: cert.course_date_text || (isSterilization ? "Del 06 de mayo al 15 de junio de 2026" : isTriaje ? "06 de octubre de 2026" : isPancreatitis ? "03 de octubre de 2026" : isCocheDeParo ? "14 de agosto de 2026" : "año 2026"),

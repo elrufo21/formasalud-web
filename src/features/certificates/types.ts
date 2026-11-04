@@ -7,6 +7,7 @@ export interface FormasaludCertificatePayload {
   documentNumber?: string;
   courseTitle: string;
   certificateType?: "approval" | "participation";
+  internationalCourse?: boolean;
   hours?: number;
   hoursUnit?: string;
   courseDateText?: string;

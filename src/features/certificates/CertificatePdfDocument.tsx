@@ -63,6 +63,10 @@ export function CertificatePdfDocument({ data }: { data: FormasaludCertificatePa
       hours: data.hours,
       hoursUnit: data.hoursUnit,
       approvalCertificate: data.certificateType === "approval",
+      internationalCourse: data.internationalCourse ?? (
+        data.courseTitle.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().includes("AREAS CRITICAS") ||
+        /^CURSO INTERNACIONAL/i.test(data.courseTitle)
+      ),
       hideCourseBackground: data.courseTitle.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().includes("OBSTETRICAS"),
       teacher1: data.academicDirector || data.teacherName || "FRANCISCO PAUCAR BENITES",
       teacher2: data.coordinatorName || "ZAMBRANO CRUZ MIGUEL",

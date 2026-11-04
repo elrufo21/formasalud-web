@@ -24,6 +24,7 @@ export interface FormasaludClassicData {
   hoursUnit?: string;
   approvalCertificate?: boolean;
   hideCourseBackground?: boolean;
+  internationalCourse?: boolean;
   teacher1?: string;
   teacher2?: string;
   idCertificado?: string;
@@ -658,10 +659,13 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
   const ruc = data.ruc || "20613837613";
   const issueDateStr = issueDateFromParts(data);
   const nameText = data.name || "Nombres y Apellidos";
-  const internationalCourse = /^CURSO INTERNACIONAL\s+SOBRE\s+EL\s+/i.test(data.course || "");
-  const courseText = internationalCourse
-    ? (data.course || "").replace(/^CURSO INTERNACIONAL\s+SOBRE\s+EL\s+/i, "")
-    : data.course;
+  const internationalCourse =
+    Boolean(data.internationalCourse) ||
+    /^CURSO INTERNACIONAL/i.test(data.course || "") ||
+    /ÁREAS CRÍTICAS|AREAS CRITICAS/i.test(data.course || "");
+  const courseText = (data.course || "")
+    .replace(/^CURSO INTERNACIONAL\s+(?:SOBRE\s+(?:EL\s+)?)?/i, "")
+    .replace(/^CURSO TALLER\s*:\s*/i, "");
   const titledName = /^(?:TEC\.|LIC\.|DR\.|DRA\.)\s/i.test(nameText)
     ? nameText
     : `LIC. ${nameText}`;
@@ -753,7 +757,7 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
             Por su participación y aprobación en el
           </Text>
           <View style={styles.coursePill}>
-            <Text style={styles.coursePillText}>{internationalCourse ? "CURSO INTERNACIONAL:" : "CURSO TALLER:"}</Text>
+            <Text style={styles.coursePillText}>{internationalCourse ? "CURSO INTERNACIONAL" : "CURSO TALLER:"}</Text>
           </View>
           <Text style={styles.course} hyphenationCallback={(word) => [word]}>
             {courseText ||
