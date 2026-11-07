@@ -16,6 +16,7 @@ import {
   ArrowRight,
   GraduationCap,
   Sparkles,
+  Award,
 } from "lucide-react";
 
 export function Header() {
@@ -149,6 +150,14 @@ export function Header() {
 
           {/* CTAs Desktop & Tablet */}
           <div className="hidden sm:flex items-center gap-2.5 shrink-0">
+            <Link
+              href="/verificar"
+              className="px-3.5 py-2.5 rounded-xl border border-gold/40 bg-gold/10 hover:bg-gold/20 text-navy hover:text-navyink text-xs font-bold transition-all flex items-center gap-2 shadow-2xs group"
+            >
+              <Award className="w-4 h-4 text-gold group-hover:scale-110 transition-transform shrink-0" />
+              <span>Validar Certificado</span>
+            </Link>
+
             {isHydrated && isAuthenticated ? (
               <>
                 <Link
@@ -261,6 +270,19 @@ export function Header() {
                 );
               })}
             </div>
+
+            {/* Botón Validar Certificado Móvil */}
+            <Link
+              href="/verificar"
+              onClick={() => setIsOpen(false)}
+              className="py-3 px-4 rounded-xl border border-gold/40 bg-gold/10 hover:bg-gold/20 text-navy font-bold text-xs flex items-center justify-between transition-colors shadow-2xs"
+            >
+              <div className="flex items-center gap-2.5">
+                <Award className="w-4 h-4 text-gold shrink-0" />
+                <span>Validar Certificado Oficial</span>
+              </div>
+              <ArrowRight className="w-4 h-4 text-gold shrink-0" />
+            </Link>
 
             {/* Mobile CTAs */}
             <div className="pt-3 border-t border-line flex flex-col sm:hidden gap-2.5">

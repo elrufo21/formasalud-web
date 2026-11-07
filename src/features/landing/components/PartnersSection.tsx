@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { CheckCircle2, MapPin } from "lucide-react";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { FadeIn } from "@/components/ui/MotionReveal";
@@ -34,8 +35,20 @@ export function PartnersSection() {
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-3.5">
-                    <div className="w-11 h-11 rounded-xl bg-navy text-goldpale text-xs flex items-center justify-center font-extrabold border border-gold/40 shadow-xs">
-                      {partner.initials}
+                    <div className="relative w-12 h-12 rounded-xl bg-white p-1.5 flex items-center justify-center border border-line shadow-xs shrink-0 overflow-hidden">
+                      {partner.logoUrl ? (
+                        <Image
+                          src={partner.logoUrl}
+                          alt={partner.name}
+                          width={48}
+                          height={48}
+                          className="w-full h-full object-contain"
+                        />
+                      ) : (
+                        <div className="w-full h-full rounded-lg bg-navy text-goldpale text-xs flex items-center justify-center font-extrabold">
+                          {partner.initials}
+                        </div>
+                      )}
                     </div>
                     <span className="text-[10px] uppercase tracking-wider text-tealdeep bg-tealtint px-2.5 py-1 rounded-full font-bold">
                       {partner.category}

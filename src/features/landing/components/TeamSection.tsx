@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Award, Building2, Stethoscope } from "lucide-react";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/ui/MotionReveal";
@@ -67,11 +68,21 @@ function TeamCard({ member }: { member: TeamMember }) {
       <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-navy via-teal to-gold" />
 
       <div>
-        {/* Cabecera: Avatar de iniciales + Etiqueta de especialidad */}
+        {/* Cabecera: Avatar de foto/iniciales + Etiqueta de especialidad */}
         <div className="flex items-center justify-between gap-3 mb-5 pt-1">
-          <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-navy via-navyink to-tealdeep text-lg font-extrabold text-goldpale border-2 border-gold/60 shadow-md shrink-0 group-hover:scale-105 transition-transform">
-            <span>{member.initials}</span>
-            <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-gold text-navyink shadow-xs">
+          <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-navy via-navyink to-tealdeep text-lg font-extrabold text-goldpale border-2 border-gold/60 shadow-md shrink-0 group-hover:scale-105 transition-transform overflow-hidden">
+            {member.photoUrl ? (
+              <Image
+                src={member.photoUrl}
+                alt={member.name}
+                fill
+                sizes="64px"
+                className="object-cover object-top"
+              />
+            ) : (
+              <span>{member.initials}</span>
+            )}
+            <span className="absolute bottom-0 right-0 z-10 flex h-5 w-5 items-center justify-center rounded-tl-lg bg-gold text-navyink shadow-xs">
               <Stethoscope className="h-3 w-3" />
             </span>
           </div>
