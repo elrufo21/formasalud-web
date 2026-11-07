@@ -357,7 +357,7 @@ export function ClassicEleganceCertificate({ data }: { data: FormasaludCertifica
 
   return (
     <Document>
-      <Page size="A4" orientation="landscape" style={styles.page}>
+      <Page size="A4" orientation="landscape" style={styles.page} wrap={false}>
         {/* Fondo decorativo perimetral */}
         <Svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={styles.background}>
           <Defs>
@@ -470,10 +470,8 @@ export function ClassicEleganceCertificate({ data }: { data: FormasaludCertifica
         </View>
 
         {/* Verification QR Badge */}
-        <VerificationBadge url={data.verificationUrl || `https://formasalud.org.pe/verificar/${encodeURIComponent(data.certificateCode)}`} />
-        <View style={styles.codeBadge}>
-          <Text style={styles.codeBadgeText}>{data.certificateCode}</Text>
-        </View>
+        <VerificationBadge url={data.verificationUrl || `https://formasalud.org.pe/verificar/${encodeURIComponent(data.certificateCode)}`} code={data.certificateCode} />
+        
 
         {/* Pie de página institucional */}
         <View style={styles.footerContainer}>
