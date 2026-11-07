@@ -38,7 +38,7 @@ export function Header() {
 
   const links = [
     { href: "/", label: "Inicio" },
-    { href: "/cursos", label: "Cursos y Programas" },
+    { href: "/cursos", label: "Cursos" },
     { href: "/quienes-somos", label: "Quiénes somos" },
     { href: "/contacto", label: "Contacto" },
   ];
@@ -133,7 +133,7 @@ export function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`relative px-4 xl:px-5 py-2 rounded-xl text-[13px] transition-all duration-200 flex items-center gap-2 ${
+                  className={`relative px-3.5 xl:px-4 py-2 rounded-xl text-[13px] whitespace-nowrap transition-all duration-200 flex items-center gap-2 ${
                     isActive
                       ? "bg-navy text-white font-bold shadow-[0_4px_12px_rgba(15,41,66,0.2)]"
                       : "text-ink-soft font-semibold hover:text-navy hover:bg-white/80"
@@ -149,61 +149,49 @@ export function Header() {
           </div>
 
           {/* CTAs Desktop & Tablet */}
-          <div className="hidden sm:flex items-center gap-2.5 shrink-0">
+          <div className="hidden sm:flex items-center gap-2 shrink-0">
             <Link
               href="/verificar"
-              className="px-3.5 py-2.5 rounded-xl border border-gold/40 bg-gold/10 hover:bg-gold/20 text-navy hover:text-navyink text-xs font-bold transition-all flex items-center gap-2 shadow-2xs group"
+              className="px-3 py-2 rounded-xl border border-line bg-white hover:bg-bg-alt text-navy hover:text-teal font-bold text-xs transition-colors flex items-center gap-1.5 shadow-2xs whitespace-nowrap"
             >
-              <Award className="w-4 h-4 text-gold group-hover:scale-110 transition-transform shrink-0" />
+              <Award className="w-4 h-4 text-teal shrink-0" />
               <span>Validar Certificado</span>
             </Link>
 
             {isHydrated && isAuthenticated ? (
-              <>
-                <Link
-                  href={role === "admin" ? "/admin" : "/aula"}
-                  className="px-3.5 py-2.5 rounded-xl border border-teal/25 bg-tealtint/60 hover:bg-tealtint text-tealdeep text-xs font-bold transition-all flex items-center gap-2"
-                >
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>
-                    {role === "admin" ? "Panel Control" : "Aula Virtual"}
-                  </span>
-                </Link>
-
-                <Link
-                  href={role === "admin" ? "/admin" : "/aula"}
-                  className="btn btn-primary !py-2.5 !px-4 !text-xs font-bold flex items-center gap-2 !rounded-xl shadow-md"
-                >
-                  {role === "admin" ? (
-                    <>
-                      <Shield className="w-3.5 h-3.5 text-goldpale" />
-                      <span>Panel Admin</span>
-                    </>
-                  ) : (
-                    <>
-                      <UserIcon className="w-3.5 h-3.5 text-goldpale" />
-                      <span>Mi Aula</span>
-                    </>
-                  )}
-                  <span className="arrow">→</span>
-                </Link>
-              </>
+              <Link
+                href={role === "admin" ? "/admin" : "/aula"}
+                className="btn btn-primary !py-2 !px-4 !text-xs font-bold flex items-center gap-1.5 !rounded-xl shadow-md whitespace-nowrap"
+              >
+                {role === "admin" ? (
+                  <>
+                    <Shield className="w-3.5 h-3.5 text-goldpale" />
+                    <span>Panel Admin</span>
+                  </>
+                ) : (
+                  <>
+                    <UserIcon className="w-3.5 h-3.5 text-goldpale" />
+                    <span>Mi Aula</span>
+                  </>
+                )}
+                <span className="arrow">→</span>
+              </Link>
             ) : (
               <>
                 <Link
                   href="/aula"
-                  className="px-3.5 py-2.5 rounded-xl border border-teal/25 bg-tealtint/55 hover:bg-tealtint text-navy hover:text-tealdeep text-xs font-bold transition-all flex items-center gap-2"
+                  className="px-3 py-2 rounded-xl border border-teal/25 bg-tealtint/55 hover:bg-tealtint text-navy hover:text-tealdeep text-xs font-bold transition-all flex items-center gap-1.5 whitespace-nowrap"
                 >
                   <GraduationCap className="w-4 h-4 text-teal shrink-0" />
                   <span>Aula Virtual</span>
-                  <span className="text-[9.5px] bg-teal text-white px-1.5 py-0.5 rounded-md font-extrabold tracking-wide">
+                  <span className="text-[9px] bg-teal text-white px-1.5 py-0.5 rounded-md font-extrabold tracking-wide">
                     24/7
                   </span>
                 </Link>
 
                 <Link
                   href="/login"
-                  className="btn btn-primary !py-2.5 !px-5 !text-xs font-bold !rounded-xl shadow-md"
+                  className="btn btn-primary !py-2 !px-4 !text-xs font-bold !rounded-xl shadow-md whitespace-nowrap"
                 >
                   <span>Iniciar sesión</span>
                   <span className="arrow">→</span>
@@ -275,13 +263,13 @@ export function Header() {
             <Link
               href="/verificar"
               onClick={() => setIsOpen(false)}
-              className="py-3 px-4 rounded-xl border border-gold/40 bg-gold/10 hover:bg-gold/20 text-navy font-bold text-xs flex items-center justify-between transition-colors shadow-2xs"
+              className="py-3 px-4 rounded-xl border border-line bg-bg-alt/70 hover:bg-white text-navy font-bold text-xs flex items-center justify-between transition-colors shadow-2xs"
             >
               <div className="flex items-center gap-2.5">
-                <Award className="w-4 h-4 text-gold shrink-0" />
+                <Award className="w-4 h-4 text-teal shrink-0" />
                 <span>Validar Certificado Oficial</span>
               </div>
-              <ArrowRight className="w-4 h-4 text-gold shrink-0" />
+              <ArrowRight className="w-4 h-4 text-teal shrink-0" />
             </Link>
 
             {/* Mobile CTAs */}
