@@ -196,11 +196,12 @@ const styles = StyleSheet.create({
   },
   name: {
     position: "absolute",
-    top: 207,
-    left: 190,
-    width: 474,
-    fontFamily: "GreatVibes",
-    fontSize: 39,
+    top: 216,
+    left: 40,
+    width: W - 80,
+    fontFamily: "Lora",
+    fontWeight: 600,
+    fontSize: 24,
     color: NAVY,
     textAlign: "center",
   },
@@ -616,20 +617,11 @@ const dateFromParts = (data: CertificatePdf18Data) => {
 
 const getNameFontSize = (nameStr: string, triaje = false) => {
   const len = (nameStr || "").trim().length;
-  if (triaje) {
-    if (len > 50) return 14;
-    if (len > 42) return 16;
-    if (len > 35) return 18;
-    if (len > 28) return 20;
-    if (len > 23) return 22;
-    return 24;
-  }
-  if (len > 50) return 16;
-  if (len > 42) return 18;
-  if (len > 35) return 21;
-  if (len > 28) return 24;
-  if (len > 23) return 27;
-  return 30;
+  if (len > 45) return 18;
+  if (len > 38) return 20;
+  if (len > 30) return 22;
+  if (len > 24) return 25;
+  return 28;
 };
 
 const issueDateFromParts = (data: CertificatePdf18Data) => {
@@ -709,9 +701,7 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
           )}
           style={styles.courseBackground}
         />}
-        {data.pancreatitisCertificate && !speakerCertificate && !updatedPancreatitisParticipant && (
-          <PancreasIllustration />
-        )}
+        {/* PancreasIllustration eliminada */ null}
         {logoImage && <Image src={logoImage} style={styles.watermark} />}
         {logoImage && (
           <Image
@@ -821,44 +811,6 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
           style={[
             styles.name,
             { fontSize: nameFontSize },
-            speakerCertificate
-              ? {
-                  top: 222,
-                  fontFamily: "Helvetica",
-                  fontSize: 22,
-                  fontStyle: "normal",
-                  left: 120,
-                  width: 602,
-                }
-              : updatedPancreatitisParticipant
-                ? {
-                    top: 222,
-                    fontFamily: "Helvetica",
-                    fontSize: 22,
-                    fontStyle: "normal",
-                    left: 120,
-                    width: 602,
-                  }
-              : data.triajeCertificate
-                ? { top: 218 }
-                : data.pancreatitisCertificate && data.certificateType === "participation"
-                  ? {
-                      top: 218,
-                      fontFamily: "Helvetica",
-                      fontSize: 22,
-                      fontStyle: "normal",
-                      left: 120,
-                      width: 602,
-                    }
-                : compactName
-                  ? {
-                      fontFamily: "Lora",
-                      fontStyle: "italic",
-                      fontSize: 20,
-                      left: 120,
-                      width: 602,
-                    }
-                  : undefined,
           ]}
           wrap={false}
           hyphenationCallback={(word) => [word]}
@@ -980,28 +932,7 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
           </View>
         </View>
 
-        {!speakerCertificate && !updatedPancreatitisParticipant && (
-          <Image
-            src={awardSealImage}
-            style={{
-              position: "absolute",
-              right: 22,
-              top: 245,
-              width: 108,
-              height: 108,
-              objectFit: "contain",
-            }}
-          />
-        )}
-        {!speakerCertificate && !updatedPancreatitisParticipant && (
-          <Text style={[styles.slogan, data.triajeCertificate || speakerCertificate ? { left: 301, right: undefined, bottom: 36, width: 240, textAlign: "center", transform: "rotate(0deg)" } : undefined]}>
-            {speakerCertificate
-              ? "Gracias por compartir\ntu experiencia"
-              : data.pancreatitisCertificate
-                ? "¡Te esperamos!"
-                : "¡Juntos por una\nenfermería más segura!"}
-          </Text>
-        )}
+        {/* Sello lateral y eslogan informal eliminados */ null}
         <VerificationBadge url={verificationUrl} />
         <View style={styles.footer}>
           <Text style={styles.footerText}>

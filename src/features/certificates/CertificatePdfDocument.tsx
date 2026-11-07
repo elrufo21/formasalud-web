@@ -17,7 +17,7 @@ export function CertificatePdfDocument({ data }: { data: FormasaludCertificatePa
   if (data.templateId === "classic-elegance") {
     return <ClassicEleganceCertificate data={data} />;
   }
-  if (data.templateId === "triaje-fisiouci" || data.templateId === "pancreatitis-formasalud" || data.templateId === "speaker-recognition") {
+  if (data.templateId === "triaje-fisiouci" || data.templateId === "speaker-recognition") {
     const classicData = {
       name: data.studentName,
       course: data.courseTitle,
@@ -26,7 +26,7 @@ export function CertificatePdfDocument({ data }: { data: FormasaludCertificatePa
       certificateType: data.certificateType,
       triajeCertificate: data.templateId === "triaje-fisiouci",
       pancreatitisCertificate:
-        data.templateId === "pancreatitis-formasalud" ||
+        (data.templateId as string) === "pancreatitis-formasalud" ||
         (data.templateId === "speaker-recognition" &&
           data.courseTitle.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().includes("PANCREATITIS")),
       speakerCertificate: data.templateId === "speaker-recognition",

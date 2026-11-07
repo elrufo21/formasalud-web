@@ -67,12 +67,14 @@ const resolveAsset = (source?: string) => {
   if (!source || source.startsWith("http") || source.startsWith("data:")) {
     return source;
   }
-  if (/^[A-Za-z]:[\\/]/.test(source)) return source;
+  if (/^[A-Za-z]:[\\/]/.test(source)) {
+    return `file:///${source.replace(/\\/g, "/")}`;
+  }
 
   const publicPath = source.startsWith("/") ? source : `/${source}`;
-  return typeof window === "undefined"
-    ? `${process.cwd().replace(/\\/g, "/")}/public${publicPath}`
-    : `${window.location.origin}${publicPath}`;
+  if (typeof window !== "undefined") return `${window.location.origin}${publicPath}`;
+  const localPath = `${process.cwd().replace(/\\/g, "/")}/public${publicPath}`;
+  return /^[A-Za-z]:\//.test(localPath) ? `file:///${localPath}` : `file://${localPath}`;
 };
 
 const styles = StyleSheet.create({
@@ -189,12 +191,13 @@ const styles = StyleSheet.create({
   },
   name: {
     position: "absolute",
-    top: 209,
+    top: 214,
     left: 40,
     width: W - 80,
     fontFamily: "Lora",
-    fontStyle: "italic",
-    fontSize: 30,
+    fontStyle: "normal",
+    fontWeight: 600,
+    fontSize: 24,
     color: NAVY,
     textAlign: "center",
   },
@@ -607,12 +610,11 @@ const dateFromParts = (data: CertificatePdf18Data) => {
 
 const getNameFontSize = (nameStr: string) => {
   const len = (nameStr || "").trim().length;
-  if (len > 50) return 16;
-  if (len > 42) return 18;
-  if (len > 35) return 21;
-  if (len > 28) return 24;
-  if (len > 23) return 27;
-  return 30;
+  if (len > 45) return 18;
+  if (len > 38) return 20;
+  if (len > 30) return 22;
+  if (len > 24) return 25;
+  return 28;
 };
 
 const issueDateFromParts = (data: CertificatePdf18Data) => {

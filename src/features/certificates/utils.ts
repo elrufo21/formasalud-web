@@ -97,7 +97,7 @@ export function mapCertificateToPayload(
     sealUrl: "/certificates/cello.png",
     backgroundUrl: isSterilization ? "/certificates/esterilizacion-fondo.png" : undefined,
     verificationUrl: getCertificateVerificationUrl(code),
-    templateId: isSpeaker ? "speaker-recognition" : isSterilization ? "sterilization-formasalud" : isTriaje ? "triaje-fisiouci" : isPancreatitis ? "pancreatitis-formasalud" : "formasalud-classic",
+    templateId: isSpeaker ? "speaker-recognition" : isSterilization ? "sterilization-formasalud" : isTriaje ? "triaje-fisiouci" : isPancreatitis ? "classic-elegance" : "formasalud-classic",
     ...(isVentilator ? {
       templateId: "ventilator-formasalud" as const,
       hours: cert.hours || 4,

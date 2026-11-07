@@ -1,3 +1,4 @@
+import { create as createQrCode } from "qrcode";
 import React from "react";
 import {
   Document,
@@ -26,6 +27,58 @@ const TEAL = "#056878";
 const GOLD = "#C99725";
 const GOLD_LIGHT = "#F6D66C";
 const PAPER = "#FFFDF8";
+
+
+function VerificationBadge({ url, code }: { url: string; code?: string }) {
+  const qr = createQrCode(url, { errorCorrectionLevel: "M" });
+  const quietZone = 2;
+  const viewBoxSize = qr.modules.size + quietZone * 2;
+  const qrPath = Array.from(qr.modules.data).reduce((path, cell, index) => {
+    if (!cell) return path;
+    const x = (index % qr.modules.size) + quietZone;
+    const y = Math.floor(index / qr.modules.size) + quietZone;
+    return `${path}M${x} ${y}h1v1h-1z`;
+  }, "");
+
+  return (
+    <View
+      style={{
+        position: "absolute",
+        right: 42,
+        bottom: 28,
+        alignItems: "center",
+      }}
+    >
+      <View
+        style={{
+          width: 52,
+          height: 52,
+          backgroundColor: "#FFFFFF",
+          borderWidth: 1,
+          borderColor: GOLD,
+          padding: 2,
+          borderRadius: 2,
+        }}
+      >
+        <Svg viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`} style={{ width: "100%", height: "100%" }}>
+          <Path d={qrPath} fill={NAVY} />
+        </Svg>
+      </View>
+      <Text
+        style={{
+          fontFamily: "Playfair",
+          fontSize: 5,
+          color: NAVY,
+          marginTop: 2,
+          fontWeight: 700,
+        }}
+      >
+        VERIFICAR
+      </Text>
+      <Text style={{ fontFamily: "Playfair", fontSize: 4.5, color: "#444444", marginTop: 1 }}>{code}</Text>
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   page: { width: W, height: H, position: "relative", backgroundColor: PAPER },
@@ -130,12 +183,13 @@ const styles = StyleSheet.create({
   },
   name: {
     position: "absolute",
-    top: 194,
+    top: 198,
     left: 40,
     width: W - 80,
     fontFamily: "Lora",
-    fontStyle: "italic",
-    fontSize: 28,
+    fontStyle: "normal",
+    fontWeight: 600,
+    fontSize: 24,
     color: NAVY,
     textAlign: "center",
   },
@@ -297,7 +351,8 @@ export function ClassicEleganceCertificate({ data }: { data: FormasaludCertifica
   const firmaRight = resolveAsset(data.signatureRightUrl, "/certificates/bertha.png");
   const sello = resolveAsset(data.sealUrl, "/certificates/cello.png");
 
-  const subtitle = isPonente ? "DE RECONOCIMIENTO" : "DE PARTICIPACIÓN";
+  const isApproval = data.certificateType === "approval";
+  const subtitle = isApproval ? "DE APROBACIÓN" : isPonente ? "DE RECONOCIMIENTO" : "DE PARTICIPACIÓN";
   const roleText = isPonente ? "PONENTE" : "PARTICIPANTE";
 
   return (
@@ -346,14 +401,29 @@ export function ClassicEleganceCertificate({ data }: { data: FormasaludCertifica
 
         {/* Otorgado a */}
         <Text style={styles.granted}>Otorgado a:</Text>
-        <Text style={styles.name}>{data.studentName}</Text>
+        {(() => {
+          const len = (data.studentName || "").trim().length;
+          const fs = len > 45 ? 18 : len > 38 ? 20 : len > 30 ? 22 : len > 24 ? 25 : 28;
+          return (
+            <Text
+              style={[styles.name, { fontSize: fs }]}
+              wrap={false}
+              hyphenationCallback={(word) => [word]}
+            >
+              {data.studentName}
+            </Text>
+          );
+        })()}
         <View style={styles.nameRule} />
 
         {/* Contenido Central */}
         <View style={styles.main}>
           <Text style={styles.preamble}>
-            En reconocimiento a su destacada participación en calidad de{" "}
-            <Text style={{ fontFamily: "Playfair", fontWeight: 700, color: NAVY }}>{roleText}</Text> en el curso:
+            {isApproval
+              ? "Por su participación y aprobación satisfactoria en el curso:"
+              : isPonente
+              ? "En reconocimiento a su destacada participación en calidad de PONENTE en el curso:"
+              : "En reconocimiento a su destacada participación en el curso:"}
           </Text>
           <Text style={styles.course}>{data.courseTitle}</Text>
           <Text style={styles.description}>
@@ -380,9 +450,9 @@ export function ClassicEleganceCertificate({ data }: { data: FormasaludCertifica
             {firmaLeft && <Image src={firmaLeft} style={styles.signatureImage} />}
             <View style={styles.signatureLine} />
             <Text style={styles.signatureName}>
-              {data.coordinatorName || "LIC. ZAMBRANO CRUZ MIGUEL"}
+              {data.academicDirector || "LIC. FRANCISCO PAUCAR BENITES"}
             </Text>
-            <Text style={styles.signatureRole}>COORDINADOR ACADÉMICO</Text>
+            <Text style={styles.signatureRole}>DIRECTOR ACADÉMICO</Text>
           </View>
 
           <View style={styles.sealBox}>
@@ -393,13 +463,14 @@ export function ClassicEleganceCertificate({ data }: { data: FormasaludCertifica
             {firmaRight && <Image src={firmaRight} style={styles.signatureImage} />}
             <View style={styles.signatureLine} />
             <Text style={styles.signatureName}>
-              {data.academicDirector || "LIC. FRANCISCO PAUCAR BENITES"}
+              {data.coordinatorName || "LIC. ZAMBRANO CRUZ MIGUEL"}
             </Text>
-            <Text style={styles.signatureRole}>DIRECTOR ACADÉMICO</Text>
+            <Text style={styles.signatureRole}>COORDINADOR ACADÉMICO</Text>
           </View>
         </View>
 
-        {/* Código QR Badge */}
+        {/* Verification QR Badge */}
+        <VerificationBadge url={data.verificationUrl || `https://formasalud.org.pe/verificar/${encodeURIComponent(data.certificateCode)}`} />
         <View style={styles.codeBadge}>
           <Text style={styles.codeBadgeText}>{data.certificateCode}</Text>
         </View>
