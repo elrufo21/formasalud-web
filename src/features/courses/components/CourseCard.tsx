@@ -55,8 +55,8 @@ export function CourseCard({ course }: CourseCardProps) {
 
   return (
     <article className="group relative rounded-3xl border border-line bg-white shadow-[0_4px_20px_rgba(15,41,66,0.05)] hover:shadow-[0_16px_36px_rgba(15,41,66,0.12)] hover:border-teal/40 hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col h-full">
-      {/* Cabecera Gráfica de la Tarjeta */}
-      <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-navyink via-navy to-tealdeep flex-none">
+      {/* Cabecera Gráfica de la Tarjeta (16:9 sin recorte) */}
+      <div className="relative aspect-[16/9] overflow-hidden bg-gradient-to-br from-navyink via-navy to-tealdeep flex-none">
         {imageUrl && !imageError ? (
           <Image
             src={imageUrl}
@@ -65,7 +65,7 @@ export function CourseCard({ course }: CourseCardProps) {
             unoptimized={imageUrl.includes("212.47.64.208")}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             onError={() => setImageError(true)}
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
           />
         ) : (
           /* Portada Institucional Alternativa con estética médica premium */
@@ -92,16 +92,16 @@ export function CourseCard({ course }: CourseCardProps) {
         )}
 
         {/* Badge flotante de certificación */}
-        <div className="absolute top-3 left-3 z-10">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-navy/90 backdrop-blur-xs border border-gold/40 text-[10px] font-bold text-goldpale shadow-xs">
-            <Award className="w-3 h-3 text-gold shrink-0" />
+        <div className="absolute top-2 left-2 z-10">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-navy/90 backdrop-blur-xs border border-gold/40 text-[9px] font-bold text-goldpale shadow-xs">
+            <Award className="w-2.5 h-2.5 text-gold shrink-0" />
             <span>{certLabel}</span>
           </span>
         </div>
 
         {/* Modalidad en esquina derecha */}
-        <div className="absolute top-3 right-3 z-10">
-          <span className="px-2 py-0.5 rounded-md bg-white/90 text-navy text-[10px] font-mono font-bold shadow-xs">
+        <div className="absolute top-2 right-2 z-10">
+          <span className="px-2 py-0.5 rounded-md bg-white/95 text-navy text-[9px] font-mono font-bold shadow-xs">
             {deliveryModeText[course.delivery_mode ?? ""] ?? "Virtual"}
           </span>
         </div>
