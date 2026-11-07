@@ -46,28 +46,32 @@ export async function POST(request: Request) {
     const useTrustedRemoteBridge = Boolean(uploadUrl && uploadToken);
 
     if (useTrustedRemoteBridge) {
-      const remoteFormData = new FormData();
-      remoteFormData.append("file", file, file.name);
-      const remoteResponse = await fetch(uploadUrl!, {
-        method: "POST",
-        headers: { "x-course-image-upload-token": uploadToken! },
-        body: remoteFormData,
-        cache: "no-store",
-      });
-      return new Response(remoteResponse.body, {
-        status: remoteResponse.status,
-        headers: {
-          "Content-Type": remoteResponse.headers.get("content-type") || "application/json",
-        },
-      });
+      try {
+        const remoteFormData = new FormData();
+        remoteFormData.append("file", file, file.name);
+        const remoteResponse = await fetch(uploadUrl!, {
+          method: "POST",
+          headers: { "x-course-image-upload-token": uploadToken! },
+          body: remoteFormData,
+          cache: "no-store",
+        });
+        if (remoteResponse.ok) {
+          return new Response(remoteResponse.body, {
+            status: remoteResponse.status,
+            headers: {
+              "Content-Type": remoteResponse.headers.get("content-type") || "application/json",
+            },
+          });
+        }
+      } catch {
+        // Fallback al endpoint autenticado /upload
+      }
     }
 
-    // Desarrollo local: el backend valida el mismo token de administrador
-    // usado para autorizar el formulario; no hace falta un secreto adicional.
     const remoteFormData = new FormData();
     remoteFormData.append("folder", "courses");
     remoteFormData.append("file", file, file.name);
-    const remoteResponse = await fetch(`${API_URL}/upload`, {
+    const remoteResponse = await fetch(`${API_URL}/upload?folder=courses`, {
       method: "POST",
       headers: { Authorization: authorization },
       body: remoteFormData,

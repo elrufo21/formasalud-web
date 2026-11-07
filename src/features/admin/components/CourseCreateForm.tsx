@@ -108,6 +108,7 @@ export function CourseCreateForm({ courseId }: { courseId?: number }) {
   // Form states
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uploadingResourceIdx, setUploadingResourceIdx] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
@@ -308,6 +309,56 @@ export function CourseCreateForm({ courseId }: { courseId?: number }) {
     };
   }, [courseId, reset]);
 
+  const handleSelectCoverFile = (file: File | null) => {
+    if (file && !["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      setError("Formato incompatible. Usa JPG, PNG o WebP.");
+      return;
+    }
+    if (file && file.size > 5 * 1024 * 1024) {
+      setError("El archivo supera el límite de 5 MB.");
+      return;
+    }
+    setError(null);
+    setRemoveImage(false);
+    setImageFile(file);
+    setImagePreview(file ? URL.createObjectURL(file) : null);
+  };
+
+  const handleUploadResourceFile = async (index: number, file: File) => {
+    if (file.size > 50 * 1024 * 1024) {
+      setError("El archivo de recurso no puede superar los 50 MB.");
+      return;
+    }
+    setError(null);
+    setUploadingResourceIdx(index);
+    try {
+      const uploaded = await api.uploadCourseResource(file);
+      const publicUrl = getPublicAssetUrl(uploaded.url) || uploaded.url;
+      setResources((curr) =>
+        curr.map((item, i) => {
+          if (i !== index) return item;
+          const cleanDefaultTitle = file.name.replace(/\.[^/.]+$/, "");
+          const isPdf = /\.pdf$/i.test(file.name) || file.type === "application/pdf";
+          return {
+            ...item,
+            resource_type: isPdf ? "pdf" : item.resource_type,
+            title: item.title.trim() ? item.title : cleanDefaultTitle,
+            file_url: publicUrl,
+          };
+        }),
+      );
+      setSuccessMsg(`Archivo "${file.name}" subido correctamente.`);
+    } catch (cause) {
+      setError(
+        cause instanceof Error
+          ? cause.message
+          : "No se pudo subir el archivo de recurso.",
+      );
+    } finally {
+      setUploadingResourceIdx(null);
+    }
+  };
+
   const submit = async (data: FormData) => {
     setSaving(true);
     setError(null);
@@ -316,6 +367,10 @@ export function CourseCreateForm({ courseId }: { courseId?: number }) {
       const uploadedImage = imageFile
         ? await api.uploadCourseImage(imageFile)
         : undefined;
+      const normalizedDurationWeeks =
+        data.duration_weeks && Number(data.duration_weeks) > 0
+          ? Number(data.duration_weeks)
+          : null;
       const payload = {
         title: data.title.trim(),
         slug: data.slug.trim(),
@@ -334,7 +389,7 @@ export function CourseCreateForm({ courseId }: { courseId?: number }) {
         complementary_hours: data.complementary_hours ?? 0,
         theory_hours: data.theory_hours ?? 0,
         practice_hours: data.practice_hours ?? 0,
-        duration_weeks: data.duration_weeks ?? 0,
+        duration_weeks: normalizedDurationWeeks,
         recommended_frequency: data.recommended_frequency?.trim() || undefined,
         min_passing_grade: data.min_passing_grade ?? 14,
         min_attendance_percent: data.min_attendance_percent ?? 0,
@@ -737,6 +792,16 @@ export function CourseCreateForm({ courseId }: { courseId?: number }) {
                       "&:hover": { borderColor: "primary.main", bgcolor: "#E8F1EF" },
                     }}
                     onClick={() => imageInputRef.current?.click()}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      const file = e.dataTransfer.files?.[0] ?? null;
+                      if (file) handleSelectCoverFile(file);
+                    }}
                   >
                     <input
                       ref={imageInputRef}
@@ -745,18 +810,7 @@ export function CourseCreateForm({ courseId }: { courseId?: number }) {
                       style={{ display: "none" }}
                       onChange={(event) => {
                         const file = event.currentTarget.files?.[0] ?? null;
-                        if (file && !["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
-                          setError("Formato incompatible. Usa JPG, PNG o WebP.");
-                          return;
-                        }
-                        if (file && file.size > 5 * 1024 * 1024) {
-                          setError("El archivo supera el límite de 5 MB.");
-                          return;
-                        }
-                        setError(null);
-                        setRemoveImage(false);
-                        setImageFile(file);
-                        setImagePreview(file ? URL.createObjectURL(file) : null);
+                        handleSelectCoverFile(file);
                       }}
                     />
                     <UploadIcon sx={{ fontSize: 48, color: "primary.main", mb: 1.5 }} />
@@ -900,6 +954,7 @@ export function CourseCreateForm({ courseId }: { courseId?: number }) {
                   fullWidth
                   type="number"
                   label="Duración Estimada (Semanas)"
+                  helperText="Déjalo en 0 si es a tu propio ritmo"
                   slotProps={{ htmlInput: { min: 0, step: 1 } }}
                   {...register("duration_weeks")}
                 />
@@ -1209,7 +1264,7 @@ export function CourseCreateForm({ courseId }: { courseId?: number }) {
                   Plana Docente y Materiales de Descarga
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Selecciona a los profesionales a cargo del dictado y provee enlaces a libros, guías clínicas o diapositivas.
+                  Selecciona a los profesionales a cargo del dictado y sube o enlaza libros, guías clínicas o diapositivas.
                 </Typography>
               </Box>
 
@@ -1279,7 +1334,7 @@ export function CourseCreateForm({ courseId }: { courseId?: number }) {
                     Recursos y Materiales Digitales
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
-                    Enlaces a Google Drive, carpetas de lecturas o videos complementarios
+                    Sube archivos directamente (PDF, PPT, Word, imágenes) o coloca enlaces a Google Drive y videos
                   </Typography>
                 </Box>
                 <Button
@@ -1289,7 +1344,7 @@ export function CourseCreateForm({ courseId }: { courseId?: number }) {
                   onClick={() =>
                     setResources((curr) => [
                       ...curr,
-                      { resource_type: "link", title: "", file_url: "" },
+                      { resource_type: "pdf", title: "", file_url: "" },
                     ])
                   }
                 >
@@ -1300,14 +1355,14 @@ export function CourseCreateForm({ courseId }: { courseId?: number }) {
               {resources.length === 0 ? (
                 <Paper variant="outlined" sx={{ p: 4, textAlign: "center", borderRadius: 2, bgcolor: "background.default" }}>
                   <Typography variant="body2" color="text.secondary">
-                    Aún no se han agregado recursos de descarga. Haz clic en "Agregar Recurso" para vincular materiales.
+                    Aún no se han agregado recursos de descarga. Haz clic en &quot;Agregar Recurso&quot; para subir o vincular materiales.
                   </Typography>
                 </Paper>
               ) : (
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                   {resources.map((resource, index) => (
                     <Paper key={index} variant="outlined" sx={{ p: 2, borderRadius: 2 }}>
-                      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "140px 1fr 1.5fr auto" }, gap: 2, alignItems: "center" }}>
+                      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "140px 1fr 1.5fr auto auto" }, gap: 2, alignItems: "center" }}>
                         <TextField
                           select
                           size="small"
@@ -1326,11 +1381,11 @@ export function CourseCreateForm({ courseId }: { courseId?: number }) {
                             )
                           }
                         >
-                          <MenuItem value="link">Enlace Web</MenuItem>
                           <MenuItem value="pdf">Documento PDF</MenuItem>
+                          <MenuItem value="link">Enlace Web</MenuItem>
                           <MenuItem value="video">Video Externo</MenuItem>
                           <MenuItem value="quiz">Evaluación</MenuItem>
-                          <MenuItem value="other">Otro</MenuItem>
+                          <MenuItem value="other">Otro Archivo</MenuItem>
                         </TextField>
 
                         <TextField
@@ -1351,7 +1406,7 @@ export function CourseCreateForm({ courseId }: { courseId?: number }) {
                         <TextField
                           size="small"
                           label="URL del Archivo / Enlace"
-                          placeholder="https://drive.google.com/..."
+                          placeholder="Sube un archivo o pega https://..."
                           value={resource.file_url}
                           onChange={(e) =>
                             setResources((curr) =>
@@ -1361,6 +1416,28 @@ export function CourseCreateForm({ courseId }: { courseId?: number }) {
                             )
                           }
                         />
+
+                        <Button
+                          component="label"
+                          variant="outlined"
+                          size="small"
+                          startIcon={<UploadIcon />}
+                          disabled={uploadingResourceIdx === index}
+                          sx={{ whiteSpace: "nowrap" }}
+                        >
+                          {uploadingResourceIdx === index ? "Subiendo…" : "Subir archivo"}
+                          <input
+                            type="file"
+                            hidden
+                            onChange={(e) => {
+                              const file = e.currentTarget.files?.[0];
+                              if (file) {
+                                void handleUploadResourceFile(index, file);
+                                e.currentTarget.value = "";
+                              }
+                            }}
+                          />
+                        </Button>
 
                         <IconButton
                           color="error"

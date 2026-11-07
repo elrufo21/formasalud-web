@@ -91,8 +91,12 @@ async function request<T>(
   const data = await getResponseData(res);
   const response = isApiResponse(data) ? data : undefined;
   if (!res.ok) {
+    const fallbackMessage =
+      res.status === 413
+        ? "El archivo supera el tamaño máximo permitido por el servidor"
+        : `Error ${res.status}: ${res.statusText}`;
     const error = new ApiError(
-      response?.message || `Error ${res.status}: ${res.statusText}`,
+      response?.message || fallbackMessage,
       res.status,
       endpoint,
       response?.data,
@@ -263,10 +267,15 @@ export interface LoginResponse {
 
 export function getPublicAssetUrl(pathOrUrl?: string | null) {
   if (!pathOrUrl) return undefined;
+  const trimmed = pathOrUrl.trim();
+  if (!trimmed) return undefined;
+  if (/^(https?:|blob:|data:)/i.test(trimmed)) return trimmed;
   try {
     const assetBaseUrl =
       process.env.NEXT_PUBLIC_COURSE_IMAGE_BASE_URL || API_URL;
-    return new URL(pathOrUrl, `${assetBaseUrl}/`).toString();
+    const baseOrigin = new URL(assetBaseUrl).origin;
+    const normalizedPath = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
+    return new URL(normalizedPath, baseOrigin).toString();
   } catch {
     return undefined;
   }
@@ -334,7 +343,7 @@ export interface CreateCourseData {
   complementary_hours?: number;
   theory_hours?: number;
   practice_hours?: number;
-  duration_weeks?: number;
+  duration_weeks?: number | null;
   recommended_frequency?: string;
   min_passing_grade?: number;
   min_attendance_percent?: number;
@@ -664,10 +673,11 @@ export const api = {
       body: JSON.stringify(data),
     }),
   uploadTeacherImage: (file: File, signature = false) => {
+    const folder = signature ? "teacher-signatures" : "teachers";
     const formData = new FormData();
-    formData.append("folder", signature ? "teacher-signatures" : "teachers");
+    formData.append("folder", folder);
     formData.append("file", file);
-    return request<{ url: string }>("/upload", {
+    return request<{ url: string }>(`/upload?folder=${folder}`, {
       method: "POST",
       body: formData,
     });
@@ -842,18 +852,43 @@ export const api = {
       method: "PATCH",
       body: JSON.stringify(data),
     }),
-  uploadCourseImage: (file: File) => {
+  uploadCourseImage: async (file: File) => {
     const formData = new FormData();
     formData.append("folder", "courses");
     formData.append("file", file);
-    return request<{ url: string }>(
-      "/api/course-image-upload",
-      {
+    try {
+      return await request<{ url: string }>("/upload?folder=courses", {
         method: "POST",
         body: formData,
-      },
-      true,
-    );
+      });
+    } catch {
+      const fallbackData = new FormData();
+      fallbackData.append("folder", "courses");
+      fallbackData.append("file", file);
+      return await request<{ url: string }>(
+        "/api/course-image-upload",
+        {
+          method: "POST",
+          body: fallbackData,
+        },
+        true,
+      );
+    }
+  },
+  uploadCourseResource: (file: File) => {
+    const formData = new FormData();
+    formData.append("folder", "general");
+    formData.append("file", file);
+    return request<{
+      url: string;
+      filename: string;
+      originalName: string;
+      size: number;
+      mimetype: string;
+    }>("/upload?folder=general", {
+      method: "POST",
+      body: formData,
+    });
   },
 
   // Certificados
