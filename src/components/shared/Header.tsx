@@ -122,8 +122,8 @@ export function Header() {
             </div>
           </Link>
 
-          {/* Desktop Navigation Pill Bar */}
-          <div className="hidden lg:flex items-center bg-bg-alt/90 p-1.5 rounded-2xl border border-line/90 shadow-2xs">
+          {/* Desktop Navigation Links */}
+          <div className="hidden lg:flex items-center gap-1">
             {links.map((link) => {
               const isActive =
                 link.href === "/"
@@ -133,14 +133,14 @@ export function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`relative px-3.5 xl:px-4 py-2 rounded-xl text-[13px] whitespace-nowrap transition-all duration-200 flex items-center gap-2 ${
+                  className={`px-3.5 py-2 rounded-lg text-[13.5px] whitespace-nowrap transition-all duration-150 flex items-center gap-1.5 ${
                     isActive
-                      ? "bg-navy text-white font-bold shadow-[0_4px_12px_rgba(15,41,66,0.2)]"
-                      : "text-ink-soft font-semibold hover:text-navy hover:bg-white/80"
+                      ? "text-tealdeep bg-tealtint/70 font-bold"
+                      : "text-slate-600 hover:text-navy hover:bg-slate-100/70 font-semibold"
                   }`}
                 >
                   {isActive && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-gold shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-teal shrink-0" />
                   )}
                   <span>{link.label}</span>
                 </Link>
@@ -148,62 +148,56 @@ export function Header() {
             })}
           </div>
 
-          {/* CTAs Desktop & Tablet */}
-          <div className="hidden sm:flex items-center gap-2 shrink-0">
+          {/* Right Actions Desktop & Tablet */}
+          <div className="hidden sm:flex items-center gap-2.5 shrink-0">
             <Link
               href="/verificar"
-              className="px-3 py-2 rounded-xl border border-line bg-white hover:bg-bg-alt text-navy hover:text-teal font-bold text-xs transition-colors flex items-center gap-1.5 shadow-2xs whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-semibold text-slate-600 hover:text-tealdeep rounded-lg hover:bg-slate-100/70 transition-all whitespace-nowrap"
             >
               <Award className="w-4 h-4 text-teal shrink-0" />
               <span>Validar Certificado</span>
             </Link>
 
+            <span className="w-px h-5 bg-slate-200/80" />
+
             {isHydrated && isAuthenticated ? (
               <Link
                 href={role === "admin" ? "/admin" : "/aula"}
-                className="btn btn-primary !py-2 !px-4 !text-xs font-bold flex items-center gap-1.5 !rounded-xl shadow-md whitespace-nowrap"
+                className="group inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-navy hover:bg-tealdeep text-white text-[13px] font-bold shadow-xs hover:shadow-md transition-all duration-200 whitespace-nowrap"
               >
                 {role === "admin" ? (
                   <>
-                    <Shield className="w-3.5 h-3.5 text-goldpale" />
+                    <Shield className="w-3.5 h-3.5 text-gold" />
                     <span>Panel Admin</span>
                   </>
                 ) : (
                   <>
-                    <UserIcon className="w-3.5 h-3.5 text-goldpale" />
+                    <UserIcon className="w-3.5 h-3.5 text-gold" />
                     <span>Mi Aula</span>
                   </>
                 )}
-                <span className="arrow">→</span>
+                <span className="text-white/60 group-hover:text-white group-hover:translate-x-0.5 transition-all text-xs">
+                  →
+                </span>
               </Link>
             ) : (
-              <>
-                <Link
-                  href="/aula"
-                  className="px-3 py-2 rounded-xl border border-teal/25 bg-tealtint/55 hover:bg-tealtint text-navy hover:text-tealdeep text-xs font-bold transition-all flex items-center gap-1.5 whitespace-nowrap"
-                >
-                  <GraduationCap className="w-4 h-4 text-teal shrink-0" />
-                  <span>Aula Virtual</span>
-                  <span className="text-[9px] bg-teal text-white px-1.5 py-0.5 rounded-md font-extrabold tracking-wide">
-                    24/7
-                  </span>
-                </Link>
-
-                <Link
-                  href="/login"
-                  className="btn btn-primary !py-2 !px-4 !text-xs font-bold !rounded-xl shadow-md whitespace-nowrap"
-                >
-                  <span>Iniciar sesión</span>
-                  <span className="arrow">→</span>
-                </Link>
-              </>
+              <Link
+                href="/aula"
+                className="group inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-navy hover:bg-tealdeep text-white text-[13px] font-bold shadow-xs hover:shadow-md transition-all duration-200 whitespace-nowrap"
+              >
+                <GraduationCap className="w-4 h-4 text-gold group-hover:scale-105 transition-transform shrink-0" />
+                <span>Aula Virtual</span>
+                <span className="text-white/60 group-hover:text-white group-hover:translate-x-0.5 transition-all text-xs">
+                  →
+                </span>
+              </Link>
             )}
           </div>
 
           {/* Mobile Hamburger Button */}
           <button
             type="button"
-            className="lg:hidden p-2.5 text-navy rounded-xl border border-line bg-bg-alt/60 hover:bg-bg-alt focus:outline-none cursor-pointer transition-colors"
+            className="lg:hidden p-2 text-slate-700 hover:text-navy rounded-lg hover:bg-slate-100 focus:outline-none cursor-pointer transition-colors"
             onClick={() => setIsOpen(!isOpen)}
             aria-label={
               isOpen
@@ -259,31 +253,31 @@ export function Header() {
               })}
             </div>
 
-            {/* Botón Validar Certificado Móvil */}
+            {/* Validar Certificado Móvil */}
             <Link
               href="/verificar"
               onClick={() => setIsOpen(false)}
-              className="py-3 px-4 rounded-xl border border-line bg-bg-alt/70 hover:bg-white text-navy font-bold text-xs flex items-center justify-between transition-colors shadow-2xs"
+              className="py-2.5 px-3.5 rounded-xl text-slate-700 hover:text-teal font-semibold text-xs flex items-center justify-between transition-colors bg-slate-50 hover:bg-slate-100"
             >
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2">
                 <Award className="w-4 h-4 text-teal shrink-0" />
                 <span>Validar Certificado Oficial</span>
               </div>
-              <ArrowRight className="w-4 h-4 text-teal shrink-0" />
+              <ArrowRight className="w-3.5 h-3.5 text-teal/70 shrink-0" />
             </Link>
 
             {/* Mobile CTAs */}
-            <div className="pt-3 border-t border-line flex flex-col sm:hidden gap-2.5">
+            <div className="pt-2 border-t border-slate-100 flex flex-col sm:hidden gap-2">
               {isHydrated && isAuthenticated ? (
                 <Link
                   href={role === "admin" ? "/admin" : "/aula"}
                   onClick={() => setIsOpen(false)}
-                  className="btn btn-primary w-full justify-center text-xs font-bold flex items-center gap-2 !py-3 !rounded-xl"
+                  className="w-full justify-center text-xs font-bold flex items-center gap-2 py-3 px-4 rounded-xl bg-navy text-white hover:bg-tealdeep transition-colors shadow-xs"
                 >
                   {role === "admin" ? (
-                    <Shield className="w-4 h-4" />
+                    <Shield className="w-4 h-4 text-gold" />
                   ) : (
-                    <UserIcon className="w-4 h-4" />
+                    <UserIcon className="w-4 h-4 text-gold" />
                   )}
                   <span>
                     Ir a{" "}
@@ -291,24 +285,18 @@ export function Header() {
                       ? "Panel Administrador"
                       : "Mi Aula Virtual"}
                   </span>
+                  <ArrowRight className="w-3.5 h-3.5 text-white/70" />
                 </Link>
               ) : (
-                <div className="grid grid-cols-2 gap-2.5">
-                  <Link
-                    href="/aula"
-                    onClick={() => setIsOpen(false)}
-                    className="btn btn-ghost w-full justify-center !text-xs font-bold !py-3 !px-3 !rounded-xl"
-                  >
-                    Aula Virtual 24/7
-                  </Link>
-                  <Link
-                    href="/login"
-                    onClick={() => setIsOpen(false)}
-                    className="btn btn-primary w-full justify-center !text-xs font-bold !py-3 !px-3 !rounded-xl"
-                  >
-                    Iniciar sesión
-                  </Link>
-                </div>
+                <Link
+                  href="/aula"
+                  onClick={() => setIsOpen(false)}
+                  className="w-full justify-center text-xs font-bold flex items-center gap-2 py-3 px-4 rounded-xl bg-navy text-white hover:bg-tealdeep transition-colors shadow-xs"
+                >
+                  <GraduationCap className="w-4 h-4 text-gold" />
+                  <span>Ingresar al Aula Virtual</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-white/70" />
+                </Link>
               )}
             </div>
 
