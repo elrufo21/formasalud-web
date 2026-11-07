@@ -488,8 +488,8 @@ const resolveAsset = (path?: string, fallback = "") => {
 export function ClassicEleganceCertificate({ data }: { data: FormasaludCertificatePayload }) {
   const isApproval = data.certificateType === "approval";
   const logoLeft = resolveAsset(data.logoLeftUrl, "/certificates/logofms.png");
-  const logoFisio = resolveAsset("/certificates/fisiouci.png");
-  const logoAusp = resolveAsset(data.sponsorLogoUrl || data.logoRightUrl, "/certificates/ausp.png");
+  const logoFisio = resolveAsset(data.logoRightUrl, "/certificates/fisiouci.png");
+  const logoAusp = resolveAsset(data.sponsorLogoUrl, "/certificates/ausp.png");
   const firmaLeft = resolveAsset(data.signatureLeftUrl, "/certificates/fra.png");
   const firmaRight = resolveAsset(data.signatureRightUrl, "/certificates/firmaMiguel.png");
   const sello = resolveAsset(data.sealUrl, "/certificates/cello.png");

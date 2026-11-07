@@ -35,6 +35,7 @@ export interface FormasaludClassicData {
   signatureRightImage?: string;
   logoImage?: string;
   secondaryLogoImage?: string;
+  sponsorLogoImage?: string;
   backgroundImage?: string;
   courseDay?: string;
   courseMonth?: string;
@@ -95,6 +96,18 @@ const styles = StyleSheet.create({
     left: 69,
     width: 126,
     height: 126,
+    objectFit: "contain",
+  },
+  logoSecondaryGroup: {
+    position: "absolute",
+    top: 48,
+    right: 45,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  logoDual: {
+    width: 72,
+    height: 72,
     objectFit: "contain",
   },
   logoSecondary: {
@@ -674,6 +687,7 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
   const nameFontSize = getNameFontSize(titledName);
   const logoImage = resolveAsset(data.logoImage);
   const secondaryLogoImage = resolveAsset(data.secondaryLogoImage);
+  const sponsorLogoImage = resolveAsset(data.sponsorLogoImage);
   const sealImage = resolveAsset(data.sealImage);
   const signatureLeftImage = resolveAsset(data.signatureLeftImage);
   const signatureRightImage = resolveAsset(data.signatureRightImage);
@@ -695,8 +709,21 @@ export function CertificatePdf18({ data }: { data: CertificatePdf18Data }) {
         />}
         {logoImage && <Image src={logoImage} style={styles.watermark} />}
         {logoImage && <Image src={logoImage} style={styles.logoPrimary} />}
-        {secondaryLogoImage && (
-          <Image src={secondaryLogoImage} style={styles.logoSecondary} />
+        {secondaryLogoImage && sponsorLogoImage ? (
+          <View style={styles.logoSecondaryGroup}>
+            <Image
+              src={secondaryLogoImage}
+              style={[styles.logoDual, { marginRight: 8 }]}
+            />
+            <Image src={sponsorLogoImage} style={styles.logoDual} />
+          </View>
+        ) : (
+          (secondaryLogoImage || sponsorLogoImage) && (
+            <Image
+              src={secondaryLogoImage || sponsorLogoImage}
+              style={styles.logoSecondary}
+            />
+          )
         )}
 
         <View style={styles.header}>
