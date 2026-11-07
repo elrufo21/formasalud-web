@@ -10,9 +10,6 @@ import {
   Path,
   Rect,
   Circle,
-  Defs,
-  LinearGradient,
-  Stop,
 } from "@react-pdf/renderer";
 import { create as createQrCode } from "qrcode";
 import "../registerFonts";
@@ -24,7 +21,6 @@ const H = 595.28;
 const NAVY = "#05224D";
 const SAPPHIRE = "#074B83";
 const TEAL = "#0B8585";
-const CYAN = "#0284C7";
 const GOLD = "#C99725";
 const PAPER = "#FFFFFF";
 
@@ -33,42 +29,42 @@ const styles = StyleSheet.create({
   background: { position: "absolute", top: 0, left: 0, width: W, height: H },
   watermark: {
     position: "absolute",
-    top: 145,
-    left: 275,
-    width: 290,
-    height: 290,
+    top: 135,
+    left: 260,
+    width: 320,
+    height: 320,
     opacity: 0.05,
     objectFit: "contain",
   },
   logoPrimary: {
     position: "absolute",
-    top: 36,
-    left: 48,
-    width: 90,
-    height: 90,
+    top: 34,
+    left: 45,
+    width: 95,
+    height: 95,
     objectFit: "contain",
   },
   logoSecondaryGroup: {
     position: "absolute",
-    top: 36,
-    right: 48,
+    top: 34,
+    right: 45,
     flexDirection: "row",
     alignItems: "center",
   },
   logoFisio: {
-    width: 68,
-    height: 68,
+    width: 74,
+    height: 74,
     objectFit: "contain",
     marginRight: 10,
   },
   logoAusp: {
-    width: 68,
-    height: 68,
+    width: 74,
+    height: 74,
     objectFit: "contain",
   },
   header: {
     position: "absolute",
-    top: 34,
+    top: 32,
     left: 170,
     width: 500,
     alignItems: "center",
@@ -76,7 +72,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontFamily: "Playfair",
     fontWeight: 700,
-    fontSize: 9,
+    fontSize: 9.5,
     color: NAVY,
     letterSpacing: 0.8,
     textAlign: "center",
@@ -85,7 +81,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
     fontFamily: "Playfair",
     fontWeight: 700,
-    fontSize: 34,
+    fontSize: 36,
     color: NAVY,
     letterSpacing: 2,
     textAlign: "center",
@@ -95,7 +91,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  taglineLine: { width: 55, height: 0.8, backgroundColor: GOLD },
+  taglineLine: { width: 60, height: 0.8, backgroundColor: GOLD },
   taglineDot: {
     width: 4,
     height: 4,
@@ -106,84 +102,84 @@ const styles = StyleSheet.create({
     marginHorizontal: 6,
     fontFamily: "Playfair",
     fontWeight: 700,
-    fontSize: 7.2,
+    fontSize: 7.8,
     color: SAPPHIRE,
-    letterSpacing: 0.7,
+    letterSpacing: 0.8,
   },
   otorga: {
     position: "absolute",
-    top: 106,
-    left: 300,
-    width: 242,
+    top: 104,
+    left: 270,
+    width: 300,
     fontFamily: "Playfair",
     fontWeight: 700,
-    fontSize: 9,
+    fontSize: 9.5,
     color: NAVY,
     letterSpacing: 1.5,
     textAlign: "center",
   },
   certificateTitle: {
     position: "absolute",
-    top: 118,
+    top: 114,
     left: 170,
     width: 500,
     fontFamily: "Playfair",
     fontWeight: 700,
-    fontSize: 46,
+    fontSize: 48,
     letterSpacing: 3,
     color: NAVY,
     textAlign: "center",
   },
   ribbonContainer: {
     position: "absolute",
-    top: 174,
-    left: 282,
-    width: 278,
-    height: 25,
+    top: 170,
+    left: 271,
+    width: 300,
+    height: 27,
     alignItems: "center",
     justifyContent: "center",
   },
   ribbonText: {
     fontFamily: "Helvetica-Bold",
-    fontSize: 13.5,
+    fontSize: 14.5,
     letterSpacing: 1.5,
     color: "#FFFFFF",
     textAlign: "center",
   },
   granted: {
     position: "absolute",
-    top: 205,
+    top: 202,
     left: 300,
     width: 242,
     fontFamily: "Helvetica-Bold",
-    fontSize: 9.5,
+    fontSize: 10.5,
     color: SAPPHIRE,
     letterSpacing: 2,
     textAlign: "center",
   },
   name: {
     position: "absolute",
-    top: 218,
+    top: 216,
     left: 40,
     width: W - 80,
     fontFamily: "Lora",
     fontStyle: "normal",
     fontWeight: 600,
-    fontSize: 23,
+    fontSize: 25,
     color: NAVY,
     textAlign: "center",
   },
   nameRule: {
     position: "absolute",
-    top: 252,
-    left: 200,
-    width: 442,
+    top: 250,
+    left: 180,
+    width: 482,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },
   nameRuleLine: {
-    width: 190,
+    width: 210,
     height: 0.8,
     backgroundColor: GOLD,
   },
@@ -201,64 +197,64 @@ const styles = StyleSheet.create({
     width: 500,
     fontFamily: "Lora",
     fontStyle: "normal",
-    fontSize: 10,
+    fontSize: 11.5,
     color: "#222222",
     textAlign: "center",
   },
   badgePill: {
     position: "absolute",
-    top: 280,
-    left: 326,
-    width: 190,
+    top: 284,
+    left: 311,
+    width: 220,
     backgroundColor: NAVY,
-    borderRadius: 10,
-    paddingVertical: 3.5,
+    borderRadius: 12,
+    paddingVertical: 4.5,
     alignItems: "center",
   },
   badgePillText: {
     fontFamily: "Helvetica-Bold",
-    fontSize: 9.5,
+    fontSize: 10.5,
     color: "#FFFFFF",
     letterSpacing: 1.2,
   },
   courseTitle: {
     position: "absolute",
-    top: 306,
-    left: 165,
-    width: 512,
+    top: 314,
+    left: 155,
+    width: 532,
     fontFamily: "Helvetica-Bold",
-    fontSize: 13,
-    lineHeight: 1.25,
-    color: SAPPHIRE,
+    fontSize: 15.5,
+    lineHeight: 1.24,
+    color: NAVY,
     textAlign: "center",
     textTransform: "uppercase",
   },
   courseMeta: {
     position: "absolute",
-    top: 356,
-    left: 180,
-    width: 482,
+    top: 374,
+    left: 165,
+    width: 512,
     fontFamily: "Lora",
-    fontSize: 9,
-    lineHeight: 1.35,
-    color: "#333333",
+    fontSize: 10.2,
+    lineHeight: 1.38,
+    color: "#222222",
     textAlign: "center",
   },
   sidebar: {
     position: "absolute",
-    left: 38,
-    top: 215,
+    left: 36,
+    top: 202,
     width: 155,
   },
   sidebarItem: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 11,
+    marginBottom: 13,
   },
   sidebarIconBox: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 35,
+    height: 35,
+    borderRadius: 17.5,
     backgroundColor: SAPPHIRE,
     alignItems: "center",
     justifyContent: "center",
@@ -269,71 +265,89 @@ const styles = StyleSheet.create({
   },
   sidebarItemTitle: {
     fontFamily: "Helvetica-Bold",
-    fontSize: 7.2,
+    fontSize: 7.8,
     color: SAPPHIRE,
     letterSpacing: 0.5,
   },
   sidebarItemVal: {
-    marginTop: 1.5,
+    marginTop: 2,
     fontFamily: "Helvetica",
-    fontSize: 7.4,
+    fontSize: 8.2,
     color: "#111111",
   },
   signatures: {
     position: "absolute",
-    left: 180,
-    bottom: 58,
-    width: 482,
+    left: 170,
+    top: 442,
+    width: 502,
     flexDirection: "row",
     alignItems: "flex-end",
     justifyContent: "space-between",
   },
   signatureCol: {
-    width: 168,
+    width: 175,
     alignItems: "center",
   },
-  signatureImg: {
-    width: 132,
-    height: 52,
+  signatureImgBox: {
+    width: 175,
+    height: 36,
+    position: "relative",
+    alignItems: "center",
+  },
+  signatureLeftImg: {
+    position: "absolute",
+    left: -12,
+    bottom: -28,
+    width: 195,
+    height: 98,
+    objectFit: "contain",
+  },
+  signatureRightImg: {
+    position: "absolute",
+    left: -10,
+    bottom: -18,
+    width: 195,
+    height: 98,
     objectFit: "contain",
   },
   signatureLine: {
-    width: 160,
+    width: 165,
     height: 0.8,
-    backgroundColor: "#333333",
+    backgroundColor: NAVY,
     marginTop: 2,
     marginBottom: 4,
   },
   signatureName: {
     fontFamily: "Helvetica-Bold",
-    fontSize: 8.4,
+    fontSize: 8.8,
     color: "#111111",
     textAlign: "center",
   },
   signatureRole: {
     marginTop: 1.5,
     fontFamily: "Helvetica",
-    fontSize: 7.2,
+    fontSize: 7.5,
     color: "#444444",
     textAlign: "center",
+    lineHeight: 1.25,
   },
   sealBox: {
-    width: 82,
-    height: 82,
+    width: 96,
+    height: 96,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 2,
+    marginBottom: 4,
   },
   sealImg: {
-    width: 78,
-    height: 78,
+    width: 92,
+    height: 92,
     objectFit: "contain",
   },
   qrContainer: {
     position: "absolute",
     right: 34,
-    bottom: 74,
-    width: 80,
+    bottom: 64,
+    width: 82,
     padding: 3,
     backgroundColor: "#FFFFFF",
     borderWidth: 1.5,
@@ -347,21 +361,21 @@ const styles = StyleSheet.create({
     backgroundColor: NAVY,
     color: "#FFFFFF",
     fontFamily: "Helvetica-Bold",
-    fontSize: 5.6,
+    fontSize: 5.8,
     textAlign: "center",
-    paddingVertical: 2,
+    paddingVertical: 2.5,
     letterSpacing: 0.4,
   },
   footer: {
     position: "absolute",
-    bottom: 14,
+    bottom: 12,
     left: 36,
     width: W - 72,
     textAlign: "center",
   },
   footerText: {
     fontFamily: "Helvetica",
-    fontSize: 7.5,
+    fontSize: 7.8,
     color: "#555555",
     textAlign: "center",
   },
@@ -372,7 +386,7 @@ function BackgroundShapes() {
     <Svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
       <Rect x="0" y="0" width={W} height={H} fill={PAPER} />
 
-      {/* Doble marco institucional con toques dorados y zafiro */}
+      {/* Doble marco institucional */}
       <Rect x="10" y="10" width={W - 20} height={H - 20} rx="5" fill="none" stroke={SAPPHIRE} strokeWidth="1.5" />
       <Rect x="14" y="14" width={W - 28} height={H - 28} rx="3" fill="none" stroke={GOLD} strokeWidth="0.6" opacity="0.8" />
       <Rect x="26" y="26" width={W - 52} height={H - 52} fill="none" stroke={SAPPHIRE} strokeWidth="0.4" opacity="0.5" />
@@ -399,7 +413,7 @@ function BackgroundShapes() {
 
 function SidebarIcon({ kind }: { kind: "date" | "time" | "screen" | "award" }) {
   return (
-    <Svg width={30} height={30} viewBox="0 0 34 34">
+    <Svg width={32} height={32} viewBox="0 0 34 34">
       <Circle cx="17" cy="17" r="16" fill={SAPPHIRE} />
       <Circle cx="17" cy="17" r="14.8" fill="none" stroke="#FFFFFF" strokeWidth="0.6" opacity="0.6" />
       {kind === "date" && (
@@ -433,7 +447,7 @@ function SidebarIcon({ kind }: { kind: "date" | "time" | "screen" | "award" }) {
 function RibbonSvg({ text }: { text: string }) {
   return (
     <View style={styles.ribbonContainer}>
-      <Svg width={278} height={25} viewBox="0 0 278 25" style={{ position: "absolute" }}>
+      <Svg width={300} height={27} viewBox="0 0 278 25" style={{ position: "absolute", width: 300, height: 27 }}>
         <Path d="M0 0h278v25H0l15-12.5zM278 0l-15 12.5L278 25z" fill={SAPPHIRE} />
       </Svg>
       <Text style={styles.ribbonText}>{text}</Text>
@@ -454,7 +468,7 @@ function QrBadge({ url }: { url: string }) {
 
   return (
     <View style={styles.qrContainer}>
-      <Svg viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`} style={{ width: 68, height: 68 }}>
+      <Svg viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`} style={{ width: 70, height: 70 }}>
         <Path d={qrPath} fill={NAVY} />
       </Svg>
       <Text style={styles.qrLabel}>VERIFICA TU CERTIFICADO</Text>
@@ -485,7 +499,7 @@ export function ClassicEleganceCertificate({ data }: { data: FormasaludCertifica
     `https://formasalud.org.pe/verificar/${encodeURIComponent(data.certificateCode)}`;
 
   const nameLength = (data.studentName || "").trim().length;
-  const nameFontSize = nameLength > 45 ? 18 : nameLength > 36 ? 20 : nameLength > 28 ? 22 : 24;
+  const nameFontSize = nameLength > 45 ? 19 : nameLength > 36 ? 21 : nameLength > 28 ? 23 : 25;
 
   return (
     <Document title={`Certificado Formasalud - ${data.studentName}`}>
@@ -609,7 +623,9 @@ export function ClassicEleganceCertificate({ data }: { data: FormasaludCertifica
         {/* Firmas y Sello Oficial Central */}
         <View style={styles.signatures}>
           <View style={styles.signatureCol}>
-            {firmaLeft && <Image src={firmaLeft} style={styles.signatureImg} />}
+            <View style={styles.signatureImgBox}>
+              {firmaLeft && <Image src={firmaLeft} style={styles.signatureLeftImg} />}
+            </View>
             <View style={styles.signatureLine} />
             <Text style={styles.signatureName}>
               {data.academicDirector || "Lic. Francisco Paucar Benites"}
@@ -622,7 +638,9 @@ export function ClassicEleganceCertificate({ data }: { data: FormasaludCertifica
           </View>
 
           <View style={styles.signatureCol}>
-            {firmaRight && <Image src={firmaRight} style={styles.signatureImg} />}
+            <View style={styles.signatureImgBox}>
+              {firmaRight && <Image src={firmaRight} style={styles.signatureRightImg} />}
+            </View>
             <View style={styles.signatureLine} />
             <Text style={styles.signatureName}>
               {data.coordinatorName || "Lic. Zambrano Cruz Miguel"}
