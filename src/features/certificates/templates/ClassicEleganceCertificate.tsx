@@ -81,7 +81,7 @@ function VerificationBadge({ url, code }: { url: string; code?: string }) {
 }
 
 const styles = StyleSheet.create({
-  page: { width: W, height: H, position: "relative", backgroundColor: PAPER },
+  page: { minHeight: H, position: "relative", backgroundColor: PAPER },
   background: { position: "absolute", top: 0, left: 0, width: W, height: H },
   logoPrimary: {
     position: "absolute",
@@ -359,18 +359,20 @@ export function ClassicEleganceCertificate({ data }: { data: FormasaludCertifica
     <Document>
       <Page size="A4" orientation="landscape" style={styles.page} wrap={false}>
         {/* Fondo decorativo perimetral */}
-        <Svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={styles.background}>
-          <Defs>
-            <LinearGradient id="borderGrad" x1="0" y1="0" x2="1" y2="1">
-              <Stop offset="0%" stopColor={GOLD_LIGHT} />
-              <Stop offset="50%" stopColor={GOLD} />
-              <Stop offset="100%" stopColor="#8A6414" />
-            </LinearGradient>
-          </Defs>
-          <Rect x={14} y={14} width={W - 28} height={H - 28} fill="none" stroke="url(#borderGrad)" strokeWidth={2} />
-          <Rect x={20} y={20} width={W - 40} height={H - 40} fill="none" stroke={NAVY} strokeWidth={0.8} />
-          <Rect x={24} y={24} width={W - 48} height={H - 48} fill="none" stroke={GOLD} strokeWidth={0.5} opacity={0.7} />
-        </Svg>
+        <View style={styles.background}>
+          <Svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
+            <Defs>
+              <LinearGradient id="borderGrad" x1="0" y1="0" x2="1" y2="1">
+                <Stop offset="0%" stopColor={GOLD_LIGHT} />
+                <Stop offset="50%" stopColor={GOLD} />
+                <Stop offset="100%" stopColor="#8A6414" />
+              </LinearGradient>
+            </Defs>
+            <Rect x={14} y={14} width={W - 28} height={H - 28} fill="none" stroke="url(#borderGrad)" strokeWidth={2} />
+            <Rect x={20} y={20} width={W - 40} height={H - 40} fill="none" stroke={NAVY} strokeWidth={0.8} />
+            <Rect x={24} y={24} width={W - 48} height={H - 48} fill="none" stroke={GOLD} strokeWidth={0.5} opacity={0.7} />
+          </Svg>
+        </View>
 
         {/* Logos superiores */}
         {logoLeft && <Image src={logoLeft} style={styles.logoPrimary} />}
