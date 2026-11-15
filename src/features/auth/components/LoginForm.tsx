@@ -5,22 +5,34 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, CheckCircle2, Eye, EyeOff } from "lucide-react";
 import { useHydratedAuth } from "../store/useAuthStore";
 import { Input } from "@/components/ui/Input";
 
 const loginSchema = z.object({
-  email: z.string().email("Ingresa un correo electrónico válido"),
+  email: z.string().trim().email("Ingresa un correo electrónico válido"),
   password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
-export function LoginForm() {
+interface LoginFormProps {
+  onSwitchToRegister?: () => void;
+}
+
+export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
   const router = useRouter();
-  const { login, isAuthenticated, role: activeRole, user: activeUser, isHydrated, logout } = useHydratedAuth();
+  const {
+    login,
+    isAuthenticated,
+    role: activeRole,
+    user: activeUser,
+    isHydrated,
+    logout,
+  } = useHydratedAuth();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (isHydrated && isAuthenticated) {
@@ -48,7 +60,7 @@ export function LoginForm() {
     setLoading(true);
     setError(null);
     try {
-      const user = await login(data.email, data.password);
+      const user = await login(data.email.trim().toLowerCase(), data.password);
       if (user.role === "admin") {
         router.push("/admin");
       } else {
@@ -68,18 +80,30 @@ export function LoginForm() {
           <CheckCircle2 className="w-6 h-6" />
         </div>
         <div>
-          <h2 className="font-serif text-xl font-bold text-navy">Sesión Activa</h2>
+          <h2 className="font-serif text-xl font-bold text-navy">
+            Sesión Activa
+          </h2>
           <p className="text-xs text-ink-soft mt-1">
-            Has iniciado sesión como <strong className="text-navy">{activeUser?.name || (activeRole === "admin" ? "Administrador" : "Alumno")}</strong>. Redirigiendo...
+            Has iniciado sesión como{" "}
+            <strong className="text-navy">
+              {activeUser?.name ||
+                (activeRole === "admin" ? "Administrador" : "Alumno")}
+            </strong>
+            . Redirigiendo...
           </p>
         </div>
         <div className="pt-2 flex flex-col gap-2">
           <button
             type="button"
-            onClick={() => router.push(activeRole === "admin" ? "/admin" : "/aula")}
+            onClick={() =>
+              router.push(activeRole === "admin" ? "/admin" : "/aula")
+            }
             className="w-full py-2.5 px-4 rounded-xl bg-navy text-white font-semibold text-xs hover:bg-navyink transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
-            <span>Continuar a {activeRole === "admin" ? "Panel Admin" : "Aula Virtual"}</span>
+            <span>
+              Continuar a{" "}
+              {activeRole === "admin" ? "Panel Admin" : "Aula Virtual"}
+            </span>
             <ArrowRight className="w-4 h-4" />
           </button>
           <button
@@ -107,7 +131,7 @@ export function LoginForm() {
       </div>
 
       {/* Form */}
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-6" noValidate>
         {error && (
           <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-xs text-red-600 font-medium">
             {error}
@@ -118,36 +142,68 @@ export function LoginForm() {
           label="Correo Electrónico"
           type="email"
           placeholder="correo@ejemplo.com"
+          autoComplete="email"
+          required
           error={errors.email?.message}
           {...register("email")}
         />
 
-        <Input
-          label="Contraseña"
-          type="password"
-          placeholder="••••••••"
-          error={errors.password?.message}
-          {...register("password")}
-        />
+        <div className="relative">
+          <Input
+            label="Contraseña"
+            type={showPassword ? "text" : "password"}
+            placeholder="••••••••"
+            autoComplete="current-password"
+            required
+            className="pr-10"
+            error={errors.password?.message}
+            {...register("password")}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-3 top-[30px] text-ink-soft hover:text-navy transition-colors cursor-pointer"
+            tabIndex={-1}
+            aria-label={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
+          >
+            {showPassword ? (
+              <EyeOff className="w-4 h-4" />
+            ) : (
+              <Eye className="w-4 h-4" />
+            )}
+          </button>
+        </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full mt-2 py-2.5 px-4 rounded-xl bg-navy text-white font-semibold text-sm hover:bg-navyink transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
+          className="w-full mt-2 py-2.5 px-4 rounded-xl bg-navy text-white font-semibold text-sm hover:bg-navyink transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer shadow-sm"
         >
           {loading ? (
             <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
           ) : (
             <>
-              <span>
-                Iniciar sesión
-              </span>
+              <span>Iniciar sesión</span>
               <ArrowRight className="w-4 h-4" />
             </>
           )}
         </button>
-      </form>
 
+        {onSwitchToRegister && (
+          <div className="pt-3 border-t border-line text-center">
+            <p className="text-xs text-ink-soft">
+              ¿Eres nuevo en FormaSalud?{" "}
+              <button
+                type="button"
+                onClick={onSwitchToRegister}
+                className="font-bold text-teal hover:text-tealdeep transition-colors underline cursor-pointer"
+              >
+                Regístrate gratis como alumno
+              </button>
+            </p>
+          </div>
+        )}
+      </form>
     </div>
   );
 }

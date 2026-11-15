@@ -181,16 +181,25 @@ export function Header() {
                 </span>
               </Link>
             ) : (
-              <Link
-                href="/aula"
-                className="group inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-navy hover:bg-tealdeep text-white text-[13px] font-bold shadow-xs hover:shadow-md transition-all duration-200 whitespace-nowrap"
-              >
-                <GraduationCap className="w-4 h-4 text-gold group-hover:scale-105 transition-transform shrink-0" />
-                <span>Aula Virtual</span>
-                <span className="text-white/60 group-hover:text-white group-hover:translate-x-0.5 transition-all text-xs">
-                  →
-                </span>
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/registro"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-bold text-tealdeep bg-tealtint/60 hover:bg-teal hover:text-white border border-teal/25 rounded-xl transition-all duration-200 whitespace-nowrap"
+                >
+                  <UserIcon className="w-3.5 h-3.5 shrink-0" />
+                  <span>Registrarse</span>
+                </Link>
+                <Link
+                  href="/login"
+                  className="group inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-navy hover:bg-tealdeep text-white text-[13px] font-bold shadow-xs hover:shadow-md transition-all duration-200 whitespace-nowrap"
+                >
+                  <GraduationCap className="w-4 h-4 text-gold group-hover:scale-105 transition-transform shrink-0" />
+                  <span>Aula Virtual</span>
+                  <span className="text-white/60 group-hover:text-white group-hover:translate-x-0.5 transition-all text-xs">
+                    →
+                  </span>
+                </Link>
+              </div>
             )}
           </div>
 
@@ -288,15 +297,26 @@ export function Header() {
                   <ArrowRight className="w-3.5 h-3.5 text-white/70" />
                 </Link>
               ) : (
-                <Link
-                  href="/aula"
-                  onClick={() => setIsOpen(false)}
-                  className="w-full justify-center text-xs font-bold flex items-center gap-2 py-3 px-4 rounded-xl bg-navy text-white hover:bg-tealdeep transition-colors shadow-xs"
-                >
-                  <GraduationCap className="w-4 h-4 text-gold" />
-                  <span>Ingresar al Aula Virtual</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-white/70" />
-                </Link>
+                <>
+                  <Link
+                    href="/registro"
+                    onClick={() => setIsOpen(false)}
+                    className="w-full justify-center text-xs font-bold flex items-center gap-2 py-3 px-4 rounded-xl bg-teal text-white hover:bg-tealdeep transition-colors shadow-xs"
+                  >
+                    <UserIcon className="w-4 h-4 text-white" />
+                    <span>Crear Cuenta de Alumno (Registro)</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-white/80" />
+                  </Link>
+                  <Link
+                    href="/login"
+                    onClick={() => setIsOpen(false)}
+                    className="w-full justify-center text-xs font-bold flex items-center gap-2 py-3 px-4 rounded-xl bg-navy text-white hover:bg-tealdeep transition-colors shadow-xs"
+                  >
+                    <GraduationCap className="w-4 h-4 text-gold" />
+                    <span>Ingresar al Aula Virtual</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-white/70" />
+                  </Link>
+                </>
               )}
             </div>
 

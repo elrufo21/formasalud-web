@@ -54,38 +54,72 @@ async function request<T>(
   options?: RequestInit,
   sameOrigin = false,
 ): Promise<T> {
-  const url = sameOrigin ? endpoint : `${API_URL}${endpoint}`;
+  const isBrowser = typeof window !== "undefined";
   const token = getStoredAccessToken();
   const isFormData =
     typeof FormData !== "undefined" && options?.body instanceof FormData;
+  const fetchOptions: RequestInit = {
+    ...options,
+    headers: {
+      ...(!isFormData ? { "Content-Type": "application/json" } : {}),
+      ...(token && !endpoint.startsWith("/auth/")
+        ? { Authorization: `Bearer ${token}` }
+        : {}),
+      ...options?.headers,
+    },
+  };
+
+  const primaryUrl = sameOrigin
+    ? endpoint
+    : isBrowser && !isFormData
+      ? `/api/proxy${endpoint}`
+      : `${API_URL}${endpoint}`;
+  const fallbackUrl =
+    !sameOrigin && isBrowser && !isFormData ? `${API_URL}${endpoint}` : null;
+
   let res: Response;
 
   try {
-    res = await fetch(url, {
-      ...options,
-      headers: {
-        ...(!isFormData ? { "Content-Type": "application/json" } : {}),
-        ...(token && !endpoint.startsWith("/auth/")
-          ? { Authorization: `Bearer ${token}` }
-          : {}),
-        ...options?.headers,
-      },
-    });
+    res = await fetch(primaryUrl, fetchOptions);
+    if (res.status === 502 && fallbackUrl) {
+      res = await fetch(fallbackUrl, fetchOptions);
+    }
   } catch {
-    const error = new ApiError(
-      "No se pudo conectar con el servidor",
-      0,
-      endpoint,
-      null,
-      [
-        {
-          code: "NETWORK_ERROR",
-          message: "No se pudo conectar con el servidor",
-        },
-      ],
-    );
-    console.error(`[API Error] ${endpoint}:`, error.message);
-    throw error;
+    if (fallbackUrl) {
+      try {
+        res = await fetch(fallbackUrl, fetchOptions);
+      } catch {
+        const error = new ApiError(
+          "No se pudo conectar con el servidor",
+          0,
+          endpoint,
+          null,
+          [
+            {
+              code: "NETWORK_ERROR",
+              message: "No se pudo conectar con el servidor",
+            },
+          ],
+        );
+        console.error(`[API Error] ${endpoint}:`, error.message);
+        throw error;
+      }
+    } else {
+      const error = new ApiError(
+        "No se pudo conectar con el servidor",
+        0,
+        endpoint,
+        null,
+        [
+          {
+            code: "NETWORK_ERROR",
+            message: "No se pudo conectar con el servidor",
+          },
+        ],
+      );
+      console.error(`[API Error] ${endpoint}:`, error.message);
+      throw error;
+    }
   }
 
   const data = await getResponseData(res);

@@ -100,20 +100,45 @@ export const useAuthStore = create<AuthState>()(
           role: "student",
         });
         const created = response.user;
+        const accessToken =
+          typeof response.access_token === "string" ? response.access_token : null;
+
+        if (!accessToken || !created || typeof created.user_id !== "number") {
+          throw new ApiError(
+            "No se pudo completar el registro del usuario",
+            200,
+            "/auth/register",
+            response,
+          );
+        }
+
+        const roles: Role[] = Array.isArray(created.roles)
+          ? created.roles.filter(isRole)
+          : ["student"];
+        const finalRoles: Role[] = roles.length > 0 ? roles : ["student"];
+        const role: Role = finalRoles.includes("admin")
+          ? "admin"
+          : (finalRoles[0] ?? "student");
 
         const authUser: AuthUser = {
           user_id: created.user_id,
-          name: created.name,
-          last_name: created.last_name,
-          email: created.email,
-          document_type: created.document_type || "dni",
-          document_number: created.document_number || "",
-          phone: created.phone || "",
-          roles: ["student"],
-          role: "student",
+          name: created.name || data.name,
+          last_name: created.last_name || data.last_name,
+          email: created.email || data.email,
+          document_type: created.document_type || data.document_type || "dni",
+          document_number:
+            created.document_number || data.document_number || "",
+          phone: created.phone || data.phone || "",
+          roles: finalRoles,
+          role,
         };
 
-        set({ user: authUser, role: "student", isAuthenticated: true, accessToken: response.access_token });
+        set({
+          user: authUser,
+          role,
+          isAuthenticated: true,
+          accessToken,
+        });
         return authUser;
       },
 
