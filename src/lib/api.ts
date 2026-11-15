@@ -270,6 +270,10 @@ export function getPublicAssetUrl(pathOrUrl?: string | null) {
   const trimmed = pathOrUrl.trim();
   if (!trimmed) return undefined;
   if (/^(https?:|blob:|data:)/i.test(trimmed)) return trimmed;
+  if (trimmed.startsWith("/images/")) return trimmed;
+  if (trimmed.includes("primeros-auxilios-emergencias-2027-banner.png")) {
+    return "/images/flyers/primeros-auxilios-emergencias-2027-banner.png";
+  }
   try {
     const assetBaseUrl =
       process.env.NEXT_PUBLIC_COURSE_IMAGE_BASE_URL || API_URL;

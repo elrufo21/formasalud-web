@@ -5,9 +5,12 @@ import { CourseFilters } from "@/features/courses/components/CourseFilters";
 import { getPublishedCourses } from "@/lib/public-courses";
 
 export const metadata: Metadata = {
-  title: "Cursos y Programas — FORMASALUD",
+  title: "Catálogo de Cursos, Talleres y Diplomados en Salud",
   description:
-    "Diplomados, cursos y talleres clínicos para el profesional de la salud. Encuentra el programa académico que impulsa tu desarrollo.",
+    "Explora el catálogo oficial de FORMASALUD: Curso de Primeros Auxilios y Respuesta Rápida ante Emergencias Comunes, Enfermería en UCI, Triaje, BLS-ACLS y más programas con certificación oficial QR.",
+  alternates: {
+    canonical: "https://www.formasalud.org.pe/cursos",
+  },
 };
 
 export const revalidate = 60;

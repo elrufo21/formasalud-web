@@ -3,6 +3,8 @@ import { montserrat } from "@/lib/fonts";
 import { JsonLd } from "@/components/shared/JsonLd";
 import "./globals.css";
 
+const SITE_URL = "https://www.formasalud.org.pe";
+
 export const viewport: Viewport = {
   themeColor: "#0F2942",
   width: "device-width",
@@ -10,48 +12,78 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://formasalud.pe"),
+  metadataBase: new URL(SITE_URL),
+  applicationName: "FORMASALUD",
   title: {
-    default: "FORMASALUD — Innovación y Desarrollo Académico en Salud",
+    default: "FORMASALUD — Innovación y Desarrollo Académico en Salud | Cursos y Diplomados",
     template: "%s | FORMASALUD",
   },
   description:
-    "FORMASALUD es un centro de capacitación especializado en la innovación y desarrollo académico para los profesionales de la salud, comprometido con la formación continua, el fortalecimiento de competencias y la excelencia en la atención sanitaria.",
+    "FORMASALUD es un centro de capacitación especializado en la innovación y desarrollo académico en salud en el Perú. Cursos de Primeros Auxilios, RCP y DEA, Inyectables, Enfermería en UCI, Emergencias y Diplomados con Certificación Oficial con código QR.",
   keywords: [
-    "cursos medicos peru",
-    "diplomados en salud lima",
-    "capacitacion medica continua",
-    "enfermeria cuidados criticos",
-    "auditoria medica susalud",
-    "ia en medicina",
-    "simulacion clinica lima",
     "formasalud",
+    "forma salud",
+    "formasalud peru",
+    "formasalud.org.pe",
+    "curso de primeros auxilios lima",
+    "primeros auxilios y respuesta rapida ante emergencias comunes",
+    "curso de rcp y dea lima",
+    "curso de inyectables y bioseguridad",
+    "cursos de enfermeria peru",
+    "cuidados criticos uci emergencias",
+    "diplomados en salud lima",
+    "capacitacion medica continua peru",
+    "soporte vital basico bls acls",
+    "simulacion clinica lima",
+    "certificados formasalud qr",
   ],
-  authors: [{ name: "FORMASALUD" }],
+  authors: [{ name: "FORMASALUD", url: SITE_URL }],
   creator: "FORMASALUD",
-  publisher: "FORMASALUD",
+  publisher: "FORMASALUD — Grupo Paucar Perú S.A.C.",
+  category: "education",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
+  manifest: "/manifest.webmanifest",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/icon-48.png", sizes: "48x48", type: "image/png" },
+      { url: "/icon-96.png", sizes: "96x96", type: "image/png" },
+      { url: "/icon-144.png", sizes: "144x144", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    shortcut: ["/favicon.ico"],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
   alternates: {
-    canonical: "/",
+    canonical: SITE_URL,
   },
   openGraph: {
-    title: "FORMASALUD — Capacitación Médica Continua & Diplomados Clínicos",
+    title: "FORMASALUD — Innovación y Desarrollo Académico en Salud",
     description:
-      "Formación médica de alto nivel para médicos, enfermeros y gestores de salud en el Perú. Clases en vivo, talleres prácticos y aula virtual 24/7.",
-    url: "https://formasalud.pe",
+      "Cursos teórico-prácticos, Primeros Auxilios, RCP/DEA, Enfermería en Áreas Críticas y Diplomados con Certificación Oficial verificable por QR en el Perú.",
+    url: SITE_URL,
     siteName: "FORMASALUD",
     locale: "es_PE",
     type: "website",
     images: [
       {
-        url: "/images/logo.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "FORMASALUD - Centro de Capacitación en Salud",
+        alt: "FORMASALUD — Innovación y Desarrollo Académico en Salud",
+      },
+      {
+        url: "/images/flyers/primeros-auxilios-emergencias-2027-banner.png",
+        width: 1280,
+        height: 720,
+        alt: "Curso de Primeros Auxilios y Respuesta Rápida ante Emergencias Comunes — FORMASALUD",
       },
     ],
   },
@@ -59,8 +91,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "FORMASALUD — Innovación y Desarrollo Académico en Salud",
     description:
-      "Diplomados y cursos clínicos dictados por especialistas médicos en ejercicio activo.",
-    images: ["/images/logo.png"],
+      "Cursos de Primeros Auxilios, Enfermería en UCI, Emergencias y Diplomados con Certificación Oficial con código QR.",
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
@@ -82,7 +114,7 @@ export default function RootLayout({
 }) {
   return (
     <html
-      lang="es"
+      lang="es-PE"
       className={`${montserrat.variable} ${montserrat.className} h-full antialiased`}
     >
       <head>

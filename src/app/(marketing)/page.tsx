@@ -9,6 +9,7 @@ import {
   MethodologySection,
   PartnersSection,
   TestimonialsSection,
+  WelcomeFlyerModal,
 } from "@/features/landing";
 import { CourseHomeGrid } from "@/features/courses/components/CourseHomeGrid";
 import { FaqSection } from "@/features/faq/components/FaqSection";
@@ -33,6 +34,9 @@ export default async function HomePage() {
   const courses = await getPublishedCourses();
   return (
     <main className="flex-1">
+      {/* Modal de Bienvenida con el Flyer del Próximo Curso */}
+      <WelcomeFlyerModal />
+
       {/* 1. Hero Principal con propuesta de valor, métricas y EKG animado */}
       <HeroSection />
 

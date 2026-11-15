@@ -6,3 +6,5 @@ export { CertificateSection } from "./components/CertificateSection";
 export { MethodologySection } from "./components/MethodologySection";
 export { SpeakersSection } from "./components/SpeakersSection";
 export { TestimonialsSection } from "./components/TestimonialsSection";
+export { WelcomeFlyerModal } from "./components/WelcomeFlyerModal";
+

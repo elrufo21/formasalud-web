@@ -4,9 +4,12 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { ContactSection } from "@/features/contact/components/ContactSection";
 
 export const metadata: Metadata = {
-  title: "Contacto — FORMASALUD",
+  title: "Contacto e Informes de Matrícula",
   description:
-    "Un asesor académico te orienta sobre programas, fechas y modalidades de FORMASALUD.",
+    "Comunícate con un asesor académico de FORMASALUD por WhatsApp (972 373 793 / 939 584 395 / 949 992 362) o correo electrónico sobre cursos, fechas e inscripciones.",
+  alternates: {
+    canonical: "https://www.formasalud.org.pe/contacto",
+  },
 };
 
 export default function ContactoPage() {

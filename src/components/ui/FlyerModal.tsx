@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { FlyerItem } from "@/features/landing/data/flyers";
 
 interface FlyerModalProps {
@@ -72,6 +74,18 @@ export function FlyerModal({ flyer, onClose }: FlyerModalProps) {
 
         {/* Scrollable Modal Content */}
         <div className="p-6 sm:p-8 overflow-y-auto space-y-6 flex-1 text-ink">
+          {flyer.imageUrl && (
+            <div className="rounded-2xl overflow-hidden border border-line bg-navyink/5 p-2 flex justify-center">
+              <Image
+                src={flyer.imageUrl}
+                alt={flyer.title}
+                width={682}
+                height={1024}
+                className="w-full max-w-sm h-auto rounded-xl object-contain shadow-md"
+              />
+            </div>
+          )}
+
           <div>
             <span className="text-xs font-mono uppercase tracking-wider text-teal font-semibold block mb-1">
               Docente / Ponente Principal
@@ -129,10 +143,19 @@ export function FlyerModal({ flyer, onClose }: FlyerModalProps) {
             <div className="font-serif text-xl font-bold text-navy">{flyer.priceTag}</div>
           </div>
 
-          <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
+            {flyer.courseSlug && (
+              <Link
+                href={`/cursos/${flyer.courseSlug}`}
+                onClick={onClose}
+                className="btn btn-ghost !py-3 !px-4 text-xs font-bold flex-1 sm:flex-none justify-center"
+              >
+                Ver Temario Completo
+              </Link>
+            )}
             <button
               onClick={onClose}
-              className="btn btn-ghost !py-3 !px-4 text-xs font-semibold w-1/2 sm:w-auto"
+              className="btn btn-ghost !py-3 !px-4 text-xs font-semibold"
             >
               Cerrar
             </button>

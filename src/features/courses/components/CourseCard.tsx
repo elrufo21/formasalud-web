@@ -11,7 +11,14 @@ interface CourseCardProps {
   course: PublicCourse;
 }
 
-function publishedLabel(value?: string | null) {
+function publishedLabel(course: PublicCourse) {
+  if (
+    Number(course.course_id) === 13 ||
+    course.slug?.includes("primeros-auxilios-y-respuesta-rapida")
+  ) {
+    return "Inicio: 15 de Enero de 2027";
+  }
+  const value = course.published_at;
   if (!value) return "Programa Académico 2026";
   const date = new Date(value);
   return Number.isNaN(date.getTime())
@@ -23,7 +30,7 @@ const deliveryModeText: Record<string, string> = {
   in_person: "Presencial",
   virtual_sync: "En vivo",
   virtual_async: "Virtual 24/7",
-  hybrid: "Semipresencial",
+  hybrid: "Presencial + Práctica Guiada",
 };
 
 function initials(name: string) {
@@ -113,7 +120,7 @@ export function CourseCard({ course }: CourseCardProps) {
         <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-ink-soft pb-2 border-b border-line/60">
           <span className="flex items-center gap-1 text-teal font-semibold">
             <Calendar className="w-3.5 h-3.5 shrink-0" />
-            <span>{publishedLabel(course.published_at)}</span>
+            <span>{publishedLabel(course)}</span>
           </span>
           {hours > 0 && (
             <span className="font-mono text-xs font-bold text-navy bg-tealtint px-2 py-0.5 rounded-md">
@@ -166,7 +173,7 @@ export function CourseCard({ course }: CourseCardProps) {
           </div>
 
           <Link
-            href={`/cursos/${slugify(course.title)}`}
+            href={`/cursos/${course.slug || slugify(course.title)}`}
             className="px-4 py-2.5 rounded-xl bg-teal text-white hover:bg-tealdeep text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 group-hover:shadow-md group-hover:scale-102"
           >
             <span>Ver Programa</span>

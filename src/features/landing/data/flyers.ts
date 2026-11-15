@@ -6,7 +6,7 @@ export interface FlyerItem {
   tag: string;
   date: string;
   time: string;
-  modality: "En Vivo vía Zoom / Aula Virtual" | "Presencial en Auditorio Lima" | "Híbrida";
+  modality: "En Vivo vía Zoom / Aula Virtual" | "Presencial en Auditorio Lima" | "Híbrida" | "Presencial + Práctica Guiada";
   speaker: string;
   speakerRole: string;
   speakerInitials: string;
@@ -16,9 +16,40 @@ export interface FlyerItem {
   priceTag: string;
   colorGradient: string;
   badgeColor: string;
+  imageUrl?: string;
+  courseSlug?: string;
 }
 
 export const FLYERS_DATA: FlyerItem[] = [
+  {
+    id: "flyer-primeros-auxilios-2027",
+    code: "FS-2027-01",
+    title: "Curso de Primeros Auxilios y Respuesta Rápida ante Emergencias Comunes",
+    type: "Curso Certificado",
+    tag: "¡Inscripciones Abiertas! · 50 Horas Académicas",
+    date: "Inicio: 15 de Enero de 2027, Todos los Sábados",
+    time: "3 Meses | 12 Semanas (3 hrs/sesión)",
+    modality: "Presencial + Práctica Guiada",
+    speaker: "Plana Docente Especialista FormaSalud",
+    speakerRole: "Profesionales en Emergencias, UCI y Soporte Vital Básico (BLS)",
+    speakerInitials: "FS",
+    summary:
+      "Capacitación integral teórico-práctica (38% teoría y 62% práctica) dirigida al público en general para actuar con seguridad en los primeros minutos críticos de una emergencia doméstica, laboral o en la vía pública.",
+    highlights: [
+      "Evaluar la escena, activar emergencias y medir signos vitales y glucosa capilar",
+      "Controlar hemorragias, heridas, quemaduras, vendajes e inmovilizaciones",
+      "Bioseguridad y administración práctica de inyectables subcutáneos e intramusculares",
+      "Realizar RCP de calidad, uso del DEA y maniobra de Heimlich en adultos, niños y lactantes",
+      "Manejo práctico de extintores, control de amagos de incendio y evacuación",
+      "Certificado oficial de aprobación por 50 horas académicas a nombre de FormaSalud",
+    ],
+    spots: "Vacantes limitadas por aforo práctico",
+    priceTag: "Inscripciones Abiertas (Consultar Promoción)",
+    colorGradient: "from-navyink via-navy to-tealdeep",
+    badgeColor: "bg-gold text-navyink",
+    imageUrl: "/images/flyers/primeros-auxilios-emergencias-2027.jpg",
+    courseSlug: "primeros-auxilios-y-respuesta-rapida-ante-emergencias-comunes",
+  },
   {
     id: "flyer-uci-shock",
     code: "FLY-2026-01",

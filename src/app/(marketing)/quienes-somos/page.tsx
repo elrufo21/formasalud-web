@@ -7,9 +7,12 @@ import { CourseHomeGrid } from "@/features/courses/components/CourseHomeGrid";
 import { getPublishedCourses } from "@/lib/public-courses";
 
 export const metadata: Metadata = {
-  title: "Quiénes Somos — FORMASALUD",
+  title: "Quiénes Somos — Centro de Capacitación en Salud",
   description:
-    "Compromiso académico con la salud pública y privada. FORMASALUD nace para responder a la necesidad de actualización constante del profesional de salud peruano.",
+    "Conoce la misión, visión y plana docente de FORMASALUD (Grupo Paucar Perú S.A.C. · RUC 20613837613). Compromiso académico con la formación continua en salud en el Perú.",
+  alternates: {
+    canonical: "https://www.formasalud.org.pe/quienes-somos",
+  },
 };
 
 export const revalidate = 60;
