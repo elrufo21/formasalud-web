@@ -116,4 +116,17 @@ export const TEAM_MEMBERS: TeamMember[] = [
     photoUrl: "/images/team/percy-lopez.jpeg",
     specialtyTag: "CUIDADOS INTENSIVOS",
   },
+  {
+    id: "juan-velazquez",
+    name: "Lic. Juan Vicente Velázquez Magallanes",
+    role: "PONENTE Y DOCENTE ESPECIALISTA",
+    area: "Comité Científico",
+    credentials:
+      "Licenciado en Enfermería (CEP 101694) · Diplomado en Cuidados Intensivos en el Adulto · Diplomado de Auditor en Salud · Especialista en Soporte Vital Básico Prehospitalario (BLS y OVACE) e IA aplicada a la Gestión en Salud",
+    institution: "MINSA – DIRIS LIMA SUR · COMITÉ EMERGENCIAS CEP CR-III",
+    bio: "Responsable del Área de Referencia y Contrarreferencia de la DIRIS Lima Sur (MINSA) e integrante del Comité Transitorio de Emergencias y Desastres del Colegio de Enfermeros del Perú – Consejo Regional III Lima Metropolitana. Cuenta con sólida trayectoria como encargado del Servicio de Enfermería en EsSalud (ENSI Móvil), INABIF y Sociedad de Beneficencia de Lima Metropolitana, así como formación en cuidados intensivos, atención prehospitalaria e inteligencia artificial aplicada a la gestión sanitaria.",
+    initials: "JV",
+    photoUrl: "/images/team/juan-velazquez.jpeg",
+    specialtyTag: "EMERGENCIAS Y GESTIÓN",
+  },
 ];

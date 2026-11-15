@@ -308,6 +308,9 @@ export function getPublicAssetUrl(pathOrUrl?: string | null) {
   if (trimmed.includes("primeros-auxilios-emergencias-2027-banner.png")) {
     return "/images/flyers/primeros-auxilios-emergencias-2027-banner.png";
   }
+  if (trimmed.includes("juan-velazquez.jpeg")) {
+    return "/images/team/juan-velazquez.jpeg";
+  }
   try {
     const assetBaseUrl =
       process.env.NEXT_PUBLIC_COURSE_IMAGE_BASE_URL || API_URL;

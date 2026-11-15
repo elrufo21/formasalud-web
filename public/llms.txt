@@ -28,6 +28,7 @@
 - **Modalidad:** Presencial + Práctica Guiada
 - **Dirigido a:** Público en general (sin requisito de formación sanitaria previa)
 - **Certificación:** Certificado de aprobación a nombre de FormaSalud por 50 horas académicas con código QR de verificación.
+- **Ponente / Docente Especialista:** Lic. Juan Vicente Velázquez Magallanes (Licenciado en Enfermería CEP 101694, Diplomado en Cuidados Intensivos en el Adulto, Diplomado de Auditor en Salud, Responsable del Área de Referencia y Contrarreferencia de la DIRIS Lima Sur – MINSA, Integrante del Comité de Emergencias y Desastres del Colegio de Enfermeros del Perú – Consejo Regional III Lima Metropolitana, Certificado en Soporte Vital Básico Prehospitalario BLS y OVACE).
 - **Competencias que aprenderás:**
   1. Evaluar la escena con seguridad y activar el sistema de emergencias.
   2. Medir e interpretar signos vitales (pulso, respiración, presión arterial, temperatura, saturación O2) y glucosa capilar.

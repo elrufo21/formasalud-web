@@ -1363,30 +1363,67 @@ export function CourseDetailView({ course }: { course: PublicCourse }) {
                   </div>
 
                   {isPrimerosAuxilios && (
-                    <div className="p-5 sm:p-6 rounded-3xl bg-white border border-line shadow-xs space-y-3">
-                      <h3 className="text-base font-serif font-bold text-navy">
-                        Perfil del Cuerpo de Instructores del Curso
-                      </h3>
-                      <ul className="space-y-2 text-xs sm:text-sm text-ink-soft">
-                        <li className="flex items-start gap-2.5">
-                          <CheckCircle2 className="w-4 h-4 text-teal shrink-0 mt-0.5" />
-                          <span>
-                            <strong>Profesional de salud</strong> (médico, licenciado/a en enfermería o especialista en emergencias y áreas críticas) con experiencia acreditada en docencia clínica.
-                          </span>
-                        </li>
-                        <li className="flex items-start gap-2.5">
-                          <CheckCircle2 className="w-4 h-4 text-teal shrink-0 mt-0.5" />
-                          <span>
-                            <strong>Instructor con certificación vigente</strong> en Soporte Vital Básico (BLS) y manejo de emergencias prehospitalarias.
-                          </span>
-                        </li>
-                        <li className="flex items-start gap-2.5">
-                          <CheckCircle2 className="w-4 h-4 text-teal shrink-0 mt-0.5" />
-                          <span>
-                            <strong>Taller de extintores y evacuación:</strong> A cargo de personal especializado con formación en seguridad, control inicial de incendios y gestión de emergencias.
-                          </span>
-                        </li>
-                      </ul>
+                    <div className="space-y-4">
+                      {/* Tarjeta Destacada del Ponente Oficial: Lic. Juan Vicente Velázquez Magallanes */}
+                      <div className="p-6 sm:p-7 rounded-3xl bg-white border-2 border-teal/30 shadow-md relative overflow-hidden">
+                        <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-navy via-teal to-gold" />
+                        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 pt-1">
+                          <div className="relative w-24 h-28 sm:w-28 sm:h-32 rounded-2xl overflow-hidden border-2 border-gold shadow-md shrink-0 bg-navy">
+                            <Image
+                              src="/images/team/juan-velazquez.jpeg"
+                              alt="Lic. Juan Vicente Velázquez Magallanes — Ponente Oficial FormaSalud"
+                              fill
+                              sizes="112px"
+                              className="object-cover object-top"
+                            />
+                          </div>
+                          <div className="space-y-2.5 text-center sm:text-left flex-1">
+                            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                              <span className="px-2.5 py-0.5 rounded-full bg-tealtint text-tealdeep text-[10px] font-extrabold uppercase tracking-wider border border-teal/20">
+                                Ponente y Docente Principal
+                              </span>
+                              <span className="px-2.5 py-0.5 rounded-full bg-gold/20 text-navy text-[10px] font-mono font-bold uppercase border border-gold/40">
+                                C.E.P. N.º 101694 · SUNEDU
+                              </span>
+                            </div>
+                            <h3 className="text-lg sm:text-xl font-serif font-bold text-navy">
+                              Lic. Juan Vicente Velázquez Magallanes
+                            </h3>
+                            <p className="text-xs sm:text-sm font-semibold text-tealdeep">
+                              Licenciado en Enfermería · Diplomado en Cuidados Intensivos en el Adulto · Diplomado de Auditor en Salud · Certificado en Soporte Vital Básico Prehospitalario (BLS y OVACE)
+                            </p>
+                            <p className="text-xs text-ink-soft leading-relaxed">
+                              Responsable del Área de Referencia y Contrarreferencia de la <strong>DIRIS Lima Sur (MINSA)</strong> e integrante acreditado del <strong>Comité Transitorio de Emergencias y Desastres del Colegio de Enfermeros del Perú – Consejo Regional III Lima Metropolitana</strong>. Cuenta con amplia trayectoria liderando servicios de enfermería en EsSalud (ENSI Móvil), INABIF y Sociedad de Beneficencia de Lima Metropolitana, además de especialización en Inteligencia Artificial aplicada a la Gestión de Servicios de Salud y Gestión Pública.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="p-5 sm:p-6 rounded-3xl bg-white border border-line shadow-xs space-y-3">
+                        <h3 className="text-base font-serif font-bold text-navy">
+                          Perfil del Cuerpo de Instructores del Curso
+                        </h3>
+                        <ul className="space-y-2 text-xs sm:text-sm text-ink-soft">
+                          <li className="flex items-start gap-2.5">
+                            <CheckCircle2 className="w-4 h-4 text-teal shrink-0 mt-0.5" />
+                            <span>
+                              <strong>Profesional de salud</strong> (médico, licenciado/a en enfermería o especialista en emergencias y áreas críticas) con experiencia acreditada en docencia clínica.
+                            </span>
+                          </li>
+                          <li className="flex items-start gap-2.5">
+                            <CheckCircle2 className="w-4 h-4 text-teal shrink-0 mt-0.5" />
+                            <span>
+                              <strong>Instructor con certificación vigente</strong> en Soporte Vital Básico (BLS) y manejo de emergencias prehospitalarias.
+                            </span>
+                          </li>
+                          <li className="flex items-start gap-2.5">
+                            <CheckCircle2 className="w-4 h-4 text-teal shrink-0 mt-0.5" />
+                            <span>
+                              <strong>Taller de extintores y evacuación:</strong> A cargo de personal especializado con formación en seguridad, control inicial de incendios y gestión de emergencias.
+                            </span>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                   )}
 
@@ -1401,9 +1438,9 @@ export function CourseDetailView({ course }: { course: PublicCourse }) {
                             {person.profile_photo_url ? (
                               // eslint-disable-next-line @next/next/no-img-element
                               <img
-                                src={person.profile_photo_url}
+                                src={getPublicAssetUrl(person.profile_photo_url) || person.profile_photo_url}
                                 alt=""
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover object-top"
                               />
                             ) : (
                               `${person.name[0] ?? ""}${person.last_name[0] ?? ""}`

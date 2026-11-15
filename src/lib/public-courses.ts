@@ -26,7 +26,15 @@ export const FEATURED_PRIMEROS_AUXILIOS_COURSE: PublicCourse = {
   min_passing_grade: 14,
   min_attendance_percent: 80,
   published_at: '2027-01-15T14:00:00.000Z',
-  teachers: [],
+  teachers: [
+    {
+      name: 'Lic. Juan Vicente',
+      last_name: 'Velázquez Magallanes',
+      profession: 'Licenciado en Enfermería (CEP 101694) · Diplomado en Cuidados Intensivos Adultos y Auditoría en Salud',
+      specialty: 'MINSA - DIRIS Lima Sur · Comité de Emergencias y Desastres CEP CR-III · Instructor BLS y OVACE',
+      profile_photo_url: '/images/team/juan-velazquez.jpeg',
+    },
+  ],
 };
 
 function sortAndEnsureFeaturedCourses(courses: PublicCourse[]): PublicCourse[] {
@@ -45,6 +53,10 @@ function sortAndEnsureFeaturedCourses(courses: PublicCourse[]): PublicCourse[] {
               ...c,
               thumbnail_url:
                 c.thumbnail_url || FEATURED_PRIMEROS_AUXILIOS_COURSE.thumbnail_url,
+              teachers:
+                Array.isArray(c.teachers) && c.teachers.length > 0
+                  ? c.teachers
+                  : FEATURED_PRIMEROS_AUXILIOS_COURSE.teachers,
             }
           : c,
       )
