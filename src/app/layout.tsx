@@ -12,6 +12,9 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  verification: {
+    google: "0fVv2gu9VVKnC-2Hzap5dwqh2pSODEyr3ADb7xMUmYc",
+  },
   applicationName: "FORMASALUD",
   title: {
     default: "FORMASALUD — Innovación y Desarrollo Académico en Salud | Cursos y Diplomados",
