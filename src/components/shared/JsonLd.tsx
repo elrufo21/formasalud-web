@@ -68,7 +68,7 @@ export function JsonLd() {
         "@id": `${SITE_URL}/#website`,
         url: SITE_URL,
         name: "FORMASALUD",
-        alternateName: "FormaSalud — Innovación y Desarrollo Académico en Salud",
+        alternateName: "Forma Salud",
         inLanguage: "es-PE",
         publisher: {
           "@id": `${SITE_URL}/#organization`,

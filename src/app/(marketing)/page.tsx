@@ -16,6 +16,7 @@ import { FaqSection } from "@/features/faq/components/FaqSection";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/ui/MotionReveal";
 import { getPublishedCourses } from "@/lib/public-courses";
+import { JsonLd } from "@/components/shared/JsonLd";
 
 export const revalidate = 60;
 
@@ -34,6 +35,7 @@ export default async function HomePage() {
   const courses = await getPublishedCourses();
   return (
     <main className="flex-1">
+      <JsonLd />
       {/* Modal de Bienvenida con el Flyer del Próximo Curso */}
       <WelcomeFlyerModal />
 

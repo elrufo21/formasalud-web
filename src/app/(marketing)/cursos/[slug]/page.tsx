@@ -131,7 +131,11 @@ export default async function CourseDetailPage({
           : "Certificado Oficial de Aprobación con código QR",
         hasCourseInstance: {
           "@type": "CourseInstance",
-          courseMode: isPrimerosAuxilios ? ["onsite", "blended"] : "online",
+          courseMode: isPrimerosAuxilios || course.delivery_mode === "hybrid"
+            ? ["onsite", "online"]
+            : course.delivery_mode === "in_person"
+              ? "onsite"
+              : "online",
           ...(isPrimerosAuxilios
             ? {
                 startDate: "2027-01-15",
@@ -147,7 +151,7 @@ export default async function CourseDetailPage({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(courseJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(courseJsonLd).replace(/</g, "\\u003c") }}
       />
       <CourseDetailView course={course} />
     </>

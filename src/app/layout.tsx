@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { montserrat } from "@/lib/fonts";
-import { JsonLd } from "@/components/shared/JsonLd";
 import "./globals.css";
 
 const SITE_URL = "https://www.formasalud.org.pe";
@@ -117,9 +116,6 @@ export default function RootLayout({
       lang="es-PE"
       className={`${montserrat.variable} ${montserrat.className} h-full antialiased`}
     >
-      <head>
-        <JsonLd />
-      </head>
       <body className="min-h-full flex flex-col font-sans text-ink bg-paper selection:bg-goldpale selection:text-navyink">
         {children}
       </body>

@@ -11,43 +11,36 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
-      lastModified: new Date(),
       changeFrequency: "daily",
       priority: 1.0,
     },
     {
       url: `${baseUrl}/cursos`,
-      lastModified: new Date(),
       changeFrequency: "daily",
       priority: 0.95,
     },
     {
       url: `${baseUrl}/quienes-somos`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/contacto`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/verificar`,
-      lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.85,
     },
     {
       url: `${baseUrl}/registro`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.75,
     },
     {
       url: `${baseUrl}/login`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.7,
     },
@@ -67,7 +60,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     courseRoutes.push({
       url: `${baseUrl}/cursos/${courseSlug}`,
-      lastModified: course.published_at ? new Date(course.published_at) : new Date(),
       changeFrequency: "weekly",
       priority: isFeatured ? 0.95 : 0.85,
     });

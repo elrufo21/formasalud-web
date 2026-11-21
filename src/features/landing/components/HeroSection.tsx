@@ -4,7 +4,6 @@ import React, { useState, useRef } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
-  Sparkles,
   CheckCircle2,
   Volume2,
   VolumeX,
@@ -64,7 +63,7 @@ export function HeroSection() {
         <div className="hero-top-row grid grid-cols-1 lg:grid-cols-12 items-center gap-8 lg:gap-12 pb-8 lg:pb-12 flex-1">
           {/* Columna Izquierda: Mensajes Principales y CTAs con entrada escalonada */}
           <motion.div
-            initial="hidden"
+            initial={false}
             animate="visible"
             variants={{
               hidden: { opacity: 0 },

@@ -34,7 +34,7 @@ export function FadeIn({
 
   return (
     <motion.div
-      initial={{ opacity: 0, ...offset }}
+      initial={{ ...offset }}
       whileInView={{ opacity: 1, x: 0, y: 0 }}
       viewport={{ once, amount: 0.15 }}
       transition={{ duration, delay, ease: EASE_OUT_EXPO }}
@@ -74,7 +74,7 @@ export function StaggerContainer({
   return (
     <motion.div
       variants={containerVariants}
-      initial="hidden"
+      initial={false}
       whileInView="visible"
       viewport={{ once, amount: 0.12 }}
       className={className}
