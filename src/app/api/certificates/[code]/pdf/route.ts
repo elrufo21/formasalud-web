@@ -85,7 +85,7 @@ export async function GET(
     const { templateId } = payload;
     const isInyectoterapia = templateId === "inyectoterapia-formasalud";
     const safeFileName = `Certificado_${code.replace(/[^a-zA-Z0-9-]/g, "_")}.pdf`;
-    const designVersion = isInyectoterapia ? "inyectoterapia-v1" : templateId === "ventilator-formasalud" ? "design-v5" : "design-v31";
+    const designVersion = isInyectoterapia ? "inyectoterapia-v2" : templateId === "ventilator-formasalud" ? "design-v5" : "design-v31";
     const cacheVersion = createHash("sha256").update(JSON.stringify(certificate) + designVersion).digest("hex").slice(0, 12);
     const cachedFilePath = path.join(CACHE_DIR, `${code.replace(/[^a-zA-Z0-9-]/g, "_")}-${cacheVersion}.pdf`);
 

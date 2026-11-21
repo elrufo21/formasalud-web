@@ -105,7 +105,7 @@ export function InyectoterapiaCertificate({ data }: { data: FormasaludCertificat
           <Text style={{ ...serif, fontSize: 20, color: "#FFFFFF", textAlign: "center" }}>Curso-Taller:</Text>
         </View>
         <Text style={{ ...absolute(211, 325, 489), ...sans, fontSize: 29, lineHeight: 1.01, textAlign: "center" }}>{title}</Text>
-        <Text style={{ ...absolute(210, 388, 519), ...serif, fontSize: 14.1, lineHeight: 1.16, textAlign: "center" }}>Organizado por ENFERMERÍA INTEGRAL en convenio con FORMASALUD, con la{"\n"}ponencia de {data.teacherName}.</Text>
+        <Text style={{ ...absolute(210, 388, 519), ...serif, fontSize: 14.1, lineHeight: 1.16, textAlign: "center" }}>Organizado por ENFERMERÍA INTEGRAL en convenio con FORMASALUD, con la{"\n"}ponencia de M.G. {data.teacherName?.replace(/^(?:M\.?\s*G\.?|Mg\.?)\s+/i, "")}.</Text>
         <Text style={{ ...absolute(210, 424, 519), ...serif, fontSize: 14.1, lineHeight: 1.12, textAlign: "center" }}>Desarrollado de manera presencial el {data.courseDateText}, con una duración de{"\n"}{duration}.</Text>
 
         {["FECHA DEL CURSO", "DURACIÓN", "MODALIDAD", "CÓDIGO DE CERTIFICADO"].map((label, i) => (
@@ -131,7 +131,7 @@ export function InyectoterapiaCertificate({ data }: { data: FormasaludCertificat
           </Link>
         )}
 
-        {data.signatureLeftUrl && <PdfImage src={data.signatureLeftUrl} style={{ ...absolute(217, 439, 151, 96), objectFit: "contain" }} />}
+        {data.signatureLeftUrl && <PdfImage src={data.signatureLeftUrl} style={{ ...absolute(217, 447, 151, 96), objectFit: "contain" }} />}
         {data.signatureRightUrl && <PdfImage src={data.signatureRightUrl} style={{ ...absolute(550, 445, 173, 90), objectFit: "contain" }} />}
         {data.sealUrl && <PdfImage src={data.sealUrl} style={{ ...absolute(411, 467, 103, 98), objectFit: "contain" }} />}
         <Text style={{ ...absolute(196, 520, 186), ...serif, fontSize: 12.1, textAlign: "center" }}>{data.academicDirector}{"\n"}DIRECTOR ACADÉMICO{"\n"}FORMASALUD</Text>
