@@ -6,8 +6,12 @@ import { CertificatePdf18 as FormasaludClassicCertificate } from "./templates/Fo
 import { CertificatePdf18 as SpecializedCertificate } from "./templates/FormasaludSpecialCertificate";
 import { SterilizationCertificate } from "./templates/SterilizationCertificate";
 import { VentilatorCertificate } from "./templates/VentilatorCertificate";
+import { InyectoterapiaCertificate } from "./templates/InyectoterapiaCertificate";
 
 export function CertificatePdfDocument({ data }: { data: FormasaludCertificatePayload }) {
+  if (data.templateId === "inyectoterapia-formasalud") {
+    return <InyectoterapiaCertificate data={data} />;
+  }
   if (data.templateId === "ventilator-formasalud") {
     return <VentilatorCertificate data={data} />;
   }

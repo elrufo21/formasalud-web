@@ -81,9 +81,12 @@ export async function GET(
       return Response.json({ message: "Certificado no encontrado" }, { status: 404 });
     }
 
-    const templateId = mapCertificateToPayload(certificate).templateId;
+    const payload = mapCertificateToPayload(certificate);
+    const { templateId } = payload;
+    const isInyectoterapia = templateId === "inyectoterapia-formasalud";
     const safeFileName = `Certificado_${code.replace(/[^a-zA-Z0-9-]/g, "_")}.pdf`;
-    const cacheVersion = createHash("sha256").update(JSON.stringify(certificate) + (templateId === "ventilator-formasalud" ? "design-v5" : "design-v31")).digest("hex").slice(0, 12);
+    const designVersion = isInyectoterapia ? "inyectoterapia-v1" : templateId === "ventilator-formasalud" ? "design-v5" : "design-v31";
+    const cacheVersion = createHash("sha256").update(JSON.stringify(certificate) + designVersion).digest("hex").slice(0, 12);
     const cachedFilePath = path.join(CACHE_DIR, `${code.replace(/[^a-zA-Z0-9-]/g, "_")}-${cacheVersion}.pdf`);
 
     if (certificate.valid === false || certificate.status === "revoked") {
@@ -123,20 +126,22 @@ export async function GET(
       templateId === "formasalud-classic" ||
       templateId === "sterilization-formasalud" ||
       templateId === "ventilator-formasalud" ||
+      isInyectoterapia ||
       templateId === "speaker-recognition";
     const [logoLeftUrl, logoRightUrl, sponsorLogoUrl, sealUrl, awardSealUrl, signatureLeftUrl, signatureRightUrl, backgroundUrl] =
       await Promise.all([
         imageDataUrl("logofms.png", origin),
-        imageDataUrl(hasTwoSponsors ? "fisiouci.png" : "ausp.png", origin),
+        imageDataUrl(isInyectoterapia ? "enfermeria-integral.png" : hasTwoSponsors ? "fisiouci.png" : "ausp.png", origin),
         hasTwoSponsors ? imageDataUrl("ausp.png", origin) : Promise.resolve(undefined),
         imageDataUrl("cello.png", origin),
-        imageDataUrl("sellofms.png", origin),
+        isInyectoterapia ? undefined : imageDataUrl("sellofms.png", origin),
         imageDataUrl("fra.png", origin),
         imageDataUrl("firmaMiguel.png", origin),
-        imageDataUrl(templateId === "ventilator-formasalud" ? "ventilador-mecanico.png" : templateId === "sterilization-formasalud" ? "esterilizacion-fondo.png" : "coche-paro-hospital.png", origin),
+        isInyectoterapia ? undefined : imageDataUrl(templateId === "ventilator-formasalud" ? "ventilador-mecanico.png" : templateId === "sterilization-formasalud" ? "esterilizacion-fondo.png" : "coche-paro-hospital.png", origin),
       ]);
 
-    const data = mapCertificateToPayload(certificate, {
+    const data = {
+      ...payload,
       logoLeftUrl,
       logoRightUrl,
       sponsorLogoUrl,
@@ -145,7 +150,7 @@ export async function GET(
       signatureLeftUrl,
       signatureRightUrl,
       backgroundUrl,
-    });
+    };
 
     const document = CertificatePdfDocument({ data });
     const buffer = await renderToBuffer(document);

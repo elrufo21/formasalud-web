@@ -53,6 +53,7 @@ export function mapCertificateToPayload(
   const isSpeaker = (cert as { certificate_type?: string }).certificate_type === "speaker" || cert.template_key === "speaker-recognition";
   const isSterilization = !isSpeaker && cert.template_key === "sterilization-formasalud";
   const isVentilator = !isSpeaker && cert.template_key === "ventilator-formasalud";
+  const isInyectoterapia = !isSpeaker && cert.template_key === "inyectoterapia-formasalud";
   const isInternational =
     Boolean(cert.internationalCourse) ||
     normalizedTitle.includes("INTERNACIONAL") ||
@@ -108,6 +109,15 @@ export function mapCertificateToPayload(
       sponsorLogoUrl: "/certificates/ausp.png",
       signatureRightUrl: "/certificates/firmaMiguel.png",
       backgroundUrl: "/certificates/ventilador-mecanico.png",
+    } : {}),
+    ...(isInyectoterapia ? {
+      templateId: "inyectoterapia-formasalud" as const,
+      hours: cert.hours ?? 6,
+      hoursUnit: cert.hours_unit || "horas lectivas",
+      courseDateText: cert.course_date_text || "22 de noviembre de 2026",
+      modality: "100 % Presencial",
+      teacherName: cert.teacher_name || "Manuel Rodríguez Andrés",
+      logoRightUrl: "/certificates/enfermeria-integral.png",
     } : {}),
     ...overrides,
   };
